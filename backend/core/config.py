@@ -69,10 +69,26 @@ class Settings(BaseSettings):
     OPENAI_TEMPERATURE: float = 0.1
     OPENAI_MAX_TOKENS: int = 2000
     
+    # Anthropic API
+    ANTHROPIC_API_KEY: Optional[str] = None
+    ANTHROPIC_MODEL: str = "claude-3-sonnet-20240229"
+    
+    # LLM Configuration
+    LLM_PROVIDER: str = "openai"  # openai, anthropic, local
+    LLM_TEMPERATURE: float = 0.1
+    LLM_MAX_TOKENS: int = 2000
+    
     # LLM (Local)
     LOCAL_LLM_ENABLED: bool = False
     LOCAL_LLM_MODEL: str = "llama-3-8b"
     LOCAL_LLM_ENDPOINT: Optional[str] = None
+    
+    # Arize Phoenix - LLM Observability
+    PHOENIX_ENABLE_SERVER: bool = True
+    PHOENIX_ENABLE_INSTRUMENTATION: bool = True
+    PHOENIX_HOST: str = "http://localhost"
+    PHOENIX_PORT: int = 6006
+    PHOENIX_PROJECT_NAME: str = "financia-2030-rag"
     
     # Embeddings
     EMBEDDING_MODEL: str = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"

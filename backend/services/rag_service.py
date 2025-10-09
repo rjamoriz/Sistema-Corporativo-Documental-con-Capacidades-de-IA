@@ -1,10 +1,12 @@
 """
 Servicio RAG (Retrieval-Augmented Generation)
 Combina búsqueda de contexto con generación de LLM, incluyendo anti-alucinación y citaciones
+Integrado con Arize Phoenix para observabilidad completa de LLM
 """
 from typing import Dict, List, Optional
 from uuid import UUID, uuid4
 from datetime import datetime
+import time
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -14,6 +16,7 @@ import anthropic
 
 from backend.core.logging_config import logger, audit_logger
 from backend.core.config import settings
+from backend.core.phoenix_config import get_phoenix, log_llm_call
 from backend.models.schemas import RAGQuery, RAGResponse, Citation
 from backend.services.search_service import search_service
 
@@ -177,8 +180,11 @@ Responde basándote ÚNICAMENTE en el contexto proporcionado. Cita las fuentes u
         conversation_history: List[Dict],
         citations_map: Dict[str, Citation]
     ) -> tuple[str, List[Citation]]:
-        """Genera respuesta usando LLM"""
+        """Genera respuesta usando LLM con observabilidad Phoenix"""
         try:
+            # Iniciar tracking de tiempo
+            start_time = time.time()
+            
             # Construir prompt
             prompt = self.query_prompt_template.format(
                 context=context,
@@ -195,6 +201,9 @@ Responde basándote ÚNICAMENTE en el contexto proporcionado. Cita las fuentes u
             messages.append({"role": "user", "content": prompt})
             
             # Generar respuesta según proveedor
+            answer = ""
+            tokens_used = 0
+            
             if settings.LLM_PROVIDER == "openai":
                 response = await self.client.chat.completions.create(
                     model=self.model,
@@ -203,6 +212,10 @@ Responde basándote ÚNICAMENTE en el contexto proporcionado. Cita las fuentes u
                     max_tokens=settings.LLM_MAX_TOKENS
                 )
                 answer = response.choices[0].message.content
+                tokens_used = response.usage.total_tokens
+                
+                # Log a Phoenix para OpenAI (auto-instrumentado)
+                logger.info(f"OpenAI call completed: {tokens_used} tokens")
                 
             elif settings.LLM_PROVIDER == "anthropic":
                 response = await self.client.messages.create(
@@ -213,18 +226,61 @@ Responde basándote ÚNICAMENTE en el contexto proporcionado. Cita las fuentes u
                     max_tokens=settings.LLM_MAX_TOKENS
                 )
                 answer = response.content[0].text
+                tokens_used = response.usage.input_tokens + response.usage.output_tokens
+                
+                # Log manual a Phoenix para Anthropic
+                log_llm_call(
+                    prompt=prompt,
+                    response=answer,
+                    model=self.model,
+                    provider="anthropic",
+                    tokens_used=tokens_used
+                )
                 
             else:
                 # Modelo local
                 full_prompt = "\n\n".join([m["content"] for m in messages])
                 response = self.client(full_prompt, max_length=settings.LLM_MAX_TOKENS)
                 answer = response[0]["generated_text"]
+                tokens_used = len(answer.split())  # Aproximación
+                
+                # Log manual a Phoenix para modelo local
+                log_llm_call(
+                    prompt=prompt,
+                    response=answer,
+                    model=self.model,
+                    provider="local",
+                    tokens_used=tokens_used
+                )
+            
+            # Calcular latencia
+            latency_ms = (time.time() - start_time) * 1000
             
             # Extraer citaciones usadas
             import re
             citation_pattern = r'\[DOC-\d+\]'
             used_labels = re.findall(citation_pattern, answer)
             used_citations = [citations_map[label] for label in used_labels if label in citations_map]
+            
+            # Log completo RAG query a Phoenix
+            phoenix = get_phoenix()
+            phoenix.log_rag_query(
+                query=question,
+                response=answer,
+                chunks_used=[{
+                    "document_id": str(c.document_id),
+                    "filename": c.filename,
+                    "score": c.relevance_score
+                } for c in used_citations],
+                model=self.model,
+                tokens_used=tokens_used,
+                latency_ms=latency_ms
+            )
+            
+            # Log para métricas internas
+            logger.info(
+                f"RAG answer generated: {latency_ms:.2f}ms, {tokens_used} tokens, {len(used_citations)} citations"
+            )
             
             return answer, used_citations
             

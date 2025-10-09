@@ -1,6 +1,7 @@
 """
 FinancIA 2030 - Main Application Entry Point
 Sistema Corporativo Documental con Capacidades de IA
+Integrado con Arize Phoenix para observabilidad de LLMs
 """
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,6 +15,7 @@ from api.v1 import documents, search, rag, risk, compliance, auth
 from core.config import settings
 from core.database import engine, Base
 from core.logging_config import setup_logging
+from core.phoenix_config import initialize_phoenix
 
 # Setup logging
 setup_logging()
@@ -26,6 +28,18 @@ async def lifespan(app: FastAPI):
     # Startup
     logger.info("🚀 Starting FinancIA 2030 Backend...")
     
+    # Initialize Phoenix Observability for LLMs
+    try:
+        phoenix = initialize_phoenix(
+            start_server=settings.PHOENIX_ENABLE_SERVER,
+            enable_instrumentation=settings.PHOENIX_ENABLE_INSTRUMENTATION
+        )
+        logger.info("✅ Phoenix observability initialized")
+        logger.info(f"📊 Phoenix UI: http://localhost:{settings.PHOENIX_PORT}")
+    except Exception as e:
+        logger.warning(f"⚠️ Phoenix initialization failed: {e}")
+        logger.info("💡 Continuing without Phoenix observability")
+    
     # Create database tables
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -37,6 +51,16 @@ async def lifespan(app: FastAPI):
     
     # Shutdown
     logger.info("🛑 Shutting down FinancIA 2030 Backend...")
+    
+    # Shutdown Phoenix
+    try:
+        from core.phoenix_config import get_phoenix
+        phoenix = get_phoenix()
+        phoenix.shutdown()
+        logger.info("✅ Phoenix shutdown complete")
+    except:
+        pass
+    
     await engine.dispose()
     logger.info("✅ Application shutdown complete")
 

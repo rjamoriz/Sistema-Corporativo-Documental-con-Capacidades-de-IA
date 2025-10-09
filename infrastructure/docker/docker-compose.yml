@@ -7,8 +7,50 @@ services:
   postgresql:
     image: pgvector/pgvector:pg15
     container_name: financia-postgresql
+      # Arize Phoenix - LLM Observability
+  phoenix:
+    image: arizephoenix/phoenix:latest
+    container_name: financia-phoenix
+    ports:
+      - "6006:6006"
+      - "4317:4317"  # OTLP gRPC endpoint
+      - "4318:4318"  # OTLP HTTP endpoint
     environment:
-      POSTGRES_DB: financia_db
+      - PHOENIX_WORKING_DIR=/phoenix-data
+      - PHOENIX_PORT=6006
+    volumes:
+      - phoenix_data:/phoenix-data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6006/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - financia-network
+
+  # Comentado: Frontend (React)
+  # frontend:
+  #   build: ../../frontend
+  #   container_name: financia-frontend
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - REACT_APP_API_URL=http://localhost:8000
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - financia-network
+
+volumes:
+  postgresql_data:
+  opensearch_data:
+  redis_data:
+  minio_data:
+  prometheus_data:
+  grafana_data:
+  mlflow_data:
+  backend_logs:
+  phoenix_data:     POSTGRES_DB: financia_db
       POSTGRES_USER: financia
       POSTGRES_PASSWORD: financia2030
       POSTGRES_INITDB_ARGS: "-E UTF8"
