@@ -2,10 +2,11 @@
 ## Fina## 📁 Documentación Principal
 
 - 🚀 [`QUICKSTART.md`](QUICKSTART.md) — **¡Empieza aquí!** Guía de inicio rápido (< 10 min)
-- 📄 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Arquitectura técnica completa (6k palabras)
+- � [`DEPLOYMENT.md`](DEPLOYMENT.md) — **✨ NUEVO** Guía completa de deployment con Docker Hub
+- �📄 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Arquitectura técnica completa (6k palabras)
 - 🏛️ [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) — Gobernanza de IA y compliance (8.5k palabras)
 - 🔒 [`docs/DPIA.md`](docs/DPIA.md) — Data Protection Impact Assessment (7k palabras)
-- 🔍 [`docs/PHOENIX_OBSERVABILITY.md`](docs/PHOENIX_OBSERVABILITY.md) — **NUEVO** Observabilidad de LLMs con Arize Phoenix
+- 🔍 [`docs/PHOENIX_OBSERVABILITY.md`](docs/PHOENIX_OBSERVABILITY.md) — Observabilidad de LLMs con Arize Phoenix
 - ✅ [`PROJECT_COMPLETE.md`](PROJECT_COMPLETE.md) — Resumen de proyecto completado30 — TeFinancia S.A.
 
 ![Estado](https://img.shields.io/badge/Estado-✅%20MVP%20Completo-brightgreen)
@@ -38,7 +39,31 @@ Sistema corporativo de gestión documental de última generación que integra ca
 
 ## 🚀 Inicio Rápido
 
-¿Quieres probar el sistema? Sigue estos 3 pasos:
+¿Quieres probar el sistema? Tienes **dos opciones**:
+
+### Opción A: Docker Hub (Recomendado - Más Rápido) 🐳
+
+```bash
+# 1. Clonar repositorio
+git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA
+cd Sistema-Corporativo-Documental-con-Capacidades-de-IA/infrastructure/docker
+
+# 2. Configurar variables de entorno
+cp .env.example .env
+# Editar .env con tu OPENAI_API_KEY y otras credenciales
+
+# 3. Desplegar con imágenes pre-construidas desde Docker Hub
+docker-compose -f docker-compose.hub.yml up -d
+
+# 4. Acceder a la aplicación
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:8000/docs
+# Phoenix (Observability): http://localhost:6006
+```
+
+📖 **Guía completa de deployment:** [`DEPLOYMENT.md`](DEPLOYMENT.md)
+
+### Opción B: Build Local (Desarrollo)
 
 ```bash
 # 1. Clonar repositorio
