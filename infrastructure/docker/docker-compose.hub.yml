@@ -1,0 +1,338 @@
+# FinancIA 2030 - Docker Compose with Docker Hub Images
+# This file uses pre-built images from Docker Hub instead of building locally
+
+version: '3.8'
+
+services:
+  # ============================================================================
+  # Database - PostgreSQL with pgvector
+  # ============================================================================
+  postgres:
+    image: pgvector/pgvector:pg15
+    container_name: financia-postgres
+    environment:
+      POSTGRES_DB: financia_db
+      POSTGRES_USER: financia
+      POSTGRES_PASSWORD: financia2030
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U financia"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - financia-network
+
+  # ============================================================================
+  # Search Engine - OpenSearch
+  # ============================================================================
+  opensearch:
+    image: opensearchproject/opensearch:2.11.1
+    container_name: financia-opensearch
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Admin@123
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+      - "9600:9600"
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - financia-network
+
+  # ============================================================================
+  # Cache - Redis
+  # ============================================================================
+  redis:
+    image: redis:7.2-alpine
+    container_name: financia-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - financia-network
+
+  # ============================================================================
+  # Message Broker - Kafka
+  # ============================================================================
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: financia-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
+      - zookeeper_logs:/var/lib/zookeeper/log
+    networks:
+      - financia-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: financia-kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - financia-network
+
+  # ============================================================================
+  # Object Storage - MinIO
+  # ============================================================================
+  minio:
+    image: minio/minio:latest
+    container_name: financia-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - financia-network
+
+  # ============================================================================
+  # Monitoring - Prometheus
+  # ============================================================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: financia-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - financia-network
+
+  # ============================================================================
+  # Monitoring - Grafana
+  # ============================================================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: financia-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana-datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+    networks:
+      - financia-network
+
+  # ============================================================================
+  # MLOps - MLflow
+  # ============================================================================
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    container_name: financia-mlflow
+    ports:
+      - "5000:5000"
+    environment:
+      MLFLOW_BACKEND_STORE_URI: sqlite:///mlflow.db
+      MLFLOW_DEFAULT_ARTIFACT_ROOT: /mlflow/artifacts
+    volumes:
+      - mlflow_data:/mlflow
+    command: mlflow server --host 0.0.0.0 --port 5000
+    networks:
+      - financia-network
+
+  # ============================================================================
+  # LLM Observability - Arize Phoenix
+  # ============================================================================
+  phoenix:
+    image: arizephoenix/phoenix:latest
+    container_name: financia-phoenix
+    ports:
+      - "6006:6006"
+      - "4317:4317"
+      - "4318:4318"
+    environment:
+      - PHOENIX_WORKING_DIR=/phoenix-data
+      - PHOENIX_PORT=6006
+    volumes:
+      - phoenix_data:/phoenix-data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6006/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - financia-network
+
+  # ============================================================================
+  # Application - Backend API (FROM DOCKER HUB)
+  # ============================================================================
+  backend:
+    image: rjamoriz/financia2030-backend:latest
+    container_name: financia-backend
+    depends_on:
+      - postgres
+      - opensearch
+      - redis
+      - kafka
+      - minio
+      - phoenix
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://financia:financia2030@postgres:5432/financia_db
+      - OPENSEARCH_HOST=opensearch
+      - OPENSEARCH_PORT=9200
+      - REDIS_URL=redis://redis:6379/0
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - MINIO_ENDPOINT=minio:9000
+      - PHOENIX_HOST=http://phoenix
+      - PHOENIX_PORT=6006
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend_logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - financia-network
+    restart: unless-stopped
+
+  # ============================================================================
+  # Application - Frontend (FROM DOCKER HUB)
+  # ============================================================================
+  frontend:
+    image: rjamoriz/financia2030-frontend:latest
+    container_name: financia-frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - financia-network
+    restart: unless-stopped
+
+  # ============================================================================
+  # Workers - Kafka Consumers (FROM DOCKER HUB)
+  # ============================================================================
+  worker-ingest:
+    image: rjamoriz/financia2030-worker-ingest:latest
+    container_name: financia-worker-ingest
+    depends_on:
+      - kafka
+      - postgres
+      - minio
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://financia:financia2030@postgres:5432/financia_db
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - MINIO_ENDPOINT=minio:9000
+    networks:
+      - financia-network
+    restart: unless-stopped
+
+  worker-process:
+    image: rjamoriz/financia2030-worker-process:latest
+    container_name: financia-worker-process
+    depends_on:
+      - kafka
+      - postgres
+      - opensearch
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://financia:financia2030@postgres:5432/financia_db
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - OPENSEARCH_HOST=opensearch
+      - OPENSEARCH_PORT=9200
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    networks:
+      - financia-network
+    restart: unless-stopped
+
+  worker-index:
+    image: rjamoriz/financia2030-worker-index:latest
+    container_name: financia-worker-index
+    depends_on:
+      - kafka
+      - opensearch
+      - postgres
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://financia:financia2030@postgres:5432/financia_db
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - OPENSEARCH_HOST=opensearch
+      - OPENSEARCH_PORT=9200
+    networks:
+      - financia-network
+    restart: unless-stopped
+
+# ============================================================================
+# Volumes
+# ============================================================================
+volumes:
+  postgres_data:
+  opensearch_data:
+  redis_data:
+  zookeeper_data:
+  zookeeper_logs:
+  kafka_data:
+  minio_data:
+  prometheus_data:
+  grafana_data:
+  mlflow_data:
+  phoenix_data:
+  backend_logs:
+
+# ============================================================================
+# Networks
+# ============================================================================
+networks:
+  financia-network:
+    driver: bridge
