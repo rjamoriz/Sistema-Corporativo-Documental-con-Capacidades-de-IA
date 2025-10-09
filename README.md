@@ -1,5 +1,12 @@
 # Sistema Corporativo Documental con Capacidades de IA
-## FinancIA 2030 — TeFinancia S.A.
+## Fina## 📁 Documentación Principal
+
+- 🚀 [`QUICKSTART.md`](QUICKSTART.md) — **¡Empieza aquí!** Guía de inicio rápido (< 10 min)
+- 📄 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Arquitectura técnica completa (6k palabras)
+- 🏛️ [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) — Gobernanza de IA y compliance (8.5k palabras)
+- 🔒 [`docs/DPIA.md`](docs/DPIA.md) — Data Protection Impact Assessment (7k palabras)
+- 🔍 [`docs/PHOENIX_OBSERVABILITY.md`](docs/PHOENIX_OBSERVABILITY.md) — **NUEVO** Observabilidad de LLMs con Arize Phoenix
+- ✅ [`PROJECT_COMPLETE.md`](PROJECT_COMPLETE.md) — Resumen de proyecto completado30 — TeFinancia S.A.
 
 ![Estado](https://img.shields.io/badge/Estado-✅%20MVP%20Completo-brightgreen)
 ![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)
@@ -158,9 +165,10 @@ cd frontend && npm run dev
 - [x] LLMClient - Unificado para OpenAI/Anthropic/Local
 
 **Infraestructura (100%):**
-- [x] docker-compose.yml con 12 servicios (PostgreSQL+pgvector, OpenSearch, Redis, Kafka, MinIO, Prometheus, Grafana, MLflow)
+- [x] docker-compose.yml con 13 servicios (PostgreSQL+pgvector, OpenSearch, Redis, Kafka, MinIO, Prometheus, Grafana, MLflow, **Phoenix**)
 - [x] Dockerfile multi-stage con healthchecks
 - [x] Configuración Prometheus + Grafana
+- [x] **Arize Phoenix** para observabilidad de LLMs (puerto 6006)
 - [x] Volúmenes persistentes para todos los datos
 
 **Scripts Operacionales (100% - 7 scripts):**
@@ -189,18 +197,18 @@ cd frontend && npm run dev
 ## 📈 Métricas del Proyecto
 
 **Código generado:**
-- 📄 **Archivos totales:** ~90 archivos
-- 📝 **Líneas de código:** ~21,000 líneas
-- 📚 **Documentación:** ~21,500 palabras (3 docs principales)
-- 🐍 **Python:** Backend completo (FastAPI + services + workers + ML)
+- 📄 **Archivos totales:** ~95 archivos
+- 📝 **Líneas de código:** ~22,000 líneas
+- 📚 **Documentación:** ~23,000 palabras (4 docs principales)
+- 🐍 **Python:** Backend completo (FastAPI + services + workers + ML + observability)
 - ⚛️ **React:** Frontend completo (TypeScript + components + routing)
-- 🐳 **Docker:** 12 servicios orquestados
-- 📦 **Dependencias:** 80+ Python, 40+ npm packages
+- 🐳 **Docker:** 13 servicios orquestados
+- 📦 **Dependencias:** 84 Python, 40+ npm packages
 
 **Commits realizados:**
-- 📊 **Total commits:** 6 commits principales
+- 📊 **Total commits:** 11 commits principales
 - ✅ **Todos pushed a GitHub**
-- 🎯 **Cobertura completa:** Backend + Frontend + Infrastructure
+- 🎯 **Cobertura completa:** Backend + Frontend + Infrastructure + Observability
 
 ---
 
@@ -253,6 +261,7 @@ cd frontend && npm run dev
 - sentence-transformers (embeddings)
 - BETO/RoBERTa (clasificación)
 - OpenAI GPT-4o-mini / Llama-3 (RAG)
+- **Arize Phoenix** (LLM observability)
 - MLflow + DVC + Evidently AI
 
 ### Frontend
