@@ -21,8 +21,8 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Download spaCy model
-RUN python -m spacy download es_core_news_lg
+# Download spaCy model using pip (more reliable in Docker)
+RUN pip install --no-cache-dir https://github.com/explosion/spacy-models/releases/download/es_core_news_lg-3.7.0/es_core_news_lg-3.7.0-py3-none-any.whl
 
 COPY . .
 
