@@ -1,9 +1,12 @@
 # Sistema Corporativo Documental con Capacidades de IA
 ## FinancIA 2030 — TeFinancia S.A.
 
-![Estado](https://img.shields.io/badge/Estado-En%20Desarrollo-yellow)
+![Estado](https://img.shields.io/badge/Estado-✅%20MVP%20Completo-brightgreen)
 ![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)
+![Completado](https://img.shields.io/badge/Completado-100%25-success)
 ![Python](https://img.shields.io/badge/Python-3.11+-green)
+![React](https://img.shields.io/badge/React-18.3-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)
 ![License](https://img.shields.io/badge/License-Proprietary-red)
 
 ---
@@ -14,7 +17,7 @@ Sistema corporativo de gestión documental de última generación que integra ca
 
 **Cliente:** TeFinancia S.A.  
 **Proyecto:** FinancIA 2030  
-**Estado:** MVP → PRE → PROD
+**Estado:** ✅ **MVP COMPLETO** - Ready for Testing & Production Deployment
 
 ### 🎯 Objetivos Clave
 
@@ -26,11 +29,44 @@ Sistema corporativo de gestión documental de última generación que integra ca
 
 ---
 
+## 🚀 Inicio Rápido
+
+¿Quieres probar el sistema? Sigue estos 3 pasos:
+
+```bash
+# 1. Clonar repositorio
+git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA
+cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
+
+# 2. Setup automático (instala todo)
+./scripts/setup.sh
+
+# 3. Iniciar sistema completo
+./scripts/start.sh
+
+# 4. Iniciar aplicación
+# Terminal 1 - Backend:
+cd backend && source venv/bin/activate && uvicorn main:app --reload
+
+# Terminal 2 - Frontend:
+cd frontend && npm run dev
+
+# 5. Acceder a la aplicación
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:8000/docs
+```
+
+📖 **Guía completa:** [`QUICKSTART.md`](QUICKSTART.md)
+
+---
+
 ## 📁 Documentación Principal
 
-- 📄 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Arquitectura técnica completa
-- 🏛️ [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) — Gobernanza de IA y compliance
-- 🔒 [`docs/DPIA.md`](docs/DPIA.md) — Data Protection Impact Assessment
+- � [`QUICKSTART.md`](QUICKSTART.md) — **¡Empieza aquí!** Guía de inicio rápido (< 10 min)
+- �📄 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Arquitectura técnica completa (6k palabras)
+- 🏛️ [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) — Gobernanza de IA y compliance (8.5k palabras)
+- 🔒 [`docs/DPIA.md`](docs/DPIA.md) — Data Protection Impact Assessment (7k palabras)
+- ✅ [`PROJECT_COMPLETE.md`](PROJECT_COMPLETE.md) — Resumen de proyecto completado
 
 ---
 
