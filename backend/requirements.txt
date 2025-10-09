@@ -36,6 +36,11 @@ openpyxl==3.1.2
 pdf2image==1.16.3
 opencv-python==4.8.1.78
 camelot-py[cv]==0.11.0
+textract==1.6.5
+pdfplumber==0.10.3
+python-pptx==0.6.23
+langdetect==1.0.9
+reportlab==4.0.7
 
 # NLP & ML
 spacy==3.7.2
@@ -46,6 +51,9 @@ langchain==0.0.350
 langchain-openai==0.0.2
 openai==1.3.7
 tiktoken==0.5.2
+anthropic==0.8.0
+numpy==1.24.3
+scikit-learn==1.3.2
 
 # Audio/Video Processing
 openai-whisper==20231117
@@ -76,7 +84,7 @@ aiofiles==23.2.1
 orjson==3.9.10
 pyyaml==6.0.1
 python-magic==0.4.27
-hashlib-additional==1.0.0
+python-json-logger==2.0.7
 
 # Testing
 pytest==7.4.3
