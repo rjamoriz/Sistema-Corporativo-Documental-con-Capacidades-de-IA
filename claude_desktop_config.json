@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "tefinancia-ontology": {
+      "command": "python",
+      "args": [
+        "/ruta/absoluta/a/mcp_server.py"
+      ],
+      "env": {
+        "PYTHONPATH": "/ruta/absoluta/a/backend"
+      },
+      "description": "Servidor MCP para Ontología TEFinancia - Acceso a clasificación OWL y SPARQL",
+      "disabled": false
+    }
+  }
+}

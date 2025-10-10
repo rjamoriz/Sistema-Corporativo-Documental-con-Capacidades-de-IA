@@ -1,0 +1,14 @@
+# Dependencias para el Servidor MCP de Ontología TEFinancia
+
+# MCP Protocol
+mcp>=0.1.0
+
+# Las siguientes dependencias ya están en backend/requirements.txt
+# pero se listan aquí para claridad:
+
+# Ontología y SPARQL
+rdflib>=7.1.1
+owlrl>=6.0.2
+
+# Utilidades
+python-dotenv>=1.0.0
