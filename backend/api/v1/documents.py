@@ -1,10 +1,11 @@
 """
 Documents Router
 Handles document upload, retrieval, update, delete
+Enhanced with ontology-based classification and validation
 """
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from uuid import UUID
 import logging
 
@@ -14,6 +15,7 @@ from models.schemas import (
     DocumentUploadResponse, EntityResponse, ChunkResponse
 )
 from api.v1.auth import oauth2_scheme
+from services.classification_service import classification_service
 
 logger = logging.getLogger(__name__)
 
@@ -191,4 +193,192 @@ async def reprocess_document(
     raise HTTPException(
         status_code=status.HTTP_501_NOT_IMPLEMENTED,
         detail="Reprocess not yet implemented"
+    )
+
+
+# ============================================================================
+# NUEVOS ENDPOINTS: INTEGRACIÓN CON ONTOLOGÍA OWL
+# ============================================================================
+
+@router.get("/{document_id}/classification/explanation", response_model=Dict[str, Any])
+async def get_classification_explanation(
+    document_id: UUID,
+    token: str = Depends(oauth2_scheme),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Obtiene explicación detallada de la clasificación del documento
+    
+    Incluye:
+    - Clasificación ML con confianza
+    - Clasificación ontológica (OWL) con keywords
+    - Evidencias textuales (extractos)
+    - Validación de metadatos contra restricciones OWL
+    - Nivel de riesgo inferido
+    - Jerarquía ontológica completa
+    
+    **Ejemplo de respuesta:**
+    ```json
+    {
+      "category": "FINANCIAL",
+      "confidence": 0.92,
+      "method": "transformer_model+ontology",
+      "matched_keywords": ["factura", "iva", "importe"],
+      "evidence": [
+        {
+          "keyword": "factura",
+          "excerpt": "...FACTURA Nº 2024-001...",
+          "source": "ontology"
+        }
+      ],
+      "ontology": {
+        "class_name": "PrestamoHipotecario",
+        "class_label": "Préstamo Hipotecario",
+        "confidence": 0.88
+      },
+      "validation": {
+        "is_valid": false,
+        "errors": ["importeFinanciado debe ser >= 30000"],
+        "required_fields": ["tieneCliente", "requiereValoracion"]
+      },
+      "risk": {
+        "level": "ALTO",
+        "method": "ontology_inference"
+      }
+    }
+    ```
+    """
+    # TODO: Obtener documento de BD
+    # document = await db.get(Document, document_id)
+    # if not document:
+    #     raise HTTPException(status_code=404, detail="Document not found")
+    
+    # text = await get_document_text(document_id)  # Helper function
+    # explanation = classification_service.get_classification_explanation(document, text)
+    # return explanation
+    
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail="Classification explanation endpoint - implementation pending database integration"
+    )
+
+
+@router.get("/{document_id}/ontology/hierarchy", response_model=Dict[str, Any])
+async def get_document_ontology_hierarchy(
+    document_id: UUID,
+    token: str = Depends(oauth2_scheme),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Obtiene la jerarquía ontológica completa para el documento
+    
+    Incluye:
+    - Información de la clase OWL asignada
+    - Ancestros (clases padre)
+    - Hermanos (clases del mismo nivel)
+    - Descendientes (subclases)
+    - Documentos relacionados semánticamente
+    - Regulaciones de compliance aplicables
+    
+    **Ejemplo de respuesta:**
+    ```json
+    {
+      "class_info": {
+        "label": "Préstamo Hipotecario",
+        "comment": "Contrato de financiación con garantía inmobiliaria",
+        "parent_classes": ["ContratoFinanciacion", "DocumentoContractual"],
+        "properties": {
+          "nivelRiesgoBase": ["BAJO"],
+          "importeMinimo": [30000]
+        }
+      },
+      "hierarchy": {
+        "uri": "http://tefinancia.es/ontology#PrestamoHipotecario",
+        "name": "PrestamoHipotecario",
+        "label": "Préstamo Hipotecario",
+        "children": []
+      },
+      "related_documents": [
+        {
+          "property": "requiereDocumento",
+          "target": "DNI"
+        },
+        {
+          "property": "requiereValoracion",
+          "target": "Valoracion"
+        }
+      ],
+      "compliance_regulations": [
+        "Ley Hipotecaria 5/2019",
+        "MiFID II",
+        "Ley de Crédito Inmobiliario"
+      ]
+    }
+    ```
+    """
+    # TODO: Obtener documento de BD
+    # document = await db.get(Document, document_id)
+    # if not document:
+    #     raise HTTPException(status_code=404, detail="Document not found")
+    
+    # hierarchy = await classification_service.get_ontology_hierarchy(document)
+    # if not hierarchy:
+    #     raise HTTPException(
+    #         status_code=404,
+    #         detail="No ontology classification found for this document"
+    #     )
+    
+    # return hierarchy
+    
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail="Ontology hierarchy endpoint - implementation pending database integration"
+    )
+
+
+@router.post("/{document_id}/reclassify", response_model=Dict[str, Any])
+async def reclassify_document_with_ontology(
+    document_id: UUID,
+    use_ontology: bool = True,
+    token: str = Depends(oauth2_scheme),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Reclasifica un documento usando el pipeline híbrido ML + Ontología
+    
+    **Parámetros:**
+    - `use_ontology`: Si True, usa refinamiento semántico con OWL (por defecto: True)
+    
+    **Pipeline de clasificación:**
+    1. Clasificación ML inicial (transformers)
+    2. Refinamiento con keywords de ontología OWL
+    3. Validación de metadatos contra restricciones OWL
+    4. Inferencia automática de nivel de riesgo
+    
+    **Retorna:**
+    - Clasificación completa con ML + Ontología
+    - Validación de metadatos
+    - Riesgo inferido
+    - Confianza combinada
+    
+    **Casos de uso:**
+    - Mejorar clasificación después de añadir metadata
+    - Re-evaluar riesgo con nuevas reglas de inferencia
+    - Actualizar validación tras cambios en ontología
+    """
+    # TODO: Obtener documento de BD
+    # document = await db.get(Document, document_id)
+    # if not document:
+    #     raise HTTPException(status_code=404, detail="Document not found")
+    
+    # text = await get_document_text(document_id)
+    # result = await classification_service.classify_document(
+    #     document, text, db, use_ontology=use_ontology
+    # )
+    
+    # return result
+    
+    raise HTTPException(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        detail="Reclassify endpoint - implementation pending database integration"
     )
