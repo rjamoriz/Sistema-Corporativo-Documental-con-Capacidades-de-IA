@@ -1,0 +1,564 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix tf: <http://tefinancia.es/ontology#> .
+
+# ============================================================================
+# ONTOLOGÍA CORPORATIVA - TEFINANCIA
+# ============================================================================
+# Versión: 2.0 (Sprint 2 + 3)
+# Fecha: 10 de Octubre 2025
+# Descripción: Ontología formal OWL para gestión documental corporativa
+# Autor: Equipo FinancIA 2030
+# ============================================================================
+
+<http://tefinancia.es/ontology> rdf:type owl:Ontology ;
+    dc:title "TeFinancia Corporate Document Ontology"@es ;
+    dc:creator "FinancIA 2030 Team" ;
+    dc:date "2025-10-10"^^xsd:date ;
+    dcterms:description "Ontología formal para clasificación y gestión de documentos corporativos en el sector financiero"@es ;
+    owl:versionInfo "2.0" .
+
+
+# ============================================================================
+# CLASES (OWL Classes)
+# ============================================================================
+
+# --- Clase Raíz ---
+
+tf:Documento rdf:type owl:Class ;
+    rdfs:label "Documento"@es ;
+    rdfs:label "Document"@en ;
+    rdfs:comment "Clase raíz de todos los documentos corporativos"@es ;
+    skos:definition "Cualquier artefacto de información estructurado que contiene datos corporativos"@es .
+
+
+# --- Nivel 1: Categorías Principales ---
+
+tf:DocumentoContractual rdf:type owl:Class ;
+    rdfs:subClassOf tf:Documento ;
+    rdfs:label "Documento Contractual"@es ;
+    rdfs:comment "Documentos legales vinculantes entre partes"@es ;
+    skos:definition "Documentos que establecen obligaciones legales y derechos entre entidades"@es .
+
+tf:DocumentoAdministrativo rdf:type owl:Class ;
+    rdfs:subClassOf tf:Documento ;
+    rdfs:label "Documento Administrativo"@es ;
+    rdfs:comment "Documentos de gestión administrativa y contable"@es .
+
+tf:DocumentoIdentificacion rdf:type owl:Class ;
+    rdfs:subClassOf tf:Documento ;
+    rdfs:label "Documento de Identificación"@es ;
+    rdfs:comment "Documentos oficiales de identidad personal"@es ;
+    tf:esSensible true ;
+    tf:requiereGDPR true .
+
+tf:DocumentoFinanciero rdf:type owl:Class ;
+    rdfs:subClassOf tf:Documento ;
+    rdfs:label "Documento Financiero"@es ;
+    rdfs:comment "Documentos contables y estados financieros"@es .
+
+tf:DocumentoOperacional rdf:type owl:Class ;
+    rdfs:subClassOf tf:Documento ;
+    rdfs:label "Documento Operacional"@es ;
+    rdfs:comment "Documentos operativos internos"@es .
+
+tf:DocumentoCumplimiento rdf:type owl:Class ;
+    rdfs:subClassOf tf:Documento ;
+    rdfs:label "Documento de Cumplimiento"@es ;
+    rdfs:comment "Documentos de compliance y regulación"@es .
+
+
+# --- Nivel 2: Tipos Específicos (Contratos) ---
+
+tf:Contrato rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoContractual ;
+    rdfs:label "Contrato"@es ;
+    rdfs:comment "Acuerdo legal entre dos o más partes"@es .
+
+tf:ContratoFinanciacion rdf:type owl:Class ;
+    rdfs:subClassOf tf:Contrato ;
+    rdfs:label "Contrato de Financiación"@es ;
+    rdfs:comment "Contratos de préstamos y financiamiento"@es ;
+    tf:nivelRiesgoBase "MEDIO" ;
+    tf:retencionAnios 15 .
+
+tf:ContratoProveedor rdf:type owl:Class ;
+    rdfs:subClassOf tf:Contrato ;
+    rdfs:label "Contrato de Proveedor"@es ;
+    rdfs:comment "Contratos con proveedores de servicios"@es ;
+    tf:nivelRiesgoBase "BAJO" ;
+    tf:retencionAnios 10 .
+
+tf:ContratoServicio rdf:type owl:Class ;
+    rdfs:subClassOf tf:Contrato ;
+    rdfs:label "Contrato de Servicio"@es ;
+    rdfs:comment "Contratos de prestación de servicios"@es ;
+    tf:nivelRiesgoBase "BAJO" ;
+    tf:retencionAnios 7 .
+
+tf:ContratoArrendamiento rdf:type owl:Class ;
+    rdfs:subClassOf tf:Contrato ;
+    rdfs:label "Contrato de Arrendamiento"@es ;
+    rdfs:comment "Contratos de alquiler de inmuebles"@es ;
+    tf:nivelRiesgoBase "BAJO" ;
+    tf:retencionAnios 10 .
+
+tf:PolizaSeguro rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoContractual ;
+    rdfs:label "Póliza de Seguro"@es ;
+    rdfs:comment "Contratos de seguros"@es ;
+    tf:nivelRiesgoBase "BAJO" ;
+    tf:retencionAnios 15 .
+
+
+# --- Nivel 3: Subtipos (Financiación) ---
+
+tf:PrestamoPersonal rdf:type owl:Class ;
+    rdfs:subClassOf tf:ContratoFinanciacion ;
+    rdfs:label "Préstamo Personal"@es ;
+    rdfs:comment "Préstamo sin garantía real"@es ;
+    tf:nivelRiesgoBase "MEDIO" ;
+    tf:retencionAnios 15 ;
+    tf:importeMinimo 3000 ;
+    tf:importeMaximo 75000 ;
+    tf:plazoMinimoMeses 12 ;
+    tf:plazoMaximoMeses 96 ;
+    tf:taeMaximo 12.0 .
+
+tf:PrestamoHipotecario rdf:type owl:Class ;
+    rdfs:subClassOf tf:ContratoFinanciacion ;
+    rdfs:label "Préstamo Hipotecario"@es ;
+    rdfs:comment "Préstamo con garantía inmobiliaria"@es ;
+    tf:nivelRiesgoBase "BAJO" ;
+    tf:retencionAnios 20 ;
+    tf:importeMinimo 30000 ;
+    tf:importeMaximo 1000000 ;
+    tf:plazoMinimoMeses 60 ;
+    tf:plazoMaximoMeses 360 ;
+    tf:taeMaximo 4.5 ;
+    tf:requiereGarantiaInmobiliaria true ;
+    tf:requiereValoracion true .
+
+tf:PrestamoAutomovil rdf:type owl:Class ;
+    rdfs:subClassOf tf:ContratoFinanciacion ;
+    rdfs:label "Préstamo para Vehículos"@es ;
+    rdfs:comment "Financiación para compra de vehículos"@es ;
+    tf:nivelRiesgoBase "MEDIO" ;
+    tf:retencionAnios 10 ;
+    tf:importeMinimo 5000 ;
+    tf:importeMaximo 100000 ;
+    tf:plazoMinimoMeses 12 ;
+    tf:plazoMaximoMeses 84 ;
+    tf:taeMaximo 9.0 .
+
+tf:LineaCredito rdf:type owl:Class ;
+    rdfs:subClassOf tf:ContratoFinanciacion ;
+    rdfs:label "Línea de Crédito"@es ;
+    rdfs:comment "Crédito revolving con límite disponible"@es ;
+    tf:nivelRiesgoBase "ALTO" ;
+    tf:retencionAnios 10 ;
+    tf:limiteMinimo 1000 ;
+    tf:limiteMaximo 50000 ;
+    tf:taeMaximo 15.0 .
+
+
+# --- Documentos Administrativos ---
+
+tf:Factura rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoAdministrativo ;
+    rdfs:label "Factura"@es ;
+    rdfs:comment "Factura comercial"@es ;
+    tf:nivelRiesgoBase "BAJO" ;
+    tf:retencionAnios 7 .
+
+tf:Recibo rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoAdministrativo ;
+    rdfs:label "Recibo"@es ;
+    rdfs:comment "Justificante de pago"@es ;
+    tf:nivelRiesgoBase "BAJO" ;
+    tf:retencionAnios 5 .
+
+tf:NotaDebito rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoAdministrativo ;
+    rdfs:label "Nota de Débito"@es ;
+    tf:nivelRiesgoBase "BAJO" ;
+    tf:retencionAnios 7 .
+
+tf:NotaCredito rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoAdministrativo ;
+    rdfs:label "Nota de Crédito"@es ;
+    tf:nivelRiesgoBase "BAJO" ;
+    tf:retencionAnios 7 .
+
+
+# --- Documentos de Identificación ---
+
+tf:DNI rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoIdentificacion ;
+    rdfs:label "DNI (Documento Nacional de Identidad)"@es ;
+    rdfs:comment "DNI español"@es ;
+    tf:nivelRiesgoBase "ALTO" ;
+    tf:retencionAnios 10 ;
+    tf:esSensible true .
+
+tf:NIE rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoIdentificacion ;
+    rdfs:label "NIE (Número Identidad Extranjero)"@es ;
+    rdfs:comment "NIE para extranjeros en España"@es ;
+    tf:nivelRiesgoBase "ALTO" ;
+    tf:retencionAnios 10 ;
+    tf:esSensible true .
+
+tf:Pasaporte rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoIdentificacion ;
+    rdfs:label "Pasaporte"@es ;
+    rdfs:comment "Pasaporte internacional"@es ;
+    tf:nivelRiesgoBase "ALTO" ;
+    tf:retencionAnios 10 ;
+    tf:esSensible true .
+
+
+# --- Documentos Financieros ---
+
+tf:EstadoFinanciero rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoFinanciero ;
+    rdfs:label "Estado Financiero"@es ;
+    tf:nivelRiesgoBase "MEDIO" ;
+    tf:retencionAnios 10 .
+
+tf:Balance rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoFinanciero ;
+    rdfs:label "Balance Contable"@es ;
+    tf:nivelRiesgoBase "MEDIO" ;
+    tf:retencionAnios 10 .
+
+tf:CuentaResultados rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoFinanciero ;
+    rdfs:label "Cuenta de Resultados"@es ;
+    tf:nivelRiesgoBase "MEDIO" ;
+    tf:retencionAnios 10 .
+
+tf:Nomina rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoFinanciero ;
+    rdfs:label "Nómina"@es ;
+    rdfs:comment "Nómina de empleado"@es ;
+    tf:nivelRiesgoBase "ALTO" ;
+    tf:retencionAnios 10 ;
+    tf:esSensible true .
+
+
+# --- Documentos Operacionales ---
+
+tf:TranscripcionLlamada rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoOperacional ;
+    rdfs:label "Transcripción de Llamada"@es ;
+    tf:nivelRiesgoBase "MEDIO" ;
+    tf:retencionAnios 5 ;
+    tf:esSensible true .
+
+tf:InformeInterno rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoOperacional ;
+    rdfs:label "Informe Interno"@es ;
+    tf:nivelRiesgoBase "BAJO" ;
+    tf:retencionAnios 5 .
+
+tf:Correspondencia rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoOperacional ;
+    rdfs:label "Correspondencia"@es ;
+    tf:nivelRiesgoBase "BAJO" ;
+    tf:retencionAnios 3 .
+
+
+# --- Documentos de Cumplimiento ---
+
+tf:CertificadoGDPR rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoCumplimiento ;
+    rdfs:label "Certificado GDPR"@es ;
+    tf:nivelRiesgoBase "ALTO" ;
+    tf:retencionAnios 10 .
+
+tf:EvaluacionRiesgo rdf:type owl:Class ;
+    rdfs:subClassOf tf:DocumentoCumplimiento ;
+    rdfs:label "Evaluación de Riesgo"@es ;
+    tf:nivelRiesgoBase "MEDIO" ;
+    tf:retencionAnios 7 .
+
+
+# --- Entidades Relacionadas ---
+
+tf:Persona rdf:type owl:Class ;
+    rdfs:label "Persona"@es ;
+    rdfs:comment "Persona física"@es .
+
+tf:Cliente rdf:type owl:Class ;
+    rdfs:subClassOf tf:Persona ;
+    rdfs:label "Cliente"@es ;
+    rdfs:comment "Cliente de TeFinancia"@es .
+
+tf:Empleado rdf:type owl:Class ;
+    rdfs:subClassOf tf:Persona ;
+    rdfs:label "Empleado"@es ;
+    rdfs:comment "Empleado de TeFinancia"@es .
+
+tf:Proveedor rdf:type owl:Class ;
+    rdfs:label "Proveedor"@es ;
+    rdfs:comment "Proveedor de servicios o productos"@es .
+
+tf:Inmueble rdf:type owl:Class ;
+    rdfs:label "Inmueble"@es ;
+    rdfs:comment "Bien inmueble (propiedad)"@es .
+
+tf:Vehiculo rdf:type owl:Class ;
+    rdfs:label "Vehículo"@es ;
+    rdfs:comment "Vehículo motorizado"@es .
+
+
+# ============================================================================
+# OBJECT PROPERTIES (Relaciones entre Clases)
+# ============================================================================
+
+tf:tieneCliente rdf:type owl:ObjectProperty ;
+    rdfs:label "tiene cliente"@es ;
+    rdfs:comment "Relaciona un documento con un cliente"@es ;
+    rdfs:domain tf:Documento ;
+    rdfs:range tf:Cliente .
+
+tf:requiereDocumento rdf:type owl:ObjectProperty ;
+    rdfs:label "requiere documento"@es ;
+    rdfs:comment "Indica que un documento requiere otro documento asociado"@es ;
+    rdfs:domain tf:Documento ;
+    rdfs:range tf:Documento .
+
+tf:derivaEn rdf:type owl:ObjectProperty ;
+    rdfs:label "deriva en"@es ;
+    rdfs:comment "Indica que un documento genera otro documento"@es ;
+    rdfs:domain tf:Documento ;
+    rdfs:range tf:Documento .
+
+tf:tieneGarantia rdf:type owl:ObjectProperty ;
+    rdfs:label "tiene garantía"@es ;
+    rdfs:comment "Relaciona un préstamo con su garantía"@es ;
+    rdfs:domain tf:ContratoFinanciacion ;
+    rdfs:range [ rdf:type owl:Class ;
+                 owl:unionOf ( tf:Inmueble tf:Vehiculo ) ] .
+
+tf:requiereValoracion rdf:type owl:ObjectProperty ;
+    rdfs:label "requiere valoración"@es ;
+    rdfs:comment "Indica que un inmueble requiere valoración"@es ;
+    rdfs:domain tf:PrestamoHipotecario ;
+    rdfs:range tf:Inmueble .
+
+tf:firmadoPor rdf:type owl:ObjectProperty ;
+    rdfs:label "firmado por"@es ;
+    rdfs:comment "Relaciona un contrato con sus firmantes"@es ;
+    rdfs:domain tf:Contrato ;
+    rdfs:range tf:Persona .
+
+tf:emitidoPor rdf:type owl:ObjectProperty ;
+    rdfs:label "emitido por"@es ;
+    rdfs:comment "Indica quién emitió el documento"@es ;
+    rdfs:domain tf:Documento ;
+    rdfs:range [ rdf:type owl:Class ;
+                 owl:unionOf ( tf:Persona tf:Proveedor ) ] .
+
+tf:destinatario rdf:type owl:ObjectProperty ;
+    rdfs:label "destinatario"@es ;
+    rdfs:comment "Indica el destinatario del documento"@es ;
+    rdfs:domain tf:Documento ;
+    rdfs:range [ rdf:type owl:Class ;
+                 owl:unionOf ( tf:Persona tf:Proveedor ) ] .
+
+
+# ============================================================================
+# DATATYPE PROPERTIES (Propiedades de Datos)
+# ============================================================================
+
+# --- Propiedades Generales ---
+
+tf:titulo rdf:type owl:DatatypeProperty ;
+    rdfs:label "título"@es ;
+    rdfs:domain tf:Documento ;
+    rdfs:range xsd:string .
+
+tf:fechaCreacion rdf:type owl:DatatypeProperty ;
+    rdfs:label "fecha de creación"@es ;
+    rdfs:domain tf:Documento ;
+    rdfs:range xsd:dateTime .
+
+tf:fechaFirma rdf:type owl:DatatypeProperty ;
+    rdfs:label "fecha de firma"@es ;
+    rdfs:domain tf:Contrato ;
+    rdfs:range xsd:date .
+
+tf:numeroDocumento rdf:type owl:DatatypeProperty ;
+    rdfs:label "número de documento"@es ;
+    rdfs:domain tf:Documento ;
+    rdfs:range xsd:string .
+
+
+# --- Propiedades Financieras ---
+
+tf:importeFinanciado rdf:type owl:DatatypeProperty ;
+    rdfs:label "importe financiado"@es ;
+    rdfs:domain tf:ContratoFinanciacion ;
+    rdfs:range xsd:decimal .
+
+tf:tae rdf:type owl:DatatypeProperty ;
+    rdfs:label "TAE (Tasa Anual Equivalente)"@es ;
+    rdfs:domain tf:ContratoFinanciacion ;
+    rdfs:range xsd:decimal .
+
+tf:tin rdf:type owl:DatatypeProperty ;
+    rdfs:label "TIN (Tipo de Interés Nominal)"@es ;
+    rdfs:domain tf:ContratoFinanciacion ;
+    rdfs:range xsd:decimal .
+
+tf:plazoMeses rdf:type owl:DatatypeProperty ;
+    rdfs:label "plazo en meses"@es ;
+    rdfs:domain tf:ContratoFinanciacion ;
+    rdfs:range xsd:integer .
+
+tf:cuotaMensual rdf:type owl:DatatypeProperty ;
+    rdfs:label "cuota mensual"@es ;
+    rdfs:domain tf:ContratoFinanciacion ;
+    rdfs:range xsd:decimal .
+
+tf:ltv rdf:type owl:DatatypeProperty ;
+    rdfs:label "LTV (Loan to Value)"@es ;
+    rdfs:domain tf:PrestamoHipotecario ;
+    rdfs:range xsd:decimal .
+
+tf:valorTasacion rdf:type owl:DatatypeProperty ;
+    rdfs:label "valor de tasación"@es ;
+    rdfs:domain tf:PrestamoHipotecario ;
+    rdfs:range xsd:decimal .
+
+
+# --- Propiedades de Identificación ---
+
+tf:nif rdf:type owl:DatatypeProperty ;
+    rdfs:label "NIF/NIE"@es ;
+    rdfs:domain tf:Persona ;
+    rdfs:range xsd:string .
+
+tf:nombreCompleto rdf:type owl:DatatypeProperty ;
+    rdfs:label "nombre completo"@es ;
+    rdfs:domain tf:Persona ;
+    rdfs:range xsd:string .
+
+tf:fechaNacimiento rdf:type owl:DatatypeProperty ;
+    rdfs:label "fecha de nacimiento"@es ;
+    rdfs:domain tf:Persona ;
+    rdfs:range xsd:date .
+
+
+# --- Propiedades de Riesgo y Compliance ---
+
+tf:nivelRiesgo rdf:type owl:DatatypeProperty ;
+    rdfs:label "nivel de riesgo"@es ;
+    rdfs:domain tf:Documento ;
+    rdfs:range xsd:string .
+
+tf:scoringCrediticio rdf:type owl:DatatypeProperty ;
+    rdfs:label "scoring crediticio"@es ;
+    rdfs:domain tf:Cliente ;
+    rdfs:range xsd:integer .
+
+tf:cumpleGDPR rdf:type owl:DatatypeProperty ;
+    rdfs:label "cumple GDPR"@es ;
+    rdfs:domain tf:Documento ;
+    rdfs:range xsd:boolean .
+
+
+# ============================================================================
+# REGLAS DE INFERENCIA (SWRL-style, expresadas como axiomas OWL)
+# ============================================================================
+
+# Regla 1: Si un préstamo hipotecario tiene LTV > 80%, entonces riesgo ALTO
+tf:PrestamoHipotecarioAltoRiesgo rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            tf:PrestamoHipotecario
+            [ rdf:type owl:Restriction ;
+              owl:onProperty tf:ltv ;
+              owl:someValuesFrom [ rdf:type rdfs:Datatype ;
+                                   owl:onDatatype xsd:decimal ;
+                                   owl:withRestrictions ( [ xsd:minExclusive 80.0 ] ) ]
+            ]
+        )
+    ] ;
+    rdfs:subClassOf [ rdf:type owl:Restriction ;
+                      owl:onProperty tf:nivelRiesgo ;
+                      owl:hasValue "ALTO" ] .
+
+# Regla 2: Todo préstamo hipotecario requiere valoración
+tf:PrestamoHipotecario rdfs:subClassOf [
+    rdf:type owl:Restriction ;
+    owl:onProperty tf:requiereValoracion ;
+    owl:minCardinality 1
+] .
+
+# Regla 3: Todo préstamo hipotecario tiene exactamente un cliente
+tf:PrestamoHipotecario rdfs:subClassOf [
+    rdf:type owl:Restriction ;
+    owl:onProperty tf:tieneCliente ;
+    owl:cardinality 1
+] .
+
+# Regla 4: Documentos sensibles deben cumplir GDPR
+tf:DocumentoSensible rdf:type owl:Class ;
+    owl:equivalentClass [
+        rdf:type owl:Class ;
+        owl:intersectionOf (
+            tf:Documento
+            [ rdf:type owl:Restriction ;
+              owl:onProperty tf:esSensible ;
+              owl:hasValue true ]
+        )
+    ] ;
+    rdfs:subClassOf [ rdf:type owl:Restriction ;
+                      owl:onProperty tf:cumpleGDPR ;
+                      owl:hasValue true ] .
+
+
+# ============================================================================
+# ANOTACIONES Y METADATOS
+# ============================================================================
+
+# Regulaciones aplicables
+tf:regulacionAplicable rdf:type owl:AnnotationProperty ;
+    rdfs:label "regulación aplicable"@es .
+
+tf:PrestamoHipotecario tf:regulacionAplicable "Ley Hipotecaria" ,
+                                                "Ley Crédito Inmobiliario" ,
+                                                "GDPR" .
+
+tf:DNI tf:regulacionAplicable "GDPR" ,
+                               "Ley Protección Datos" .
+
+tf:Nomina tf:regulacionAplicable "GDPR" ,
+                                  "Estatuto de los Trabajadores" .
+
+# Keywords para clasificación
+tf:keyword rdf:type owl:AnnotationProperty ;
+    rdfs:label "palabra clave"@es .
+
+tf:PrestamoHipotecario tf:keyword "préstamo hipotecario" ,
+                                   "hipoteca" ,
+                                   "crédito inmobiliario" ,
+                                   "garantía hipotecaria" ,
+                                   "tasación" .
+
+tf:PrestamoPersonal tf:keyword "préstamo personal" ,
+                                "crédito consumo" ,
+                                "financiación personal" .
+
+# ============================================================================
+# FIN DE LA ONTOLOGÍA
+# ============================================================================

@@ -55,6 +55,11 @@ anthropic==0.8.0
 numpy==1.24.3
 scikit-learn==1.3.2
 
+# Ontology & Semantic Web (Sprint 2 + 3)
+rdflib==7.1.1
+owlready2==0.45
+SPARQLWrapper==2.0.0
+
 # Audio/Video Processing
 openai-whisper==20231117
 ffmpeg-python==0.2.0
