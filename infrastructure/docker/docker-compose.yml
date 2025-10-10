@@ -7,7 +7,25 @@ services:
   postgresql:
     image: pgvector/pgvector:pg15
     container_name: financia-postgresql
-      # Arize Phoenix - LLM Observability
+    environment:
+      POSTGRES_DB: financia_db
+      POSTGRES_USER: financia
+      POSTGRES_PASSWORD: financia2030
+      POSTGRES_INITDB_ARGS: "-E UTF8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U financia -d financia_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - financia-network
+
+  # Arize Phoenix - LLM Observability
   phoenix:
     image: arizephoenix/phoenix:latest
     container_name: financia-phoenix
@@ -50,22 +68,10 @@ volumes:
   grafana_data:
   mlflow_data:
   backend_logs:
-  phoenix_data:     POSTGRES_DB: financia_db
-      POSTGRES_USER: financia
-      POSTGRES_PASSWORD: financia2030
-      POSTGRES_INITDB_ARGS: "-E UTF8"
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgresql_data:/var/lib/postgresql/data
-      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U financia -d financia_db"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - financia-network
+  phoenix_data:
+
+networks:
+  financia-network:
 
   # OpenSearch (Elasticsearch fork)
   opensearch:
@@ -288,16 +294,6 @@ volumes:
   #     - backend
   #   networks:
   #     - financia-network
-
-volumes:
-  postgresql_data:
-  opensearch_data:
-  redis_data:
-  minio_data:
-  prometheus_data:
-  grafana_data:
-  mlflow_data:
-  backend_logs:
 
 networks:
   financia-network:

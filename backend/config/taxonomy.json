@@ -1,0 +1,685 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TeFinancia Taxonomy Hierarchy",
+  "version": "1.0.0",
+  "created_at": "2025-10-09",
+  "description": "Taxonomía jerárquica de 3 niveles para documentos corporativos de TeFinancia",
+  
+  "taxonomy": {
+    "DOCUMENTO": {
+      "id": "DOC",
+      "label": "Documento",
+      "level": 0,
+      "description": "Clase raíz de todos los documentos",
+      "children": [
+        "DOC_CONTRACTUAL",
+        "DOC_ADMINISTRATIVO",
+        "DOC_IDENTIFICACION",
+        "DOC_FINANCIERO",
+        "DOC_OPERACIONAL",
+        "DOC_CUMPLIMIENTO"
+      ]
+    },
+
+    "DOC_CONTRACTUAL": {
+      "id": "DOC_CONTRACTUAL",
+      "label": "Documento Contractual",
+      "level": 1,
+      "parent": "DOCUMENTO",
+      "description": "Documentos legales vinculantes entre partes",
+      "required_fields": ["partes", "fecha_firma", "vigencia"],
+      "optional_fields": ["clausulas_especiales", "garantias"],
+      "retention_years": 10,
+      "children": [
+        "CONTRATO_FINANCIACION",
+        "CONTRATO_PROVEEDOR",
+        "CONTRATO_SERVICIO",
+        "CONTRATO_ARRENDAMIENTO",
+        "POLIZA_SEGURO"
+      ]
+    },
+
+    "CONTRATO_FINANCIACION": {
+      "id": "CONTRATO_FINANCIACION",
+      "label": "Contrato de Financiación",
+      "level": 2,
+      "parent": "DOC_CONTRACTUAL",
+      "description": "Contratos de préstamos y financiamiento",
+      "required_fields": [
+        "importe_financiado",
+        "tae",
+        "tin",
+        "plazo_meses",
+        "cuota_mensual",
+        "cliente_nif"
+      ],
+      "optional_fields": [
+        "comisiones",
+        "seguros_vinculados",
+        "garantias"
+      ],
+      "retention_years": 15,
+      "risk_level": "MEDIO",
+      "compliance_regulations": ["MiFID II", "Ley Crédito Consumo", "GDPR"],
+      "children": [
+        "PRESTAMO_PERSONAL",
+        "PRESTAMO_HIPOTECARIO",
+        "PRESTAMO_AUTOMOVIL",
+        "LINEA_CREDITO"
+      ]
+    },
+
+    "PRESTAMO_PERSONAL": {
+      "id": "PRESTAMO_PERSONAL",
+      "label": "Préstamo Personal",
+      "level": 3,
+      "parent": "CONTRATO_FINANCIACION",
+      "description": "Préstamo sin garantía real",
+      "required_fields": [
+        "importe_financiado",
+        "tae",
+        "tin",
+        "plazo_meses",
+        "cuota_mensual",
+        "cliente_nif",
+        "ingresos_mensuales",
+        "scoring_crediticio"
+      ],
+      "optional_fields": [
+        "finalidad_prestamo",
+        "seguro_vida",
+        "seguro_desempleo"
+      ],
+      "validation_rules": {
+        "importe_minimo": 3000,
+        "importe_maximo": 75000,
+        "plazo_minimo_meses": 12,
+        "plazo_maximo_meses": 96,
+        "tae_maximo": 12.0
+      },
+      "retention_years": 15,
+      "risk_level": "MEDIO",
+      "keywords": [
+        "préstamo personal",
+        "crédito consumo",
+        "financiación personal",
+        "préstamo sin aval"
+      ]
+    },
+
+    "PRESTAMO_HIPOTECARIO": {
+      "id": "PRESTAMO_HIPOTECARIO",
+      "label": "Préstamo Hipotecario",
+      "level": 3,
+      "parent": "CONTRATO_FINANCIACION",
+      "description": "Préstamo con garantía inmobiliaria",
+      "required_fields": [
+        "importe_financiado",
+        "tae",
+        "tin",
+        "plazo_meses",
+        "cuota_mensual",
+        "cliente_nif",
+        "valor_tasacion",
+        "ltv",
+        "direccion_inmueble",
+        "referencia_catastral"
+      ],
+      "optional_fields": [
+        "tipo_interes_fijo_variable",
+        "seguro_vida",
+        "seguro_hogar",
+        "comision_apertura"
+      ],
+      "validation_rules": {
+        "importe_minimo": 30000,
+        "importe_maximo": 1000000,
+        "plazo_minimo_meses": 60,
+        "plazo_maximo_meses": 360,
+        "ltv_maximo": 80.0,
+        "tae_maximo": 4.5
+      },
+      "retention_years": 20,
+      "risk_level": "BAJO",
+      "compliance_regulations": [
+        "Ley Hipotecaria",
+        "Ley Crédito Inmobiliario",
+        "GDPR"
+      ],
+      "keywords": [
+        "préstamo hipotecario",
+        "hipoteca",
+        "crédito inmobiliario",
+        "garantía hipotecaria",
+        "tasación"
+      ],
+      "related_documents": [
+        "VALORACION_INMUEBLE",
+        "ESCRITURA_COMPRAVENTA",
+        "POLIZA_SEGURO"
+      ]
+    },
+
+    "PRESTAMO_AUTOMOVIL": {
+      "id": "PRESTAMO_AUTOMOVIL",
+      "label": "Préstamo para Vehículos",
+      "level": 3,
+      "parent": "CONTRATO_FINANCIACION",
+      "description": "Financiación para compra de vehículos",
+      "required_fields": [
+        "importe_financiado",
+        "tae",
+        "tin",
+        "plazo_meses",
+        "cuota_mensual",
+        "cliente_nif",
+        "marca_vehiculo",
+        "modelo_vehiculo",
+        "matricula"
+      ],
+      "optional_fields": [
+        "valor_vehiculo",
+        "seguro_vehiculo",
+        "entrada_inicial"
+      ],
+      "validation_rules": {
+        "importe_minimo": 5000,
+        "importe_maximo": 100000,
+        "plazo_minimo_meses": 12,
+        "plazo_maximo_meses": 84,
+        "tae_maximo": 9.0
+      },
+      "retention_years": 10,
+      "risk_level": "MEDIO",
+      "keywords": [
+        "préstamo coche",
+        "financiación vehículo",
+        "crédito automóvil"
+      ]
+    },
+
+    "LINEA_CREDITO": {
+      "id": "LINEA_CREDITO",
+      "label": "Línea de Crédito",
+      "level": 3,
+      "parent": "CONTRATO_FINANCIACION",
+      "description": "Crédito revolving con límite disponible",
+      "required_fields": [
+        "limite_credito",
+        "tae",
+        "tin",
+        "cliente_nif"
+      ],
+      "optional_fields": [
+        "comision_disponibilidad",
+        "comision_exceso"
+      ],
+      "validation_rules": {
+        "limite_minimo": 1000,
+        "limite_maximo": 50000,
+        "tae_maximo": 15.0
+      },
+      "retention_years": 10,
+      "risk_level": "ALTO",
+      "keywords": [
+        "línea de crédito",
+        "crédito revolving",
+        "tarjeta crédito"
+      ]
+    },
+
+    "CONTRATO_PROVEEDOR": {
+      "id": "CONTRATO_PROVEEDOR",
+      "label": "Contrato de Proveedor",
+      "level": 2,
+      "parent": "DOC_CONTRACTUAL",
+      "description": "Contratos con proveedores de servicios",
+      "required_fields": [
+        "proveedor_nombre",
+        "proveedor_nif",
+        "importe_contrato",
+        "fecha_inicio",
+        "fecha_fin"
+      ],
+      "retention_years": 10,
+      "risk_level": "BAJO",
+      "keywords": [
+        "contrato proveedor",
+        "acuerdo comercial",
+        "suministro"
+      ]
+    },
+
+    "CONTRATO_SERVICIO": {
+      "id": "CONTRATO_SERVICIO",
+      "label": "Contrato de Servicio",
+      "level": 2,
+      "parent": "DOC_CONTRACTUAL",
+      "description": "Contratos de prestación de servicios",
+      "required_fields": [
+        "servicio_descripcion",
+        "proveedor_nombre",
+        "importe_mensual"
+      ],
+      "retention_years": 7,
+      "risk_level": "BAJO",
+      "keywords": [
+        "contrato servicio",
+        "prestación servicios"
+      ]
+    },
+
+    "CONTRATO_ARRENDAMIENTO": {
+      "id": "CONTRATO_ARRENDAMIENTO",
+      "label": "Contrato de Arrendamiento",
+      "level": 2,
+      "parent": "DOC_CONTRACTUAL",
+      "description": "Contratos de alquiler de inmuebles",
+      "required_fields": [
+        "arrendador",
+        "arrendatario",
+        "direccion_inmueble",
+        "renta_mensual",
+        "duracion_meses"
+      ],
+      "retention_years": 10,
+      "risk_level": "BAJO",
+      "keywords": [
+        "contrato alquiler",
+        "arrendamiento",
+        "renta"
+      ]
+    },
+
+    "POLIZA_SEGURO": {
+      "id": "POLIZA_SEGURO",
+      "label": "Póliza de Seguro",
+      "level": 2,
+      "parent": "DOC_CONTRACTUAL",
+      "description": "Contratos de seguros",
+      "required_fields": [
+        "numero_poliza",
+        "aseguradora",
+        "tomador",
+        "prima_anual",
+        "coberturas"
+      ],
+      "retention_years": 15,
+      "risk_level": "BAJO",
+      "compliance_regulations": ["Ley Contrato Seguro"],
+      "keywords": [
+        "póliza",
+        "seguro",
+        "cobertura"
+      ]
+    },
+
+    "DOC_ADMINISTRATIVO": {
+      "id": "DOC_ADMINISTRATIVO",
+      "label": "Documento Administrativo",
+      "level": 1,
+      "parent": "DOCUMENTO",
+      "description": "Documentos de gestión administrativa",
+      "retention_years": 7,
+      "children": [
+        "FACTURA",
+        "RECIBO",
+        "NOTA_DEBITO",
+        "NOTA_CREDITO",
+        "ALBARÁN"
+      ]
+    },
+
+    "FACTURA": {
+      "id": "FACTURA",
+      "label": "Factura",
+      "level": 2,
+      "parent": "DOC_ADMINISTRATIVO",
+      "description": "Factura comercial",
+      "required_fields": [
+        "numero_factura",
+        "fecha_emision",
+        "emisor_nif",
+        "receptor_nif",
+        "base_imponible",
+        "iva",
+        "total"
+      ],
+      "retention_years": 7,
+      "risk_level": "BAJO",
+      "compliance_regulations": ["Ley IVA", "Ley Impuesto Sociedades"],
+      "keywords": [
+        "factura",
+        "invoice",
+        "base imponible",
+        "iva"
+      ]
+    },
+
+    "RECIBO": {
+      "id": "RECIBO",
+      "label": "Recibo",
+      "level": 2,
+      "parent": "DOC_ADMINISTRATIVO",
+      "description": "Justificante de pago",
+      "required_fields": [
+        "numero_recibo",
+        "fecha",
+        "importe",
+        "concepto"
+      ],
+      "retention_years": 5,
+      "risk_level": "BAJO",
+      "keywords": [
+        "recibo",
+        "justificante pago"
+      ]
+    },
+
+    "DOC_IDENTIFICACION": {
+      "id": "DOC_IDENTIFICACION",
+      "label": "Documento de Identificación",
+      "level": 1,
+      "parent": "DOCUMENTO",
+      "description": "Documentos de identidad personal",
+      "retention_years": 10,
+      "compliance_regulations": ["GDPR", "Ley Protección Datos"],
+      "children": [
+        "DNI",
+        "NIE",
+        "PASAPORTE",
+        "PERMISO_RESIDENCIA"
+      ]
+    },
+
+    "DNI": {
+      "id": "DNI",
+      "label": "DNI (Documento Nacional de Identidad)",
+      "level": 2,
+      "parent": "DOC_IDENTIFICACION",
+      "description": "DNI español",
+      "required_fields": [
+        "numero_dni",
+        "nombre_completo",
+        "fecha_nacimiento",
+        "fecha_expedicion",
+        "fecha_caducidad"
+      ],
+      "retention_years": 10,
+      "risk_level": "ALTO",
+      "is_sensitive": true,
+      "keywords": [
+        "dni",
+        "documento nacional identidad",
+        "nif"
+      ]
+    },
+
+    "NIE": {
+      "id": "NIE",
+      "label": "NIE (Número Identidad Extranjero)",
+      "level": 2,
+      "parent": "DOC_IDENTIFICACION",
+      "description": "NIE para extranjeros en España",
+      "required_fields": [
+        "numero_nie",
+        "nombre_completo",
+        "nacionalidad",
+        "fecha_expedicion"
+      ],
+      "retention_years": 10,
+      "risk_level": "ALTO",
+      "is_sensitive": true,
+      "keywords": [
+        "nie",
+        "número identidad extranjero"
+      ]
+    },
+
+    "PASAPORTE": {
+      "id": "PASAPORTE",
+      "label": "Pasaporte",
+      "level": 2,
+      "parent": "DOC_IDENTIFICACION",
+      "description": "Pasaporte internacional",
+      "required_fields": [
+        "numero_pasaporte",
+        "nombre_completo",
+        "nacionalidad",
+        "fecha_caducidad"
+      ],
+      "retention_years": 10,
+      "risk_level": "ALTO",
+      "is_sensitive": true,
+      "keywords": [
+        "pasaporte",
+        "passport"
+      ]
+    },
+
+    "DOC_FINANCIERO": {
+      "id": "DOC_FINANCIERO",
+      "label": "Documento Financiero",
+      "level": 1,
+      "parent": "DOCUMENTO",
+      "description": "Documentos contables y financieros",
+      "retention_years": 10,
+      "children": [
+        "ESTADO_FINANCIERO",
+        "BALANCE",
+        "CUENTA_RESULTADOS",
+        "NOMINA"
+      ]
+    },
+
+    "ESTADO_FINANCIERO": {
+      "id": "ESTADO_FINANCIERO",
+      "label": "Estado Financiero",
+      "level": 2,
+      "parent": "DOC_FINANCIERO",
+      "description": "Informes financieros consolidados",
+      "required_fields": [
+        "periodo",
+        "empresa",
+        "fecha_cierre"
+      ],
+      "retention_years": 10,
+      "risk_level": "MEDIO",
+      "keywords": [
+        "estado financiero",
+        "informe financiero"
+      ]
+    },
+
+    "BALANCE": {
+      "id": "BALANCE",
+      "label": "Balance Contable",
+      "level": 2,
+      "parent": "DOC_FINANCIERO",
+      "description": "Balance de situación",
+      "required_fields": [
+        "ejercicio",
+        "total_activo",
+        "total_pasivo",
+        "patrimonio_neto"
+      ],
+      "retention_years": 10,
+      "risk_level": "MEDIO",
+      "keywords": [
+        "balance",
+        "activo",
+        "pasivo"
+      ]
+    },
+
+    "NOMINA": {
+      "id": "NOMINA",
+      "label": "Nómina",
+      "level": 2,
+      "parent": "DOC_FINANCIERO",
+      "description": "Nómina de empleado",
+      "required_fields": [
+        "empleado_nombre",
+        "empleado_nif",
+        "periodo",
+        "salario_bruto",
+        "deducciones",
+        "salario_neto"
+      ],
+      "retention_years": 10,
+      "risk_level": "ALTO",
+      "is_sensitive": true,
+      "compliance_regulations": ["GDPR", "Estatuto Trabajadores"],
+      "keywords": [
+        "nómina",
+        "salario",
+        "payroll"
+      ]
+    },
+
+    "DOC_OPERACIONAL": {
+      "id": "DOC_OPERACIONAL",
+      "label": "Documento Operacional",
+      "level": 1,
+      "parent": "DOCUMENTO",
+      "description": "Documentos operativos internos",
+      "retention_years": 5,
+      "children": [
+        "TRANSCRIPCION_LLAMADA",
+        "INFORME_INTERNO",
+        "ACTA_REUNION",
+        "CORRESPONDENCIA"
+      ]
+    },
+
+    "TRANSCRIPCION_LLAMADA": {
+      "id": "TRANSCRIPCION_LLAMADA",
+      "label": "Transcripción de Llamada",
+      "level": 2,
+      "parent": "DOC_OPERACIONAL",
+      "description": "Transcripción de llamadas telefónicas",
+      "required_fields": [
+        "fecha_llamada",
+        "duracion_segundos",
+        "transcripcion"
+      ],
+      "optional_fields": [
+        "agente",
+        "cliente_nif",
+        "sentimiento"
+      ],
+      "retention_years": 5,
+      "risk_level": "MEDIO",
+      "is_sensitive": true,
+      "compliance_regulations": ["GDPR", "MiFID II"],
+      "keywords": [
+        "transcripción",
+        "llamada",
+        "grabación"
+      ]
+    },
+
+    "INFORME_INTERNO": {
+      "id": "INFORME_INTERNO",
+      "label": "Informe Interno",
+      "level": 2,
+      "parent": "DOC_OPERACIONAL",
+      "description": "Informes corporativos internos",
+      "required_fields": [
+        "titulo",
+        "autor",
+        "fecha"
+      ],
+      "retention_years": 5,
+      "risk_level": "BAJO",
+      "keywords": [
+        "informe",
+        "reporte interno"
+      ]
+    },
+
+    "CORRESPONDENCIA": {
+      "id": "CORRESPONDENCIA",
+      "label": "Correspondencia",
+      "level": 2,
+      "parent": "DOC_OPERACIONAL",
+      "description": "Emails y comunicaciones",
+      "required_fields": [
+        "fecha",
+        "remitente",
+        "destinatario"
+      ],
+      "retention_years": 3,
+      "risk_level": "BAJO",
+      "keywords": [
+        "email",
+        "correo",
+        "carta"
+      ]
+    },
+
+    "DOC_CUMPLIMIENTO": {
+      "id": "DOC_CUMPLIMIENTO",
+      "label": "Documento de Cumplimiento",
+      "level": 1,
+      "parent": "DOCUMENTO",
+      "description": "Documentos de compliance y regulación",
+      "retention_years": 10,
+      "children": [
+        "CERTIFICADO_GDPR",
+        "AUDITORIA_ISO",
+        "CONSENTIMIENTO_DATOS",
+        "EVALUACION_RIESGO"
+      ]
+    },
+
+    "CERTIFICADO_GDPR": {
+      "id": "CERTIFICADO_GDPR",
+      "label": "Certificado GDPR",
+      "level": 2,
+      "parent": "DOC_CUMPLIMIENTO",
+      "description": "Certificaciones de protección de datos",
+      "required_fields": [
+        "fecha_certificacion",
+        "entidad_certificadora",
+        "vigencia"
+      ],
+      "retention_years": 10,
+      "risk_level": "ALTO",
+      "compliance_regulations": ["GDPR"],
+      "keywords": [
+        "gdpr",
+        "protección datos",
+        "certificado"
+      ]
+    },
+
+    "EVALUACION_RIESGO": {
+      "id": "EVALUACION_RIESGO",
+      "label": "Evaluación de Riesgo",
+      "level": 2,
+      "parent": "DOC_CUMPLIMIENTO",
+      "description": "Análisis de riesgos operacionales",
+      "required_fields": [
+        "tipo_riesgo",
+        "nivel_riesgo",
+        "mitigaciones",
+        "responsable"
+      ],
+      "retention_years": 7,
+      "risk_level": "MEDIO",
+      "keywords": [
+        "evaluación riesgo",
+        "análisis riesgo"
+      ]
+    }
+  },
+
+  "metadata": {
+    "total_classes": 39,
+    "max_depth": 3,
+    "risk_levels": ["BAJO", "MEDIO", "ALTO"],
+    "retention_periods": [3, 5, 7, 10, 15, 20],
+    "supported_languages": ["es", "en"]
+  }
+}
