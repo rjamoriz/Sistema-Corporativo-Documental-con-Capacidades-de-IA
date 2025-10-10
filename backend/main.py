@@ -11,7 +11,7 @@ from contextlib import asynccontextmanager
 import logging
 import time
 
-from api.v1 import documents, search, rag, risk, compliance, auth, synthetic, taxonomy
+from api.v1 import documents, search, rag, risk, compliance, auth, synthetic, taxonomy, ontology
 from core.config import settings
 from core.database import engine, Base
 from core.logging_config import setup_logging
@@ -174,7 +174,8 @@ app.include_router(rag.router, prefix="/api/v1/rag", tags=["RAG"])
 app.include_router(risk.router, prefix="/api/v1/risk", tags=["Risk Analysis"])
 app.include_router(compliance.router, prefix="/api/v1/compliance", tags=["Compliance"])
 app.include_router(synthetic.router, prefix="/api/v1", tags=["Synthetic Data"])
-app.include_router(taxonomy.router, prefix="/api/v1", tags=["Taxonomy"])  # Nueva taxonomía jerárquica
+app.include_router(taxonomy.router, prefix="/api/v1", tags=["Taxonomy"])  # Sprint 1: Taxonomía jerárquica
+app.include_router(ontology.router, prefix="/api/v1", tags=["Ontology"])  # Sprint 2+3: Ontología OWL + SPARQL
 
 
 if __name__ == "__main__":
