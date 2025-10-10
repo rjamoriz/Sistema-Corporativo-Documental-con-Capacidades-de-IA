@@ -7,6 +7,7 @@ import {
   ChatBubbleLeftRightIcon,
   ChartBarIcon,
   ShieldCheckIcon,
+  CircleStackIcon,
   Bars3Icon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
@@ -22,6 +23,7 @@ const navigation = [
   { name: 'Subir', href: '/upload', icon: CloudArrowUpIcon },
   { name: 'Buscar', href: '/search', icon: MagnifyingGlassIcon },
   { name: 'Chat RAG', href: '/chat', icon: ChatBubbleLeftRightIcon },
+  { name: 'Ontología', href: '/ontology', icon: CircleStackIcon },
   { name: 'Riesgos', href: '/risks', icon: ShieldCheckIcon },
   { name: 'Cumplimiento', href: '/compliance', icon: ChartBarIcon },
 ];

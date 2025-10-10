@@ -7,6 +7,7 @@ import { Dashboard } from './components/Dashboard';
 import { UploadComponent } from './components/Upload';
 import { SearchComponent } from './components/Search';
 import { RAGChat } from './components/RAGChat';
+import OntologyPage from './pages/OntologyPage';
 import { useAuthStore } from './store/authStore';
 
 const queryClient = new QueryClient({
@@ -41,6 +42,7 @@ function App() {
                     <Route path="/upload" element={<UploadComponent />} />
                     <Route path="/search" element={<SearchComponent />} />
                     <Route path="/chat" element={<RAGChat />} />
+                    <Route path="/ontology" element={<OntologyPage />} />
                   </Routes>
                 </Layout>
               </PrivateRoute>
