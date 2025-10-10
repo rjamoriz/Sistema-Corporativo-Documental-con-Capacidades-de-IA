@@ -1,6 +1,6 @@
 """
 Servicio de Clasificación de Documentos
-Híbrido ML + Ontología: clasificación con transformers y refinamiento semántico con OWL
+Estrategia Triple: ML + Taxonomía JSON (rápido) + Ontología OWL (preciso)
 """
 from typing import Dict, List, Optional
 from uuid import UUID
@@ -13,6 +13,7 @@ from backend.core.logging_config import logger
 from backend.core.config import settings
 from backend.models.database_models import Document, DocumentClassification, DocumentStatus
 from backend.services.ontology_service import ontology_service
+from backend.services.taxonomy_service import taxonomy_service
 
 
 class ClassificationService:
@@ -83,22 +84,29 @@ class ClassificationService:
         document: Document,
         text: str,
         db: AsyncSession,
-        use_ontology: bool = True
+        mode: str = "intelligent"
     ) -> Dict:
         """
-        Clasifica un documento automáticamente con enfoque híbrido ML + Ontología
+        Clasifica un documento con estrategia triple inteligente
         
-        Pipeline:
-        1. Clasificación ML inicial (rápida)
-        2. Refinamiento semántico con ontología OWL (si use_ontology=True)
-        3. Validación de metadatos contra restricciones OWL
-        4. Inferencia automática de riesgo
+        Pipeline Inteligente:
+        1. FASE RÁPIDA: Taxonomía JSON (keywords jerárquicos)
+        2. FASE ML: Transformers (si confianza < 0.8)
+        3. FASE PRECISA: Ontología OWL (si confianza < 0.85)
+        4. VALIDACIÓN: Restricciones OWL
+        5. INFERENCIA: Nivel de riesgo
+        
+        Modos de clasificación:
+        - "fast": Solo taxonomía (JSON) - ultra rápido
+        - "ml": Taxonomía + ML - rápido y preciso
+        - "precise": Taxonomía + ML + Ontología - máxima precisión
+        - "intelligent": Adaptativo según confianza (default)
         
         Args:
             document: Documento a clasificar
             text: Texto del documento
             db: Sesión de base de datos
-            use_ontology: Si True, usa refinamiento con ontología OWL
+            mode: Modo de clasificación (fast/ml/precise/intelligent)
             
         Returns:
             Dict: Resultado de clasificación con categoría, confianza, validación y riesgo
@@ -107,19 +115,87 @@ class ClassificationService:
             # Limitar texto para clasificación (primeros 512 tokens aprox)
             text_sample = text[:2000]
             
-            # PASO 1: Clasificación ML inicial
-            if hasattr(self, 'model'):
-                classification = await self._classify_with_model(text_sample)
-            else:
-                classification = await self._classify_with_pipeline(text_sample)
+            classification = None
+            phases_used = []
             
-            # Si la confianza es baja, aplicar reglas
-            if classification["confidence"] < 0.6:
-                rule_based = self._classify_with_rules(text)
-                if rule_based["confidence"] > classification["confidence"]:
-                    classification = rule_based
+            # ========== FASE 1: TAXONOMÍA JSON (SIEMPRE) ==========
+            taxonomy_result = taxonomy_service.classify_by_keywords(text)
             
-            # PASO 2: Refinamiento semántico con ontología OWL (si habilitado)
+            if taxonomy_result and taxonomy_result.get("confidence", 0) > 0:
+                classification = {
+                    "category": taxonomy_result["class_id"],
+                    "confidence": taxonomy_result["confidence"],
+                    "method": "taxonomy",
+                    "taxonomy_class": taxonomy_result["class_id"],
+                    "taxonomy_label": taxonomy_result["class_label"],
+                    "taxonomy_path": taxonomy_result.get("path", [])
+                }
+                phases_used.append("taxonomy")
+                
+                logger.info(
+                    f"Taxonomy classification: {taxonomy_result['class_label']} "
+                    f"(confidence: {taxonomy_result['confidence']:.2f})"
+                )
+            
+            # Decidir si continuar según modo y confianza
+            use_ml = False
+            use_ontology = False
+            
+            if mode == "fast":
+                # Solo taxonomía - finalizar aquí
+                pass
+            elif mode == "ml":
+                use_ml = True
+            elif mode == "precise":
+                use_ml = True
+                use_ontology = True
+            elif mode == "intelligent":
+                # Decisión adaptativa
+                current_confidence = classification["confidence"] if classification else 0
+                use_ml = current_confidence < 0.80  # Si < 80%, usar ML
+                use_ontology = current_confidence < 0.85  # Si < 85%, usar OWL
+            
+            # ========== FASE 2: ML TRANSFORMERS (CONDICIONAL) ==========
+            if use_ml:
+                if hasattr(self, 'model'):
+                    ml_result = await self._classify_with_model(text_sample)
+                else:
+                    ml_result = await self._classify_with_pipeline(text_sample)
+                
+                # Si la confianza ML es baja, aplicar reglas
+                if ml_result["confidence"] < 0.6:
+                    rule_based = self._classify_with_rules(text)
+                    if rule_based["confidence"] > ml_result["confidence"]:
+                        ml_result = rule_based
+                
+                phases_used.append("ml")
+                
+                # Fusionar con taxonomía (si existe)
+                if classification:
+                    # Blend: 50% taxonomía + 50% ML
+                    classification["ml_category"] = ml_result["category"]
+                    classification["ml_confidence"] = ml_result["confidence"]
+                    classification["confidence"] = (
+                        classification["confidence"] * 0.5 + 
+                        ml_result["confidence"] * 0.5
+                    )
+                    classification["method"] = "taxonomy+ml"
+                else:
+                    classification = ml_result
+                    classification["method"] = "ml"
+                
+                logger.info(
+                    f"ML classification: {ml_result['category']} "
+                    f"(confidence: {ml_result['confidence']:.2f})"
+                )
+            
+            # Si aún no hay clasificación, usar reglas como fallback
+            if not classification:
+                classification = self._classify_with_rules(text)
+                classification["method"] = "rules_fallback"
+                phases_used.append("rules")
+            
+            # ========== FASE 3: ONTOLOGÍA OWL (CONDICIONAL) ==========
             ontology_result = None
             if use_ontology:
                 try:
@@ -129,19 +205,20 @@ class ClassificationService:
                     )
                     
                     if ontology_result and ontology_result.get("confidence", 0) > 0.5:
+                        phases_used.append("ontology")
+                        
                         # Enriquecer con clasificación ontológica
                         classification["ontology_class"] = ontology_result["class_name"]
                         classification["ontology_label"] = ontology_result["class_label"]
                         classification["ontology_confidence"] = ontology_result["confidence"]
                         classification["matched_keywords"] = ontology_result["matched_keywords"]
                         
-                        # Si la ontología tiene alta confianza, ajustar categoría ML
-                        if ontology_result["confidence"] > classification["confidence"]:
-                            classification["confidence"] = (
-                                classification["confidence"] * 0.4 + 
-                                ontology_result["confidence"] * 0.6
-                            )
-                            classification["method"] = f"{classification['method']}+ontology"
+                        # Blend con clasificación anterior: 40% anterior + 60% ontología
+                        classification["confidence"] = (
+                            classification["confidence"] * 0.4 + 
+                            ontology_result["confidence"] * 0.6
+                        )
+                        classification["method"] = f"{classification['method']}+ontology"
                         
                         logger.info(
                             f"Ontology refinement: {ontology_result['class_label']} "
@@ -152,7 +229,7 @@ class ClassificationService:
                     logger.warning(f"Ontology classification failed: {e}")
                     classification["ontology_error"] = str(e)
             
-            # PASO 3: Validación de metadatos contra restricciones OWL
+            # ========== FASE 4: VALIDACIÓN OWL ==========
             validation_result = None
             if use_ontology and ontology_result:
                 try:
@@ -180,7 +257,7 @@ class ClassificationService:
                     logger.warning(f"Metadata validation failed: {e}")
                     classification["validation_error"] = str(e)
             
-            # PASO 4: Inferencia automática de nivel de riesgo
+            # ========== FASE 5: INFERENCIA DE RIESGO ==========
             risk_level = None
             if use_ontology and ontology_result:
                 try:
@@ -199,6 +276,10 @@ class ClassificationService:
                 except Exception as e:
                     logger.warning(f"Risk inference failed: {e}")
                     classification["risk_error"] = str(e)
+            
+            # Registrar fases utilizadas
+            classification["phases_used"] = phases_used
+            classification["classification_mode"] = mode
             
             # Actualizar documento con metadata enriquecida
             category = classification["category"]

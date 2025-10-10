@@ -3,7 +3,7 @@ Documents Router
 Handles document upload, retrieval, update, delete
 Enhanced with ontology-based classification and validation
 """
-from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional, Dict, Any
 from uuid import UUID
@@ -337,43 +337,91 @@ async def get_document_ontology_hierarchy(
 
 
 @router.post("/{document_id}/reclassify", response_model=Dict[str, Any])
-async def reclassify_document_with_ontology(
+async def reclassify_document_intelligent(
     document_id: UUID,
-    use_ontology: bool = True,
+    mode: str = Query(
+        "intelligent",
+        description="Modo de clasificación: fast, ml, precise, intelligent"
+    ),
     token: str = Depends(oauth2_scheme),
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Reclasifica un documento usando el pipeline híbrido ML + Ontología
+    Reclasifica un documento usando el pipeline triple inteligente
     
-    **Parámetros:**
-    - `use_ontology`: Si True, usa refinamiento semántico con OWL (por defecto: True)
+    **Modos de clasificación:**
+    - `fast`: Solo taxonomía JSON (ultra rápido, ~10ms)
+    - `ml`: Taxonomía + ML transformers (rápido, ~100ms)
+    - `precise`: Taxonomía + ML + Ontología OWL (preciso, ~500ms)
+    - `intelligent`: Adaptativo según confianza (recomendado)
     
-    **Pipeline de clasificación:**
-    1. Clasificación ML inicial (transformers)
-    2. Refinamiento con keywords de ontología OWL
-    3. Validación de metadatos contra restricciones OWL
-    4. Inferencia automática de nivel de riesgo
+    **Pipeline inteligente (modo intelligent):**
+    1. FASE RÁPIDA: Taxonomía JSON con keywords jerárquicos
+    2. FASE ML: Transformers si confianza < 80%
+    3. FASE PRECISA: Ontología OWL si confianza < 85%
+    4. VALIDACIÓN: Restricciones OWL
+    5. INFERENCIA: Nivel de riesgo
+    
+    **Optimización:**
+    El modo `intelligent` optimiza automáticamente:
+    - Si taxonomía tiene confianza > 80% → Skip ML (ahorra 90ms)
+    - Si taxonomía+ML tiene confianza > 85% → Skip OWL (ahorra 400ms)
+    - Si confianza final < 85% → Usa todas las fases para máxima precisión
     
     **Retorna:**
-    - Clasificación completa con ML + Ontología
-    - Validación de metadatos
-    - Riesgo inferido
-    - Confianza combinada
+    - Clasificación multi-fuente (taxonomy + ml + ontology)
+    - Confianza combinada con blending adaptativo
+    - Fases utilizadas para transparencia
+    - Validación de metadatos OWL
+    - Riesgo inferido con reglas de negocio
+    
+    **Ejemplo de respuesta (modo intelligent):**
+    ```json
+    {
+      "category": "FINANCIAL",
+      "confidence": 0.91,
+      "method": "taxonomy+ml+ontology",
+      "phases_used": ["taxonomy", "ml", "ontology"],
+      "classification_mode": "intelligent",
+      "taxonomy_class": "PrestamoHipotecario",
+      "taxonomy_label": "Préstamo Hipotecario",
+      "ml_category": "FINANCIAL",
+      "ml_confidence": 0.87,
+      "ontology_class": "PrestamoHipotecario",
+      "ontology_label": "Préstamo Hipotecario",
+      "ontology_confidence": 0.93,
+      "matched_keywords": ["préstamo hipotecario", "hipoteca", "vivienda"],
+      "metadata_validation": {
+        "is_valid": false,
+        "errors": ["importeFinanciado debe ser >= 30000"],
+        "required_fields": ["tieneCliente", "requiereValoracion"]
+      },
+      "inferred_risk_level": "ALTO"
+    }
+    ```
     
     **Casos de uso:**
-    - Mejorar clasificación después de añadir metadata
-    - Re-evaluar riesgo con nuevas reglas de inferencia
-    - Actualizar validación tras cambios en ontología
+    - **fast**: Clasificación masiva de miles de documentos
+    - **ml**: Balance velocidad/precisión para apps interactivas
+    - **precise**: Documentos críticos que requieren máxima precisión
+    - **intelligent**: Default recomendado - adapta automáticamente
     """
     # TODO: Obtener documento de BD
     # document = await db.get(Document, document_id)
     # if not document:
     #     raise HTTPException(status_code=404, detail="Document not found")
     
+    # Validar modo
+    valid_modes = ["fast", "ml", "precise", "intelligent"]
+    if mode not in valid_modes:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid mode '{mode}'. Must be one of: {', '.join(valid_modes)}"
+        )
+    
     # text = await get_document_text(document_id)
     # result = await classification_service.classify_document(
-    #     document, text, db, use_ontology=use_ontology
+    #     document, text, db, mode=mode
     # )
     
     # return result
