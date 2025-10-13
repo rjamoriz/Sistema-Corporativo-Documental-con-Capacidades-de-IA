@@ -5,8 +5,8 @@ from typing import List, Dict, Tuple
 import torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline
 
-from backend.core.logging_config import logger
-from backend.core.config import settings
+from core.logging_config import logger
+from core.config import settings
 
 
 class ClassifierModel:
@@ -18,12 +18,17 @@ class ClassifierModel:
         self.tokenizer = None
         self.model = None
         self.pipeline = None
-        self._load_model()
+        # OPTIMIZACIÓN: Lazy loading
+        # self._load_model()  # Comentado
+        logger.info(f"ClassifierModel initialized (lazy loading enabled)")
     
     def _load_model(self):
-        """Carga el modelo de clasificación"""
+        """Carga el modelo de clasificación (lazy loading)"""
+        if self.model is not None or self.pipeline is not None:
+            return  # Ya está cargado
+            
         try:
-            logger.info(f"Loading classification model: {self.model_name}")
+            logger.info(f"Loading classification model: {self.model_name} (first use)")
             
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
             self.model = AutoModelForSequenceClassification.from_pretrained(self.model_name)
@@ -52,6 +57,10 @@ class ClassifierModel:
         Returns:
             Dict: Resultado con categoría y confianza
         """
+        # LAZY LOADING: Cargar modelo solo cuando se usa
+        if self.model is None and self.pipeline is None:
+            self._load_model()
+        
         if self.pipeline:
             result = self.pipeline(text[:2000])[0]
             return {

@@ -12,6 +12,7 @@ import logging
 import time
 
 from api.v1 import documents, search, rag, risk, compliance, auth, synthetic, taxonomy, ontology
+from api.graphql.router import graphql_router  # GraphQL API
 from core.config import settings
 from core.database import engine, Base
 from core.logging_config import setup_logging
@@ -176,6 +177,9 @@ app.include_router(compliance.router, prefix="/api/v1/compliance", tags=["Compli
 app.include_router(synthetic.router, prefix="/api/v1", tags=["Synthetic Data"])
 app.include_router(taxonomy.router, prefix="/api/v1", tags=["Taxonomy"])  # Sprint 1: Taxonomía jerárquica
 app.include_router(ontology.router, prefix="/api/v1", tags=["Ontology"])  # Sprint 2+3: Ontología OWL + SPARQL
+
+# Mount GraphQL as ASGI app (Strawberry GraphQLRouter is not a FastAPI router)
+app.mount("/api/graphql", graphql_router)  # GraphQL API ✨
 
 
 if __name__ == "__main__":

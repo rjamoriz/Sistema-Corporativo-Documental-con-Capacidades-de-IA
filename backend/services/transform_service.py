@@ -10,13 +10,13 @@ from typing import Dict, Optional
 import pytesseract
 from pdf2image import convert_from_bytes
 from PIL import Image
-import textract
+# import textract  # Commented out - package has dependency issues
 from docx import Document as DocxDocument
 from pptx import Presentation
 import openpyxl
 
-from backend.core.logging_config import logger
-from backend.models.database_models import Document, DocumentStatus
+from core.logging_config import logger
+from models.database_models import Document, DocumentStatus
 
 
 class TransformService:
@@ -279,26 +279,37 @@ class TransformService:
     
     async def _extract_with_textract(self, content: bytes, filename: str) -> Dict:
         """Extrae texto usando textract como último recurso"""
-        try:
-            # textract requiere archivo temporal
-            with tempfile.NamedTemporaryFile(delete=False, suffix=Path(filename).suffix) as tmp_file:
-                tmp_file.write(content)
-                tmp_path = tmp_file.name
-            
-            try:
-                text = textract.process(tmp_path).decode('utf-8')
-                return {
-                    "text": text,
-                    "page_count": 1,
-                    "has_images": False,
-                    "method": "textract"
-                }
-            finally:
-                os.unlink(tmp_path)
-                
-        except Exception as e:
-            logger.error(f"Textract extraction failed: {e}", exc_info=True)
-            return {"text": "", "page_count": 1, "has_images": False, "error": str(e)}
+        # Textract disabled due to dependency issues
+        logger.warning(f"Textract extraction not available for {filename}")
+        return {
+            "text": "",
+            "page_count": 0,
+            "has_images": False,
+            "method": "textract_unavailable",
+            "error": "Textract library has dependency conflicts"
+        }
+        
+        # Original code commented out:
+        # try:
+        #     # textract requiere archivo temporal
+        #     with tempfile.NamedTemporaryFile(delete=False, suffix=Path(filename).suffix) as tmp_file:
+        #         tmp_file.write(content)
+        #         tmp_path = tmp_file.name
+        #     
+        #     try:
+        #         text = textract.process(tmp_path).decode('utf-8')
+        #         return {
+        #             "text": text,
+        #             "page_count": 1,
+        #             "has_images": False,
+        #             "method": "textract"
+        #         }
+        #     finally:
+        #         os.unlink(tmp_path)
+        #         
+        # except Exception as e:
+        #     logger.error(f"Textract extraction failed: {e}", exc_info=True)
+        #     return {"text": "", "page_count": 1, "has_images": False, "error": str(e)}
 
 
 # Instancia singleton del servicio

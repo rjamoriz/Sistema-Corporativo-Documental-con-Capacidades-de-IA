@@ -9,7 +9,7 @@
  */
 import { useState, useEffect } from 'react';
 import { ChevronRight, ChevronDown, FileText, AlertCircle, Search, Info } from 'lucide-react';
-import axios from 'axios';
+import { apiClient } from '../lib/api';
 
 interface OntologyClass {
   uri: string;
@@ -64,7 +64,7 @@ export default function OntologyExplorer() {
   const loadOntologyHierarchy = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_BASE}/ontology/hierarchy`);
+      const response = await apiClient.get(`${API_BASE}/ontology/hierarchy`);
       setHierarchy(response.data.hierarchy || []);
       setError(null);
     } catch (err) {
@@ -77,7 +77,7 @@ export default function OntologyExplorer() {
 
   const loadClassDetails = async (className: string) => {
     try {
-      const response = await axios.get(`${API_BASE}/ontology/classes/${className}`);
+      const response = await apiClient.get(`${API_BASE}/ontology/classes/${className}`);
       setSelectedClass(response.data);
     } catch (err) {
       console.error('Error loading class details:', err);

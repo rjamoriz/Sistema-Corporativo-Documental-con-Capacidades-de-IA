@@ -1,0 +1,143 @@
+# Connectors Configuration
+# =========================
+
+# SharePoint Configuration
+sharepoint:
+  enabled: true
+  name: "Corporate SharePoint"
+  type: "sharepoint"
+  
+  # Azure AD Application
+  tenant_id: "${SHAREPOINT_TENANT_ID}"
+  client_id: "${SHAREPOINT_CLIENT_ID}"
+  client_secret: "${SHAREPOINT_CLIENT_SECRET}"
+  
+  # Optional: Specific site URL
+  site_url: "https://yourcompany.sharepoint.com"
+  
+  # Sites to sync
+  sites:
+    - name: "Corporate Documents"
+      site_id: "yourcompany.sharepoint.com,abc123-def456-ghi789"
+      libraries:
+        - "Shared Documents"
+        - "Contracts"
+        - "Financial Reports"
+        - "HR Documents"
+    
+    - name: "Legal Department"
+      site_id: "yourcompany.sharepoint.com,legal-site-id"
+      libraries:
+        - "Shared Documents"
+        - "Legal Cases"
+  
+  # Synchronization schedule (cron format)
+  sync_schedule: "0 */6 * * *"  # Every 6 hours
+  
+  # Webhook configuration
+  webhook_enabled: true
+  webhook_expiration_days: 30
+  
+  # Performance settings
+  retry_attempts: 3
+  timeout_seconds: 300
+  batch_size: 100
+
+# SAP DMS Configuration
+sap_dms:
+  enabled: true
+  name: "SAP Document Management"
+  type: "sap_dms"
+  
+  # SAP Connection
+  url: "${SAP_DMS_URL}"
+  auth_type: "basic"  # or "oauth2"
+  username: "${SAP_USERNAME}"
+  password: "${SAP_PASSWORD}"
+  client: "${SAP_CLIENT}"
+  
+  # Repositories to sync
+  repositories:
+    - id: "FI_DOCUMENTS"
+      name: "Financial Documents"
+      sync_filters:
+        status: 
+          - "active"
+          - "approved"
+        document_type:
+          - "INVOICE"
+          - "CONTRACT"
+          - "REPORT"
+    
+    - id: "PROC_DOCUMENTS"
+      name: "Procurement Documents"
+      sync_filters:
+        status: ["active"]
+        document_type: ["PO", "RFQ", "CONTRACT"]
+    
+    - id: "HR_DOCUMENTS"
+      name: "HR Documents"
+      sync_filters:
+        status: ["active", "archived"]
+  
+  # Synchronization schedule (cron format)
+  sync_schedule: "0 2 * * *"  # Daily at 2 AM
+  
+  # Performance settings
+  retry_attempts: 5
+  timeout_seconds: 600
+  batch_size: 50
+
+# Alfresco Configuration (Future)
+alfresco:
+  enabled: false
+  name: "Alfresco ECM"
+  type: "alfresco"
+  url: "${ALFRESCO_URL}"
+  username: "${ALFRESCO_USERNAME}"
+  password: "${ALFRESCO_PASSWORD}"
+  sync_schedule: "0 3 * * *"
+
+# Microsoft Exchange Configuration (Future)
+exchange:
+  enabled: false
+  name: "Microsoft Exchange"
+  type: "exchange"
+  tenant_id: "${EXCHANGE_TENANT_ID}"
+  client_id: "${EXCHANGE_CLIENT_ID}"
+  client_secret: "${EXCHANGE_CLIENT_SECRET}"
+  mailboxes:
+    - "documents@company.com"
+    - "legal@company.com"
+  sync_schedule: "*/30 * * * *"  # Every 30 minutes
+
+# Global Connector Settings
+global:
+  # Enable/disable all connectors
+  enabled: true
+  
+  # Maximum concurrent sync jobs
+  max_concurrent_syncs: 3
+  
+  # Logging level for connectors
+  log_level: "INFO"
+  
+  # Retry configuration
+  default_retry_attempts: 3
+  default_retry_delay_seconds: 5
+  default_retry_backoff_multiplier: 2.0
+  
+  # Timeout configuration
+  default_timeout_seconds: 300
+  
+  # Monitoring
+  enable_metrics: true
+  metrics_port: 9091
+  
+  # Notifications
+  notify_on_sync_start: false
+  notify_on_sync_complete: true
+  notify_on_sync_error: true
+  notification_channels:
+    - "email"
+    - "slack"

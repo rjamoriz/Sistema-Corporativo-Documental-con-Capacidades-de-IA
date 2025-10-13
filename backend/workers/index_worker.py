@@ -10,11 +10,11 @@ from uuid import UUID
 from aiokafka import AIOKafkaConsumer
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.core.config import settings
-from backend.core.database import async_session_maker
-from backend.core.logging_config import logger, audit_logger
-from backend.models.database_models import Document, DocumentChunk, DocumentStatus
-from backend.services.search_service import search_service
+from core.config import settings
+from core.database import async_session_maker
+from core.logging_config import logger, audit_logger
+from models.database_models import Document, DocumentChunk, DocumentStatus
+from services.search_service import search_service
 from sqlalchemy import select
 
 

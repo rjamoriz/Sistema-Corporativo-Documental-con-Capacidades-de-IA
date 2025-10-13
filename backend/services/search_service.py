@@ -11,11 +11,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, text
 import numpy as np
 
-from backend.core.logging_config import logger
-from backend.core.config import settings
-from backend.models.database_models import Document, DocumentChunk
-from backend.models.schemas import SearchResult, SearchResponse
-from backend.services.extract_service import extract_service
+from core.logging_config import logger
+from core.config import settings
+from models.database_models import Document, DocumentChunk
+from models.schemas import SearchResult, SearchResponse
+from services.extract_service import extract_service
 
 
 class SearchService:

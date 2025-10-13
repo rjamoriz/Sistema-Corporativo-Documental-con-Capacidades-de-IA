@@ -6,8 +6,8 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 import torch
 
-from backend.core.logging_config import logger
-from backend.core.config import settings
+from core.logging_config import logger
+from core.config import settings
 
 
 class EmbeddingModel:
@@ -18,12 +18,17 @@ class EmbeddingModel:
         self.dimension = settings.EMBEDDING_DIMENSION
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model = None
-        self._load_model()
+        # OPTIMIZACIÓN: No cargar modelo en __init__, cargar lazy cuando se necesite
+        # self._load_model()  # Comentado para lazy loading
+        logger.info(f"EmbeddingModel initialized (lazy loading enabled)")
     
     def _load_model(self):
-        """Carga el modelo de embeddings"""
+        """Carga el modelo de embeddings (lazy loading)"""
+        if self.model is not None:
+            return  # Ya está cargado
+            
         try:
-            logger.info(f"Loading embedding model: {self.model_name}")
+            logger.info(f"Loading embedding model: {self.model_name} (first use)")
             self.model = SentenceTransformer(self.model_name, device=self.device)
             logger.info(f"Embedding model loaded successfully on {self.device}")
             
@@ -58,6 +63,10 @@ class EmbeddingModel:
         Returns:
             np.ndarray: Vector(es) de embeddings
         """
+        # LAZY LOADING: Cargar modelo solo cuando se usa
+        if self.model is None:
+            self._load_model()
+        
         if isinstance(texts, str):
             texts = [texts]
         

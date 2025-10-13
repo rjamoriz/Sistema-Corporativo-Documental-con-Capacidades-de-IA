@@ -10,13 +10,13 @@ from enum import Enum
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, func
 
-from backend.core.logging_config import logger, audit_logger
-from backend.core.config import settings
-from backend.models.database_models import (
+from core.logging_config import logger, audit_logger
+from core.config import settings
+from models.database_models import (
     Document, ComplianceCheck, DataSubjectRequest, AuditLog,
     DSRType, DSRStatus, Entity
 )
-from backend.models.schemas import ComplianceResult, DSRCreate
+from models.schemas import ComplianceResult, DSRCreate
 
 
 class ComplianceRule(str, Enum):

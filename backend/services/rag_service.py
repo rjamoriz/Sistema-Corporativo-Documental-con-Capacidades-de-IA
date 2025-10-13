@@ -14,11 +14,11 @@ from langchain.prompts import PromptTemplate
 from openai import AsyncOpenAI
 import anthropic
 
-from backend.core.logging_config import logger, audit_logger
-from backend.core.config import settings
-from backend.core.phoenix_config import get_phoenix, log_llm_call
-from backend.models.schemas import RAGQuery, RAGResponse, Citation
-from backend.services.search_service import search_service
+from core.logging_config import logger, audit_logger
+from core.config import settings
+from core.phoenix_config import get_phoenix, log_llm_call
+from models.schemas import RAGQuery, RAGResponse, Citation
+from services.search_service import search_service
 
 
 class RAGService:

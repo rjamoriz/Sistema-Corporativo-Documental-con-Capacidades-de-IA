@@ -6,8 +6,8 @@ from typing import List, Dict, Tuple
 import spacy
 from spacy.tokens import Doc
 
-from backend.core.logging_config import logger
-from backend.core.config import settings
+from core.logging_config import logger
+from core.config import settings
 
 
 class NERModel:
@@ -16,11 +16,17 @@ class NERModel:
     def __init__(self):
         self.model_name = settings.SPACY_MODEL
         self.nlp = None
-        self._load_model()
+        # OPTIMIZACIÓN: Lazy loading - no cargar en __init__
+        # self._load_model()  # Comentado
+        logger.info(f"NERModel initialized (lazy loading enabled)")
     
     def _load_model(self):
-        """Carga el modelo de spaCy"""
+        """Carga el modelo de spaCy (lazy loading)"""
+        if self.nlp is not None:
+            return  # Ya está cargado
+            
         try:
+            logger.info(f"Loading spaCy NER model: {self.model_name} (first use)")
             self.nlp = spacy.load(self.model_name)
             logger.info(f"Loaded spaCy NER model: {self.model_name}")
         except OSError:
@@ -39,6 +45,10 @@ class NERModel:
         Returns:
             List[Dict]: Lista de entidades con tipo, texto, posición y confianza
         """
+        # LAZY LOADING: Cargar modelo solo cuando se usa
+        if self.nlp is None:
+            self._load_model()
+        
         doc = self.nlp(text[:1000000])  # Limitar a 1M caracteres
         
         entities = []

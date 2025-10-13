@@ -10,16 +10,17 @@ from uuid import UUID
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.core.config import settings
-from backend.core.database import async_session_maker
-from backend.core.logging_config import logger, audit_logger
-from backend.models.database_models import Document, DocumentStatus, DocumentChunk
-from backend.services.ingest_service import ingest_service
-from backend.services.transform_service import transform_service
-from backend.services.extract_service import extract_service
-from backend.services.classification_service import classification_service
-from backend.services.risk_service import risk_service
-from backend.services.compliance_service import compliance_service
+from core.config import settings
+from core.database import async_session_maker
+from core.logging_config import logger, audit_logger
+from models.database_models import Document, DocumentStatus, DocumentChunk
+from services.ingest_service import ingest_service
+from services.transform_service import transform_service
+from services.extract_service import extract_service
+from services.classification_service import classification_service
+from services.risk_service import risk_service
+from services.compliance_service import compliance_service
+from middleware.validation_middleware import validation_middleware
 from sqlalchemy import select
 
 
@@ -155,8 +156,43 @@ class ProcessWorker:
                     f"{extract_result['entity_count']} entities"
                 )
                 
-                # 3. CLASIFICACIÓN: Determinar categoría del documento
-                logger.info(f"Step 3/5: Classifying document {document_id}")
+                # 3. VALIDACIÓN AUTOMÁTICA: Terceros, sanciones, registros
+                logger.info(f"Step 3/6: Validating entities for document {document_id}")
+                validation_result = None
+                if await validation_middleware.should_validate(document):
+                    # Obtener entidades extraídas
+                    entities_result = await db.execute(
+                        select(DocumentChunk).where(DocumentChunk.document_id == document_id)
+                    )
+                    chunks = entities_result.scalars().all()
+                    
+                    # Extraer entidades de los chunks
+                    all_entities = []
+                    for chunk in chunks:
+                        if chunk.metadata_ and "entities" in chunk.metadata_:
+                            all_entities.extend(chunk.metadata_["entities"])
+                    
+                    # Ejecutar validación
+                    validation_result = await validation_middleware.validate_document(
+                        document=document,
+                        extracted_text=extracted_text,
+                        entities=all_entities,
+                        db=db
+                    )
+                    
+                    # Guardar resultado de validación
+                    document.metadata_["validation"] = validation_result
+                    document.metadata_["validation_completed"] = True
+                    await db.commit()
+                    
+                    logger.info(
+                        f"Validation completed: {len(validation_result.get('flagged_entities', []))} entities flagged"
+                    )
+                else:
+                    logger.info(f"Skipping validation for document {document_id}")
+                
+                # 4. CLASIFICACIÓN: Determinar categoría del documento
+                logger.info(f"Step 4/6: Classifying document {document_id}")
                 classification_result = await classification_service.classify_document(
                     document=document,
                     text=extracted_text,
@@ -168,8 +204,8 @@ class ProcessWorker:
                     f"(confidence: {classification_result['confidence']:.2f})"
                 )
                 
-                # 4. EVALUACIÓN DE RIESGOS: Análisis multidimensional
-                logger.info(f"Step 4/5: Assessing risks for document {document_id}")
+                # 5. EVALUACIÓN DE RIESGOS: Análisis multidimensional
+                logger.info(f"Step 5/6: Assessing risks for document {document_id}")
                 risk_assessment = await risk_service.assess_risk(
                     document=document,
                     text=extracted_text,
@@ -181,8 +217,8 @@ class ProcessWorker:
                     f"(score: {risk_assessment.overall_risk_score:.2f})"
                 )
                 
-                # 5. VERIFICACIÓN DE CUMPLIMIENTO: GDPR, etc.
-                logger.info(f"Step 5/5: Checking compliance for document {document_id}")
+                # 6. VERIFICACIÓN DE CUMPLIMIENTO: GDPR, etc.
+                logger.info(f"Step 6/6: Checking compliance for document {document_id}")
                 compliance_result = await compliance_service.run_compliance_checks(
                     document=document,
                     db=db
@@ -204,7 +240,9 @@ class ProcessWorker:
                     "chunk_count": extract_result['chunk_count'],
                     "classification": document.classification.value,
                     "risk_level": risk_assessment.risk_level,
-                    "is_compliant": compliance_result.is_compliant
+                    "is_compliant": compliance_result.is_compliant,
+                    "validation_completed": validation_result is not None,
+                    "entities_flagged": len(validation_result.get("flagged_entities", [])) if validation_result else 0
                 }
                 
                 await self.producer.send(self.topic_index, value=index_event)
@@ -223,7 +261,9 @@ class ProcessWorker:
                         "entity_count": extract_result['entity_count'],
                         "risk_level": risk_assessment.risk_level,
                         "risk_score": risk_assessment.overall_risk_score,
-                        "is_compliant": compliance_result.is_compliant
+                        "is_compliant": compliance_result.is_compliant,
+                        "validation_completed": validation_result is not None,
+                        "entities_flagged": len(validation_result.get("flagged_entities", [])) if validation_result else 0
                     }
                 )
                 

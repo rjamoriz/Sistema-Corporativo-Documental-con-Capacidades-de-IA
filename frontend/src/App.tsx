@@ -7,6 +7,7 @@ import { Dashboard } from './components/Dashboard';
 import { UploadComponent } from './components/Upload';
 import { SearchComponent } from './components/Search';
 import { RAGChat } from './components/RAGChat';
+import { Login } from './components/Login';
 import OntologyPage from './pages/OntologyPage';
 import { useAuthStore } from './store/authStore';
 
@@ -26,12 +27,24 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 };
 
 function App() {
+  const { isAuthenticated } = useAuthStore();
+  
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
         <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          {/* Public Route */}
+          <Route path="/login" element={<Login />} />
           
+          {/* Root redirects based on auth */}
+          <Route 
+            path="/" 
+            element={
+              isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
+            } 
+          />
+          
+          {/* Private Routes */}
           <Route
             path="/*"
             element={

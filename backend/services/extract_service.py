@@ -13,9 +13,9 @@ import spacy
 from sentence_transformers import SentenceTransformer
 import numpy as np
 
-from backend.core.logging_config import logger
-from backend.core.config import settings
-from backend.models.database_models import Document, DocumentChunk, Entity, DocumentStatus
+from core.logging_config import logger
+from core.config import settings
+from models.database_models import Document, DocumentChunk, Entity, DocumentStatus
 
 
 class ExtractService:

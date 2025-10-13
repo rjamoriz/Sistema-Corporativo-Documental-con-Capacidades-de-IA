@@ -2,14 +2,14 @@
 Servicios de Backend - FinancIA 2030
 """
 
-from backend.services.ingest_service import ingest_service
-from backend.services.transform_service import transform_service
-from backend.services.extract_service import extract_service
-from backend.services.classification_service import classification_service
-from backend.services.search_service import search_service
-from backend.services.rag_service import rag_service
-from backend.services.risk_service import risk_service
-from backend.services.compliance_service import compliance_service
+from services.ingest_service import ingest_service
+from services.transform_service import transform_service
+from services.extract_service import extract_service
+from services.classification_service import classification_service
+from services.search_service import search_service
+from services.rag_service import rag_service
+from services.risk_service import risk_service
+from services.compliance_service import compliance_service
 
 __all__ = [
     "ingest_service",

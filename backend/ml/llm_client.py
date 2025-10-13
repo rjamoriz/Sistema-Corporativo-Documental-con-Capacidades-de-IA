@@ -8,8 +8,8 @@ import asyncio
 from openai import AsyncOpenAI
 import anthropic
 
-from backend.core.logging_config import logger
-from backend.core.config import settings
+from core.logging_config import logger
+from core.config import settings
 
 
 class LLMProvider(str, Enum):

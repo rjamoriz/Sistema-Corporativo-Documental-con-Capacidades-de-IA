@@ -90,3 +90,8 @@ def setup_logging():
 def get_audit_logger():
     """Get audit logger for immutable logs"""
     return logging.getLogger("audit")
+
+
+# Export logger instances for easy import
+logger = logging.getLogger(__name__)
+audit_logger = logging.getLogger("audit")

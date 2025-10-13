@@ -10,10 +10,10 @@ import re
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from backend.core.logging_config import logger, audit_logger
-from backend.core.config import settings
-from backend.models.database_models import Document, RiskAssessment, Entity
-from backend.models.schemas import RiskScore, RiskDimension
+from core.logging_config import logger, audit_logger
+from core.config import settings
+from models.database_models import Document, RiskAssessment, Entity
+from models.schemas import RiskScore, RiskDimension
 
 
 class RiskService:

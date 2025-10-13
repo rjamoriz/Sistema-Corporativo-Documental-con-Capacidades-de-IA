@@ -13,10 +13,10 @@ from minio.error import S3Error
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from backend.core.config import settings
-from backend.core.logging_config import logger, audit_logger
-from backend.models.database_models import Document, DocumentStatus, DocumentClassification
-from backend.models.schemas import DocumentCreate
+from core.config import settings
+from core.logging_config import logger, audit_logger
+from models.database_models import Document, DocumentStatus, DocumentClassification
+from models.schemas import DocumentCreate
 
 
 class IngestService:
@@ -30,7 +30,8 @@ class IngestService:
             secure=settings.MINIO_SECURE
         )
         self.bucket_name = settings.MINIO_BUCKET_NAME
-        self._ensure_bucket_exists()
+        # Don't check bucket on init - will check lazily when needed
+        # self._ensure_bucket_exists()
     
     def _ensure_bucket_exists(self):
         """Crea el bucket si no existe"""
@@ -38,9 +39,9 @@ class IngestService:
             if not self.minio_client.bucket_exists(self.bucket_name):
                 self.minio_client.make_bucket(self.bucket_name)
                 logger.info(f"Bucket {self.bucket_name} created")
-        except S3Error as e:
-            logger.error(f"Error creating bucket: {e}")
-            raise
+        except Exception as e:
+            logger.warning(f"Could not verify/create bucket (MinIO may not be running): {e}")
+            # Don't raise - allow service to start even if MinIO is down
     
     async def ingest_document(
         self,

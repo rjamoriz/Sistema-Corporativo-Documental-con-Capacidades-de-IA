@@ -5,12 +5,14 @@ Solo disponible para administradores en entornos no productivos
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
+import os
+from pathlib import Path
 
-from backend.core.config import settings
-from backend.core.auth import get_current_active_user, require_role
-from backend.models.database_models import User
-from backend.services.synthetic_data_service import synthetic_data_service
-from backend.core.logging_config import logger
+from core.config import settings
+from core.auth import get_current_active_user, require_role
+from models.database_models import User
+from services.synthetic_data_service import synthetic_data_service
+from core.logging_config import logger
 
 
 router = APIRouter(prefix="/synthetic", tags=["Synthetic Data"])
@@ -68,6 +70,23 @@ class TemplateInfo(BaseModel):
     name: str
     description: str
     categories: dict
+
+
+class SyntheticFileInfo(BaseModel):
+    """Información de un archivo sintético generado"""
+    filename: str
+    category: str
+    size: int
+    created_at: str
+    metadata: dict
+    preview_text: str
+
+
+class SyntheticFilesResponse(BaseModel):
+    """Response con lista de archivos sintéticos"""
+    task_id: str
+    files: List[SyntheticFileInfo]
+    total_files: int
 
 
 # ===== Dependency: Verificar permisos =====
@@ -323,3 +342,122 @@ async def preview_distribution(
             for cat, count in distribution.items()
         }
     }
+
+
+@router.get("/tasks/{task_id}/files", response_model=SyntheticFilesResponse)
+async def get_task_files(
+    task_id: str,
+    current_user: User = Depends(verify_synthetic_permissions)
+):
+    """
+    Obtiene la lista de archivos sintéticos generados para una tarea
+    
+    Retorna información detallada de cada archivo incluyendo:
+    - Filename y categoría
+    - Tamaño del archivo
+    - Metadata (entidades, chunks, risk_level)
+    - Preview del contenido
+    
+    **Nota:** Solo archivos de tareas completadas
+    """
+    # Verificar que la tarea existe
+    status_data = await synthetic_data_service.get_task_status(task_id)
+    
+    if "error" in status_data:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Task {task_id} not found"
+        )
+    
+    # Verificar que está completada
+    if status_data.get("status") != "completed":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Task {task_id} is not completed yet (status: {status_data.get('status')})"
+        )
+    
+    # Obtener output_path
+    output_path = status_data.get("output_path")
+    if not output_path:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Output path not found for task {task_id}"
+        )
+    
+    # Leer archivos del directorio
+    try:
+        output_dir = Path(output_path)
+        if not output_dir.exists():
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Output directory not found: {output_path}"
+            )
+        
+        files_info = []
+        
+        # Buscar archivos PDF en el directorio
+        for pdf_file in output_dir.glob("*.pdf"):
+            # Leer metadata (buscar archivo .json con mismo nombre)
+            metadata_file = pdf_file.with_suffix('.json')
+            metadata = {
+                "entities": [],
+                "chunks": 0,
+                "risk_level": "unknown"
+            }
+            
+            if metadata_file.exists():
+                import json
+                try:
+                    with open(metadata_file, 'r', encoding='utf-8') as f:
+                        file_metadata = json.load(f)
+                        metadata = {
+                            "entities": file_metadata.get("entities", [])[:10],  # Primeras 10 entidades
+                            "chunks": file_metadata.get("chunks", 0),
+                            "risk_level": file_metadata.get("risk_level", "medium")
+                        }
+                except Exception as e:
+                    logger.warning(f"Error reading metadata for {pdf_file}: {e}")
+            
+            # Extraer categoría del nombre del archivo
+            category = "Unknown"
+            filename_parts = pdf_file.stem.split('_')
+            if len(filename_parts) >= 2:
+                category = filename_parts[1].capitalize()
+            
+            # Leer preview del contenido (buscar archivo .txt)
+            preview_text = "Preview no disponible"
+            txt_file = pdf_file.with_suffix('.txt')
+            if txt_file.exists():
+                try:
+                    with open(txt_file, 'r', encoding='utf-8') as f:
+                        preview_text = f.read()[:1000]  # Primeros 1000 caracteres
+                except Exception as e:
+                    logger.warning(f"Error reading text preview for {pdf_file}: {e}")
+            
+            # Información del archivo
+            file_stat = pdf_file.stat()
+            file_info = SyntheticFileInfo(
+                filename=pdf_file.name,
+                category=category,
+                size=file_stat.st_size,
+                created_at=status_data.get("created_at", ""),
+                metadata=metadata,
+                preview_text=preview_text
+            )
+            files_info.append(file_info)
+        
+        # Ordenar por nombre
+        files_info.sort(key=lambda x: x.filename)
+        
+        return SyntheticFilesResponse(
+            task_id=task_id,
+            files=files_info,
+            total_files=len(files_info)
+        )
+        
+    except Exception as e:
+        logger.error(f"Error reading task files: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error reading task files: {str(e)}"
+        )

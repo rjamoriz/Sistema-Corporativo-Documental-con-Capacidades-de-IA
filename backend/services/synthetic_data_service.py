@@ -10,8 +10,8 @@ from typing import Dict, List, Optional
 import json
 import tempfile
 
-from backend.core.logging_config import logger
-from backend.core.config import settings
+from core.logging_config import logger
+from core.config import settings
 
 
 class SyntheticDataService:
@@ -213,8 +213,8 @@ class SyntheticDataService:
     async def _upload_documents(self, task_id: str, output_dir: Path):
         """Sube documentos generados a la aplicación"""
         try:
-            from backend.services.ingest_service import ingest_service
-            from backend.core.database import AsyncSessionLocal
+            from services.ingest_service import ingest_service
+            from core.database import AsyncSessionLocal
             
             logger.info(f"Task {task_id}: Starting auto-upload")
             

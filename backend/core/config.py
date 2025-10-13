@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     API_V1_PREFIX: str = "/api/v1"
     
     # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8000"]
+    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:8000", "http://localhost:5173"]
     
     # Database (PostgreSQL)
     DATABASE_URL: str = "postgresql+asyncpg://financia:financia2030@localhost:5432/financia_db"
@@ -46,10 +46,13 @@ class Settings(BaseSettings):
     
     # MinIO (S3-compatible)
     MINIO_ENDPOINT: str = "localhost:9000"
+    MINIO_HOST: str = "localhost"
+    MINIO_PORT: int = 9000
     MINIO_ACCESS_KEY: str = "minioadmin"
     MINIO_SECRET_KEY: str = "minioadmin"
     MINIO_SECURE: bool = False
     MINIO_BUCKET: str = "documents"
+    MINIO_BUCKET_NAME: str = "documents"
     
     # Authentication
     SECRET_KEY: str = "your-secret-key-change-in-production"

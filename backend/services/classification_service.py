@@ -9,11 +9,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification
 import torch
 
-from backend.core.logging_config import logger
-from backend.core.config import settings
-from backend.models.database_models import Document, DocumentClassification, DocumentStatus
-from backend.services.ontology_service import ontology_service
-from backend.services.taxonomy_service import taxonomy_service
+from core.logging_config import logger
+from core.config import settings
+from models.database_models import Document, DocumentClassification, DocumentStatus
+from services.ontology_service import ontology_service
+from services.taxonomy_service import taxonomy_service
 
 
 class ClassificationService:

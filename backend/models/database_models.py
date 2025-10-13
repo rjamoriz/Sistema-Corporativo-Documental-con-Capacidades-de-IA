@@ -75,7 +75,7 @@ class Document(Base):
     owner_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
     department = Column(String(100), index=True)
     retention_until = Column(Date)
-    metadata = Column(JSONB)
+    metadata_json = Column(JSONB)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), index=True)
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
@@ -172,7 +172,7 @@ class AuditLog(Base):
     ip_address = Column(String(45))
     user_agent = Column(Text)
     result = Column(String(20), nullable=False)  # success, failure
-    metadata = Column(JSONB)
+    metadata_json = Column(JSONB)
     
     # Relationships
     user = relationship("User", back_populates="audit_logs")

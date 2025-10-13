@@ -1,0 +1,52 @@
+@prefix : <http://financia2030.com/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Ontology Declaration
+<http://financia2030.com/ontology> rdf:type owl:Ontology ;
+    rdfs:label "FinancIA 2030 Document Ontology" ;
+    rdfs:comment "Ontología para clasificación de documentos corporativos" .
+
+# Classes
+:Document rdf:type owl:Class ;
+    rdfs:label "Document" ;
+    rdfs:comment "Documento corporativo" .
+
+:Contract rdf:type owl:Class ;
+    rdfs:subClassOf :Document ;
+    rdfs:label "Contract" ;
+    rdfs:comment "Contrato legal" .
+
+:FinancialDocument rdf:type owl:Class ;
+    rdfs:subClassOf :Document ;
+    rdfs:label "Financial Document" ;
+    rdfs:comment "Documento financiero" .
+
+:LegalDocument rdf:type owl:Class ;
+    rdfs:subClassOf :Document ;
+    rdfs:label "Legal Document" ;
+    rdfs:comment "Documento legal" .
+
+:Report rdf:type owl:Class ;
+    rdfs:subClassOf :Document ;
+    rdfs:label "Report" ;
+    rdfs:comment "Informe o reporte" .
+
+# Properties
+:hasTitle rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Document ;
+    rdfs:range xsd:string .
+
+:hasDate rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Document ;
+    rdfs:range xsd:dateTime .
+
+:hasAuthor rdf:type owl:ObjectProperty ;
+    rdfs:domain :Document ;
+    rdfs:label "has author" .
+
+:hasRiskLevel rdf:type owl:DatatypeProperty ;
+    rdfs:domain :Document ;
+    rdfs:range xsd:string .
