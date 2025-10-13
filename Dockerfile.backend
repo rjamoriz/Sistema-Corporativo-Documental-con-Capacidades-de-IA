@@ -1,0 +1,45 @@
+# Dockerfile para Backend de FinancIA 2030
+FROM python:3.12-slim
+
+# Variables de entorno
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    git \
+    libpq-dev \
+    tesseract-ocr \
+    poppler-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+# Crear directorio de trabajo
+WORKDIR /app
+
+# Copiar requirements
+COPY backend/requirements.txt .
+
+# Instalar dependencias Python
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt && \
+    pip install sentence-transformers spacy python-pptx python-docx \
+    pytesseract pdf2image pillow openpyxl PyMuPDF reportlab rdflib
+
+# Descargar modelos de spaCy
+RUN python -m spacy download es_core_news_md
+
+# Copiar código del backend
+COPY backend/ .
+
+# Crear directorios necesarios
+RUN mkdir -p logs data/ontology uploads
+
+# Exponer puerto
+EXPOSE 8000
+
+# Comando de inicio
+CMD ["python", "main.py"]

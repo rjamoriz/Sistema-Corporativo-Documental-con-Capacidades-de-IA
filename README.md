@@ -1,6 +1,35 @@
 # Sistema Corporativo Documental con Capacidades de IA
+
+## ⚡ Quick Start con Docker (Local Setup)
+
+### 🚀 Inicio Rápido:
+```bash
+# 1. Clonar repositorio
+git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.git
+cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
+
+# 2. Configurar environment
+cp .env.example .env
+# Editar .env con tu OPENAI_API_KEY
+
+# 3. Iniciar servicios
+docker-compose up -d
+
+# 4. Acceder
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:8000/docs
+# Login: admin.demo / Demo2025!
+```
+
+📖 **Guía completa:** [`DOCKER_SETUP_LOCAL.md`](./DOCKER_SETUP_LOCAL.md)
+
+**Requisitos:** Docker Desktop, 12GB+ RAM, 30GB disco
+
+---
+
 ## 📁 Documentación Principal
 
+- 🐳 [`DOCKER_SETUP_LOCAL.md`](DOCKER_SETUP_LOCAL.md) — **Setup local con Docker** (nuevo)
 - 🚀 [`QUICKSTART.md`](QUICKSTART.md) — **¡Empieza aquí!** Guía de inicio rápido (< 10 min)
 - 🐳 [`DEPLOYMENT.md`](DEPLOYMENT.md) — **✨ NUEVO** Guía completa de deployment con Docker Hub
 - 📄 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Arquitectura técnica completa (6k palabras)

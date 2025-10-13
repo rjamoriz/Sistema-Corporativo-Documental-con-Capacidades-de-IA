@@ -1,0 +1,20 @@
+# Dockerfile para Frontend de FinancIA 2030
+FROM node:20-alpine
+
+# Crear directorio de trabajo
+WORKDIR /app
+
+# Copiar package files
+COPY frontend/package*.json ./
+
+# Instalar dependencias
+RUN npm ci
+
+# Copiar código del frontend
+COPY frontend/ .
+
+# Exponer puerto
+EXPOSE 3000
+
+# Comando de inicio (desarrollo)
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
