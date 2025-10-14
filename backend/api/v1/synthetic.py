@@ -370,31 +370,44 @@ async def get_task_files(
     - Metadata (entidades, chunks, risk_level)
     - Preview del contenido
     
-    **Nota:** Solo archivos de tareas completadas
+    **Nota:** Lee directamente del filesystem si la tarea no está en memoria
     """
-    # Verificar que la tarea existe
+    # Intentar obtener desde el servicio primero
     status_data = await synthetic_data_service.get_task_status(task_id)
     
+    # Si la tarea no está en memoria, buscar directamente en el filesystem
+    output_path = None
     if "error" in status_data:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Task {task_id} not found"
-        )
-    
-    # Verificar que está completada
-    if status_data.get("status") != "completed":
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Task {task_id} is not completed yet (status: {status_data.get('status')})"
-        )
-    
-    # Obtener output_path
-    output_path = status_data.get("output_path")
-    if not output_path:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Output path not found for task {task_id}"
-        )
+        # Construir path esperado basado en task_id
+        expected_path = Path(f"/tmp/synthetic_documents/{task_id}")
+        if expected_path.exists() and expected_path.is_dir():
+            output_path = str(expected_path)
+            logger.info(f"Task {task_id} not in memory, but found directory at {output_path}")
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Task {task_id} not found and no directory exists"
+            )
+    else:
+        # Verificar que está completada (solo si está en memoria)
+        if status_data.get("status") != "completed":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Task {task_id} is not completed yet (status: {status_data.get('status')})"
+            )
+        
+        # Obtener output_path
+        output_path = status_data.get("output_path")
+        if not output_path:
+            # Fallback: intentar path esperado
+            expected_path = Path(f"/tmp/synthetic_documents/{task_id}")
+            if expected_path.exists():
+                output_path = str(expected_path)
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"Output path not found for task {task_id}"
+                )
     
     # Leer archivos del directorio
     try:
@@ -509,25 +522,26 @@ async def download_file(
     # Verificar que la tarea existe y está completada
     status_data = await synthetic_data_service.get_task_status(task_id)
     
-    if "error" in status_data:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Task {task_id} not found"
-        )
+    output_path = None
+    if "error" not in status_data:
+        # Verificar que está completada (solo si está en memoria)
+        if status_data.get("status") != "completed":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Task {task_id} is not completed yet"
+            )
+        output_path = status_data.get("output_path")
     
-    if status_data.get("status") != "completed":
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Task {task_id} is not completed yet"
-        )
-    
-    # Obtener ruta del archivo
-    output_path = status_data.get("output_path")
+    # Fallback: buscar directamente en filesystem
     if not output_path:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Output path not found"
-        )
+        expected_path = Path(f"/tmp/synthetic_documents/{task_id}")
+        if expected_path.exists() and expected_path.is_dir():
+            output_path = str(expected_path)
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Task {task_id} not found"
+            )
     
     file_path = Path(output_path) / filename
     
