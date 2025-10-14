@@ -10,6 +10,8 @@ import { RAGChat } from './components/RAGChat';
 import { Login } from './components/Login';
 import OntologyPage from './pages/OntologyPage';
 import AdminSyntheticData from './pages/AdminSyntheticData';
+import RisksPage from './pages/RisksPage';
+import CompliancePage from './pages/CompliancePage';
 import { useAuthStore } from './store/authStore';
 
 const queryClient = new QueryClient({
@@ -56,6 +58,8 @@ function App() {
                     <Route path="/upload" element={<UploadComponent />} />
                     <Route path="/search" element={<SearchComponent />} />
                     <Route path="/chat" element={<RAGChat />} />
+                    <Route path="/risks" element={<RisksPage />} />
+                    <Route path="/compliance" element={<CompliancePage />} />
                     <Route path="/ontology" element={<OntologyPage />} />
                     <Route path="/synthetic" element={<AdminSyntheticData />} />
                   </Routes>
