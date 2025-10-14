@@ -1,7 +1,7 @@
 """
 Pydantic Models for API Request/Response
 """
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field, validator, ConfigDict
 from typing import Optional, List, Dict, Any
 from datetime import datetime, date
 from uuid import UUID
@@ -62,8 +62,11 @@ class UserResponse(UserBase):
     created_at: datetime
     last_login: Optional[datetime] = None
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(
+        from_attributes=True,
+        protected_namespaces=(),
+        arbitrary_types_allowed=True
+    )
 
 
 # Authentication Models
@@ -116,8 +119,11 @@ class DocumentResponse(DocumentBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(
+        from_attributes=True,
+        protected_namespaces=(),
+        arbitrary_types_allowed=True
+    )
 
 
 class DocumentUploadResponse(BaseModel):
@@ -138,8 +144,11 @@ class ChunkResponse(ChunkBase):
     document_id: UUID
     created_at: datetime
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(
+        from_attributes=True,
+        protected_namespaces=(),
+        arbitrary_types_allowed=True
+    )
 
 
 # Entity Models
@@ -157,8 +166,11 @@ class EntityResponse(EntityBase):
     end_pos: Optional[int] = None
     created_at: datetime
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(
+        from_attributes=True,
+        protected_namespaces=(),
+        arbitrary_types_allowed=True
+    )
 
 
 # Search Models
@@ -211,9 +223,37 @@ class RAGResponse(BaseModel):
     conversation_id: UUID
     processing_time_ms: float
     model_version: str
+    
+    model_config = ConfigDict(
+        protected_namespaces=(),
+        arbitrary_types_allowed=True
+    )
 
 
 # Risk Assessment Models
+class RiskDimension(BaseModel):
+    name: str
+    score: float
+    weight: float
+    description: Optional[str] = None
+    factors: Optional[List[str]] = None
+
+
+class RiskScore(BaseModel):
+    document_id: UUID
+    overall_score: float
+    risk_level: str  # "LOW", "MEDIUM", "HIGH", "CRITICAL"
+    dimensions: List[RiskDimension]
+    calculated_at: datetime = Field(default_factory=datetime.utcnow)
+    explanation: Optional[str] = None
+    
+    model_config = ConfigDict(
+        from_attributes=True,
+        protected_namespaces=(),
+        arbitrary_types_allowed=True
+    )
+
+
 class RiskDimensionFinding(BaseModel):
     issue: str
     severity: str = Field(..., pattern="^(low|medium|high)$")
@@ -239,8 +279,11 @@ class RiskAssessmentResponse(BaseModel):
     assessed_at: datetime
     model_version: str
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(
+        from_attributes=True,
+        protected_namespaces=(),
+        arbitrary_types_allowed=True
+    )
 
 
 # Compliance Models
@@ -254,8 +297,11 @@ class ComplianceCheckResponse(BaseModel):
     recommendation: Optional[str] = None
     checked_at: datetime
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(
+        from_attributes=True,
+        protected_namespaces=(),
+        arbitrary_types_allowed=True
+    )
 
 
 class ComplianceRuleExecution(BaseModel):
@@ -275,8 +321,11 @@ class AuditLogResponse(BaseModel):
     result: str
     metadata: Optional[Dict[str, Any]] = None
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(
+        from_attributes=True,
+        protected_namespaces=(),
+        arbitrary_types_allowed=True
+    )
 
 
 class AuditLogQuery(BaseModel):
@@ -308,8 +357,11 @@ class DataSubjectRequestResponse(BaseModel):
     created_at: datetime
     completed_at: Optional[datetime] = None
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(
+        from_attributes=True,
+        protected_namespaces=(),
+        arbitrary_types_allowed=True
+    )
 
 
 # Health Check

@@ -3,6 +3,7 @@ Configuration Management
 Loads settings from environment variables
 """
 from pydantic_settings import BaseSettings
+from pydantic import ConfigDict
 from typing import List, Optional
 from functools import lru_cache
 
@@ -14,6 +15,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "FinancIA 2030"
     DEBUG: bool = False
     VERSION: str = "1.0.0"
+    ENVIRONMENT: str = "development"  # development, staging, production
     
     # API
     API_V1_PREFIX: str = "/api/v1"
@@ -28,6 +30,7 @@ class Settings(BaseSettings):
     
     # Vector Store (pgvector)
     VECTOR_DIMENSION: int = 768  # sentence-transformers mpnet dimension
+    EMBEDDING_DIMENSION: int = 768  # Alias for VECTOR_DIMENSION (used by ml/embeddings.py)
     
     # OpenSearch
     OPENSEARCH_HOST: str = "localhost"
@@ -35,6 +38,8 @@ class Settings(BaseSettings):
     OPENSEARCH_USER: str = "admin"
     OPENSEARCH_PASSWORD: str = "admin"
     OPENSEARCH_INDEX: str = "documents"
+    OPENSEARCH_USE_SSL: bool = False  # For local development
+    OPENSEARCH_VERIFY_CERTS: bool = False  # For local development
     
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"
@@ -156,9 +161,12 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
     LOG_FORMAT: str = "json"
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    model_config = ConfigDict(
+        env_file=".env",
+        case_sensitive=True,
+        protected_namespaces=(),
+        arbitrary_types_allowed=True
+    )
 
 
 @lru_cache()

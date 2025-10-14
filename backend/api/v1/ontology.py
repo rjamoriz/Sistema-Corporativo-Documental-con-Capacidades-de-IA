@@ -4,11 +4,11 @@ Sprint 2 & 3: Endpoints para consultas SPARQL, inferencia y validación semánti
 """
 
 from fastapi import APIRouter, HTTPException, Query
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Dict, Any, Optional
 import logging
 
-from ...services.ontology_service import ontology_service
+from services.ontology_service import ontology_service
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +28,8 @@ class ClassifyDocumentRequest(BaseModel):
     content: str = Field(..., description="Contenido del documento a clasificar")
     metadata: Optional[Dict[str, Any]] = Field(default={}, description="Metadatos del documento")
     
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "content": "Contrato de préstamo hipotecario con garantía inmobiliaria...",
                 "metadata": {
@@ -38,7 +38,10 @@ class ClassifyDocumentRequest(BaseModel):
                     "plazoMeses": 240
                 }
             }
-        }
+        },
+        protected_namespaces=(),
+        arbitrary_types_allowed=True
+    )
 
 
 class ClassifyDocumentResponse(BaseModel):
@@ -56,8 +59,8 @@ class ValidateMetadataRequest(BaseModel):
     class_name: str = Field(..., description="Nombre de la clase OWL")
     metadata: Dict[str, Any] = Field(..., description="Metadatos a validar")
     
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "class_name": "PrestamoHipotecario",
                 "metadata": {
@@ -67,7 +70,10 @@ class ValidateMetadataRequest(BaseModel):
                     "ltv": 80.0
                 }
             }
-        }
+        },
+        protected_namespaces=(),
+        arbitrary_types_allowed=True
+    )
 
 
 class ValidateMetadataResponse(BaseModel):
@@ -83,8 +89,8 @@ class InferRiskRequest(BaseModel):
     class_name: str = Field(..., description="Nombre de la clase OWL")
     metadata: Dict[str, Any] = Field(..., description="Metadatos del documento")
     
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "class_name": "PrestamoHipotecario",
                 "metadata": {
@@ -94,7 +100,10 @@ class InferRiskRequest(BaseModel):
                     "plazoMeses": 300
                 }
             }
-        }
+        },
+        protected_namespaces=(),
+        arbitrary_types_allowed=True
+    )
 
 
 class InferRiskResponse(BaseModel):
@@ -109,8 +118,8 @@ class SPARQLQueryRequest(BaseModel):
     """Request para ejecutar consulta SPARQL."""
     query: str = Field(..., description="Consulta SPARQL a ejecutar")
     
-    class Config:
-        schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "query": """
                     PREFIX tf: <http://tefinancia.es/ontology#>
@@ -123,7 +132,10 @@ class SPARQLQueryRequest(BaseModel):
                     }
                 """
             }
-        }
+        },
+        protected_namespaces=(),
+        arbitrary_types_allowed=True
+    )
 
 
 class SPARQLQueryResponse(BaseModel):

@@ -15,7 +15,7 @@ from models.schemas import (
     DocumentUploadResponse, EntityResponse, ChunkResponse
 )
 from api.v1.auth import oauth2_scheme
-from services.classification_service import classification_service
+from services import classification_service
 
 logger = logging.getLogger(__name__)
 

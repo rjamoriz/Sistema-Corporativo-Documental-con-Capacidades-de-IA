@@ -214,3 +214,14 @@ class DataSubjectRequest(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     completed_at = Column(DateTime(timezone=True))
     handled_by = Column(UUID(as_uuid=True), ForeignKey("users.id"))
+
+
+class DSRType(str, enum.Enum):
+    """Data Subject Request Types (GDPR/LOPDGDD)"""
+    ACCESS = "access"           # Right to access
+    RECTIFICATION = "rectification"  # Right to rectification
+    ERASURE = "erasure"         # Right to be forgotten
+    PORTABILITY = "portability"  # Right to data portability
+    OBJECT = "object"           # Right to object
+    RESTRICT = "restrict"       # Right to restrict processing
+    LODGE = "lodge"             # Right to lodge complaint

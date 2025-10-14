@@ -41,6 +41,12 @@ interface EmbeddingData {
 }
 
 export default function AdminSyntheticData() {
+  // API Base URL - usar directo al backend para evitar problemas de proxy
+  const API_BASE_URL = 'http://localhost:8000';
+  
+  // Helper para obtener el token del localStorage (auth_token es el correcto del sistema)
+  const getToken = () => localStorage.getItem('auth_token') || getToken();
+  
   // State
   const [count, setCount] = useState(50);
   const [selectedTemplate, setSelectedTemplate] = useState('default');
@@ -50,6 +56,8 @@ export default function AdminSyntheticData() {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [previewDist, setPreviewDist] = useState<any>(null);
   const [tasks, setTasks] = useState<GenerationTask[]>([]);
+  const [loadingTemplates, setLoadingTemplates] = useState(true);
+  const [templatesError, setTemplatesError] = useState<string | null>(null);
   
   // Nuevos estados para visualización de archivos y vectorización
   const [selectedFile, setSelectedFile] = useState<SyntheticFile | null>(null);
@@ -83,27 +91,48 @@ export default function AdminSyntheticData() {
 
   // Funciones API
   const loadTemplates = async () => {
+    setLoadingTemplates(true);
+    setTemplatesError(null);
+    
     try {
-      const response = await fetch('/api/v1/synthetic/templates', {
+      const token = getToken();
+      console.log('Loading templates with token:', token ? 'exists' : 'missing');
+      
+      const response = await fetch(`${API_BASE_URL}/api/v1/synthetic/templates`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${token}`
         }
       });
 
+      console.log('Templates response status:', response.status);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log('Templates loaded:', data);
         setTemplates(data);
+        setTemplatesError(null);
+      } else {
+        const errorData = await response.json();
+        const errorMsg = errorData.detail || 'Error cargando templates';
+        console.error('Error response:', errorData);
+        setTemplatesError(errorMsg);
+        alert(`⚠️ Error al cargar templates: ${errorMsg}`);
       }
     } catch (error) {
       console.error('Error loading templates:', error);
+      const errorMsg = error instanceof Error ? error.message : 'Error de conexión';
+      setTemplatesError(errorMsg);
+      alert(`⚠️ Error al cargar templates: ${errorMsg}\n\nVerifica:\n1. Backend en http://localhost:8000\n2. Token de autenticación válido\n3. Permisos de administrador`);
+    } finally {
+      setLoadingTemplates(false);
     }
   };
 
   const loadTasks = async () => {
     try {
-      const response = await fetch('/api/v1/synthetic/tasks', {
+      const response = await fetch(`${API_BASE_URL}/api/v1/synthetic/tasks`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${getToken()}`
         }
       });
 
@@ -119,11 +148,11 @@ export default function AdminSyntheticData() {
   const previewDistribution = async () => {
     try {
       const response = await fetch(
-        `/api/v1/synthetic/preview-distribution?template_id=${selectedTemplate}&total_documents=${count}`,
+        `${API_BASE_URL}/api/v1/synthetic/preview-distribution?template_id=${selectedTemplate}&total_documents=${count}`,
         {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${getToken()}`
           }
         }
       );
@@ -141,11 +170,11 @@ export default function AdminSyntheticData() {
     setGenerating(true);
 
     try {
-      const response = await fetch('/api/v1/synthetic/generate', {
+      const response = await fetch(`${API_BASE_URL}/api/v1/synthetic/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${getToken()}`
         },
         body: JSON.stringify({
           total_documents: count,
@@ -181,9 +210,9 @@ export default function AdminSyntheticData() {
 
   const pollTaskStatus = async (taskId: string) => {
     try {
-      const response = await fetch(`/api/v1/synthetic/status/${taskId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/synthetic/status/${taskId}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${getToken()}`
         }
       });
 
@@ -209,10 +238,10 @@ export default function AdminSyntheticData() {
     if (!confirm('¿Eliminar esta tarea?')) return;
 
     try {
-      const response = await fetch(`/api/v1/synthetic/tasks/${taskId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/synthetic/tasks/${taskId}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${getToken()}`
         }
       });
 
@@ -227,18 +256,34 @@ export default function AdminSyntheticData() {
   // Nueva función: Cargar archivos sintéticos generados
   const loadSyntheticFiles = async (taskId: string) => {
     try {
-      const response = await fetch(`/api/v1/synthetic/tasks/${taskId}/files`, {
+      console.log('[DEBUG] Loading files for task:', taskId);
+      const token = getToken();
+      console.log('[DEBUG] Token:', token ? 'exists' : 'missing');
+      
+      const url = `${API_BASE_URL}/api/v1/synthetic/tasks/${taskId}/files`;
+      console.log('[DEBUG] URL:', url);
+      
+      const response = await fetch(url, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${token}`
         }
       });
 
+      console.log('[DEBUG] Response status:', response.status);
+      console.log('[DEBUG] Response ok:', response.ok);
+
       if (response.ok) {
         const data = await response.json();
+        console.log('[DEBUG] Files data:', data);
         return data.files;
+      } else {
+        const errorText = await response.text();
+        console.error('[DEBUG] Error response:', errorText);
+        alert(`Error cargando archivos: ${response.status} - ${errorText}`);
       }
     } catch (error) {
-      console.error('Error loading files:', error);
+      console.error('[DEBUG] Exception loading files:', error);
+      alert(`Excepción cargando archivos: ${error}`);
     }
     return [];
   };
@@ -431,21 +476,50 @@ export default function AdminSyntheticData() {
                 <label className="text-sm font-medium block mb-2">
                   Template de Distribución
                 </label>
-                <select
-                  value={selectedTemplate}
-                  onChange={(e) => setSelectedTemplate(e.target.value)}
-                  className="w-full p-2 border rounded-lg"
-                >
-                  {templates.map((template) => (
-                    <option key={template.id} value={template.id}>
-                      {template.name}
-                    </option>
-                  ))}
-                </select>
-                {templates.find(t => t.id === selectedTemplate) && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    {templates.find(t => t.id === selectedTemplate)?.description}
-                  </p>
+                
+                {loadingTemplates ? (
+                  <div className="w-full p-2 border rounded-lg bg-gray-50 text-gray-500 text-center">
+                    🔄 Cargando templates...
+                  </div>
+                ) : templatesError ? (
+                  <div className="w-full p-3 border border-red-300 rounded-lg bg-red-50">
+                    <p className="text-sm text-red-700">⚠️ {templatesError}</p>
+                    <button
+                      onClick={loadTemplates}
+                      className="mt-2 text-xs text-blue-600 hover:text-blue-800"
+                    >
+                      🔄 Reintentar
+                    </button>
+                  </div>
+                ) : templates.length === 0 ? (
+                  <div className="w-full p-3 border border-yellow-300 rounded-lg bg-yellow-50">
+                    <p className="text-sm text-yellow-700">⚠️ No hay templates disponibles</p>
+                    <button
+                      onClick={loadTemplates}
+                      className="mt-2 text-xs text-blue-600 hover:text-blue-800"
+                    >
+                      🔄 Recargar
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <select
+                      value={selectedTemplate}
+                      onChange={(e) => setSelectedTemplate(e.target.value)}
+                      className="w-full p-2 border rounded-lg"
+                    >
+                      {templates.map((template) => (
+                        <option key={template.id} value={template.id}>
+                          {template.name}
+                        </option>
+                      ))}
+                    </select>
+                    {templates.find(t => t.id === selectedTemplate) && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        {templates.find(t => t.id === selectedTemplate)?.description}
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
 
@@ -486,9 +560,9 @@ export default function AdminSyntheticData() {
               {/* Botón Generar */}
               <button
                 onClick={handleGenerate}
-                disabled={generating}
+                disabled={generating || templates.length === 0 || loadingTemplates}
                 className={`w-full py-3 px-4 rounded-lg font-medium flex items-center justify-center gap-2 ${
-                  generating
+                  generating || templates.length === 0 || loadingTemplates
                     ? 'bg-gray-400 cursor-not-allowed'
                     : 'bg-blue-600 hover:bg-blue-700 text-white'
                 }`}
@@ -497,6 +571,15 @@ export default function AdminSyntheticData() {
                   <>
                     <span className="animate-spin">⟳</span>
                     Generando...
+                  </>
+                ) : loadingTemplates ? (
+                  <>
+                    <span className="animate-spin">⟳</span>
+                    Cargando...
+                  </>
+                ) : templates.length === 0 ? (
+                  <>
+                    ⚠️ Sin templates disponibles
                   </>
                 ) : (
                   <>

@@ -31,6 +31,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
+        "http://localhost:3001",
         "http://localhost:5173",
         "http://localhost:8000",
         "https://glowing-system-57vgpqp6qj63p4jx-3000.app.github.dev",

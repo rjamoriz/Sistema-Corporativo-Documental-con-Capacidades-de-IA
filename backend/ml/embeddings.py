@@ -11,26 +11,55 @@ from core.config import settings
 
 
 class EmbeddingModel:
-    """Modelo para generación de embeddings de documentos"""
+    """Modelo para generación de embeddings de documentos con optimización GPU"""
     
     def __init__(self):
         self.model_name = settings.EMBEDDING_MODEL
         self.dimension = settings.EMBEDDING_DIMENSION
+        
+        # GPU Detection y configuración
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.gpu_available = torch.cuda.is_available()
+        
+        if self.gpu_available:
+            self.gpu_name = torch.cuda.get_device_name(0)
+            self.gpu_memory = torch.cuda.get_device_properties(0).total_memory / 1024**3  # GB
+            logger.info(f"GPU detected: {self.gpu_name} ({self.gpu_memory:.1f}GB)")
+        else:
+            logger.info("No GPU detected, using CPU")
+        
         self.model = None
-        # OPTIMIZACIÓN: No cargar modelo en __init__, cargar lazy cuando se necesite
-        # self._load_model()  # Comentado para lazy loading
-        logger.info(f"EmbeddingModel initialized (lazy loading enabled)")
+        # Ajustar batch size según device
+        self.default_batch_size = 64 if self.gpu_available else 16
+        logger.info(f"EmbeddingModel initialized - Device: {self.device}, Batch size: {self.default_batch_size}")
     
     def _load_model(self):
-        """Carga el modelo de embeddings (lazy loading)"""
+        """Carga el modelo de embeddings (lazy loading) con optimización GPU"""
         if self.model is not None:
             return  # Ya está cargado
             
         try:
-            logger.info(f"Loading embedding model: {self.model_name} (first use)")
+            logger.info(f"Loading embedding model: {self.model_name} on {self.device}")
+            
+            # Cargar modelo con device específico
             self.model = SentenceTransformer(self.model_name, device=self.device)
-            logger.info(f"Embedding model loaded successfully on {self.device}")
+            
+            # Si usamos GPU, optimizar para rendimiento
+            if self.gpu_available:
+                # Configurar modelo para evaluación (no entrenamiento)
+                self.model.eval()
+                # Usar half precision en GPU si es soportado (RTX 4070 lo soporta)
+                try:
+                    self.model.half()
+                    logger.info("Half precision (FP16) enabled for GPU")
+                except Exception as e:
+                    logger.warning(f"Could not enable FP16: {e}")
+                    
+                # Warming up GPU
+                logger.info("Warming up GPU...")
+                dummy_text = ["This is a dummy text for GPU warmup"]
+                _ = self.model.encode(dummy_text, convert_to_numpy=True)
+                logger.info("GPU warmup completed")
             
             # Verificar dimensión
             test_embedding = self.model.encode(["test"])[0]
@@ -40,6 +69,9 @@ class EmbeddingModel:
                     f"got {len(test_embedding)}"
                 )
                 self.dimension = len(test_embedding)
+                
+            logger.info(f"Embedding model loaded successfully - Dim: {self.dimension}")
+            
         except Exception as e:
             logger.error(f"Error loading embedding model: {e}")
             raise
@@ -47,16 +79,16 @@ class EmbeddingModel:
     def encode(
         self,
         texts: Union[str, List[str]],
-        batch_size: int = 32,
+        batch_size: int = None,
         show_progress: bool = False,
         normalize: bool = True
     ) -> np.ndarray:
         """
-        Genera embeddings para texto(s)
+        Genera embeddings para texto(s) con optimización GPU
         
         Args:
             texts: Texto o lista de textos
-            batch_size: Tamaño de batch para procesamiento
+            batch_size: Tamaño de batch (None = usar default optimizado)
             show_progress: Mostrar barra de progreso
             normalize: Normalizar vectores
             
@@ -69,6 +101,16 @@ class EmbeddingModel:
         
         if isinstance(texts, str):
             texts = [texts]
+        
+        # Usar batch size optimizado para GPU/CPU
+        if batch_size is None:
+            batch_size = self.default_batch_size
+            
+        # Para GPU, usar batch size más grande si hay muchos textos
+        if self.gpu_available and len(texts) > 100:
+            batch_size = min(128, batch_size * 2)
+        
+        logger.debug(f"Encoding {len(texts)} texts with batch_size={batch_size} on {self.device}")
         
         embeddings = self.model.encode(
             texts,
@@ -160,27 +202,73 @@ class EmbeddingModel:
         
         return np.dot(embedding1, embedding2) / (norm1 * norm2)
     
-    def similarity_matrix(
-        self,
-        embeddings1: np.ndarray,
-        embeddings2: np.ndarray
-    ) -> np.ndarray:
+    def get_gpu_info(self) -> dict:
         """
-        Calcula matriz de similaridades entre dos conjuntos de embeddings
+        Obtiene información del estado de la GPU
+        
+        Returns:
+            dict: Información de GPU
+        """
+        gpu_info = {
+            "gpu_available": self.gpu_available,
+            "device": self.device,
+            "default_batch_size": self.default_batch_size
+        }
+        
+        if self.gpu_available:
+            gpu_info.update({
+                "gpu_name": self.gpu_name,
+                "gpu_memory_total": f"{self.gpu_memory:.1f}GB",
+                "gpu_memory_allocated": f"{torch.cuda.memory_allocated(0) / 1024**3:.2f}GB",
+                "gpu_memory_reserved": f"{torch.cuda.memory_reserved(0) / 1024**3:.2f}GB",
+                "cuda_version": torch.version.cuda
+            })
+        
+        return gpu_info
+    
+    def benchmark_performance(self, num_texts: int = 100) -> dict:
+        """
+        Realiza un benchmark de rendimiento
         
         Args:
-            embeddings1: Primera matriz de embeddings (N x D)
-            embeddings2: Segunda matriz de embeddings (M x D)
+            num_texts: Número de textos para el benchmark
             
         Returns:
-            np.ndarray: Matriz de similaridades (N x M)
+            dict: Métricas de rendimiento
         """
-        # Normalizar
-        embeddings1_norm = embeddings1 / np.linalg.norm(embeddings1, axis=1, keepdims=True)
-        embeddings2_norm = embeddings2 / np.linalg.norm(embeddings2, axis=1, keepdims=True)
+        import time
         
-        # Producto matricial
-        return np.matmul(embeddings1_norm, embeddings2_norm.T)
+        # Asegurar que el modelo esté cargado
+        if self.model is None:
+            self._load_model()
+        
+        # Generar textos de prueba
+        test_texts = [f"Este es un texto de prueba número {i} para benchmark." for i in range(num_texts)]
+        
+        # Benchmark
+        start_time = time.time()
+        embeddings = self.encode(test_texts, show_progress=False)
+        end_time = time.time()
+        
+        total_time = end_time - start_time
+        texts_per_second = num_texts / total_time
+        
+        benchmark_results = {
+            "num_texts": num_texts,
+            "total_time": f"{total_time:.2f}s",
+            "texts_per_second": f"{texts_per_second:.1f}",
+            "device": self.device,
+            "batch_size_used": self.default_batch_size,
+            "embedding_dimension": embeddings.shape[1] if len(embeddings.shape) > 1 else len(embeddings)
+        }
+        
+        if self.gpu_available:
+            benchmark_results["gpu_memory_peak"] = f"{torch.cuda.max_memory_allocated(0) / 1024**3:.2f}GB"
+            torch.cuda.reset_peak_memory_stats(0)  # Reset para próximo benchmark
+        
+        logger.info(f"Benchmark completed: {texts_per_second:.1f} texts/sec on {self.device}")
+        
+        return benchmark_results
     
     def get_model_info(self) -> dict:
         """

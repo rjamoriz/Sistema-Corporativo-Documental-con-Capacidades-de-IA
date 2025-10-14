@@ -27,10 +27,36 @@ class ExtractService:
             self.nlp = spacy.load(settings.SPACY_MODEL)
             logger.info(f"Loaded spaCy model: {settings.SPACY_MODEL}")
         except OSError:
-            logger.warning(f"spaCy model {settings.SPACY_MODEL} not found, downloading...")
-            import subprocess
-            subprocess.run(["python", "-m", "spacy", "download", settings.SPACY_MODEL])
-            self.nlp = spacy.load(settings.SPACY_MODEL)
+            logger.warning(f"spaCy model {settings.SPACY_MODEL} not found, trying alternatives...")
+            # Try medium model first
+            for model_name in ["es_core_news_md", "es_core_news_sm"]:
+                try:
+                    self.nlp = spacy.load(model_name)
+                    logger.info(f"Loaded fallback spaCy model: {model_name}")
+                    break
+                except OSError:
+                    logger.warning(f"Model {model_name} not found, trying next...")
+            else:
+                # If no model found, download small model
+                logger.warning("No spaCy model found, downloading es_core_news_sm...")
+                import subprocess
+                import sys
+                result = subprocess.run(
+                    [sys.executable, "-m", "spacy", "download", "es_core_news_sm"],
+                    capture_output=True,
+                    text=True
+                )
+                if result.returncode == 0:
+                    self.nlp = spacy.load("es_core_news_sm")
+                    logger.info("Successfully downloaded and loaded es_core_news_sm")
+                else:
+                    logger.error(f"Failed to download spaCy model: {result.stderr}")
+                    # As a last resort, try to use blank Spanish model
+                    try:
+                        self.nlp = spacy.blank("es")
+                        logger.warning("Using blank Spanish spaCy model - NER will be limited")
+                    except:
+                        raise RuntimeError("Could not load or download any spaCy model")
         
         # Cargar modelo de embeddings
         self.embedding_model = SentenceTransformer(settings.EMBEDDING_MODEL)

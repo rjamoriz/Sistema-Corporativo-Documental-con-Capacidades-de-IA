@@ -2,11 +2,11 @@
 Taxonomy API Endpoints
 Sprint 1: API para navegación de taxonomía jerárquica
 """
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Body, Path
 from typing import List, Dict, Optional
 from pydantic import BaseModel, Field
 
-from backend.services.taxonomy_service import taxonomy_service
+from services.taxonomy_service import taxonomy_service
 
 
 router = APIRouter(prefix="/taxonomy", tags=["Taxonomy"])
@@ -276,7 +276,7 @@ async def classify_text(
 @router.post("/validate", response_model=MetadataValidation, summary="Validar metadatos")
 async def validate_metadata(
     class_id: str = Query(..., description="Identificador de la clase"),
-    metadata: Dict = Query(..., description="Metadatos a validar")
+    metadata: Dict = Body(..., description="Metadatos a validar")
 ):
     """
     Valida que los metadatos cumplan con los requisitos de una clase
@@ -333,7 +333,7 @@ async def get_taxonomy_statistics():
 
 @router.get("/risk/{risk_level}", summary="Obtener clases por nivel de riesgo")
 async def get_classes_by_risk(
-    risk_level: str = Query(..., description="Nivel de riesgo: BAJO, MEDIO, ALTO")
+    risk_level: str = Path(..., description="Nivel de riesgo: BAJO, MEDIO, ALTO")
 ):
     """
     Obtiene todas las clases con un nivel de riesgo específico
@@ -389,7 +389,7 @@ async def get_sensitive_classes():
 
 @router.get("/compliance/{regulation}", summary="Obtener clases por regulación")
 async def get_classes_by_compliance(
-    regulation: str = Query(..., description="Regulación (ej: GDPR, MiFID II)")
+    regulation: str = Path(..., description="Regulación (ej: GDPR, MiFID II)")
 ):
     """
     Obtiene todas las clases afectadas por una regulación específica

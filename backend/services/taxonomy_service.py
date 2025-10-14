@@ -12,13 +12,17 @@ from enum import Enum
 class TaxonomyService:
     """Servicio para navegación y consulta de la taxonomía jerárquica"""
     
-    def __init__(self, taxonomy_file: str = "backend/config/taxonomy.json"):
+    def __init__(self, taxonomy_file: str = None):
         """
         Inicializa el servicio cargando la taxonomía desde JSON
         
         Args:
             taxonomy_file: Ruta al archivo JSON de taxonomía
         """
+        if taxonomy_file is None:
+            # Get path relative to current file
+            current_dir = Path(__file__).parent.parent
+            taxonomy_file = current_dir / "config" / "taxonomy.json"
         self.taxonomy_file = Path(taxonomy_file)
         self.taxonomy: Dict = {}
         self.metadata: Dict = {}

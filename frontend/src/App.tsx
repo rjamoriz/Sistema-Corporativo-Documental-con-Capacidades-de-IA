@@ -9,6 +9,7 @@ import { SearchComponent } from './components/Search';
 import { RAGChat } from './components/RAGChat';
 import { Login } from './components/Login';
 import OntologyPage from './pages/OntologyPage';
+import AdminSyntheticData from './pages/AdminSyntheticData';
 import { useAuthStore } from './store/authStore';
 
 const queryClient = new QueryClient({
@@ -56,6 +57,7 @@ function App() {
                     <Route path="/search" element={<SearchComponent />} />
                     <Route path="/chat" element={<RAGChat />} />
                     <Route path="/ontology" element={<OntologyPage />} />
+                    <Route path="/synthetic" element={<AdminSyntheticData />} />
                   </Routes>
                 </Layout>
               </PrivateRoute>

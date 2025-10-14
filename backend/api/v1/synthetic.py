@@ -11,8 +11,10 @@ from pathlib import Path
 from core.config import settings
 from core.auth import get_current_active_user, require_role
 from models.database_models import User
-from services.synthetic_data_service import synthetic_data_service
+# Switch to full synthetic data service for real PDF generation
+from services.synthetic_data_service_full import synthetic_data_service
 from core.logging_config import logger
+from fastapi.responses import FileResponse
 
 
 router = APIRouter(prefix="/synthetic", tags=["Synthetic Data"])
@@ -307,9 +309,19 @@ async def list_templates(
     - Compliance
     - Multimedia
     """
-    templates = synthetic_data_service.get_available_templates()
+    templates = synthetic_data_service.get_templates()
     
-    return [TemplateInfo(**template) for template in templates]
+    # Convert dict to list of TemplateInfo
+    template_list = []
+    for template_id, template_data in templates.items():
+        template_list.append({
+            "id": template_id,
+            "name": template_data["name"],
+            "description": template_data["description"],
+            "categories": template_data["categories"]
+        })
+    
+    return template_list
 
 
 @router.post("/preview-distribution")
@@ -461,3 +473,74 @@ async def get_task_files(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error reading task files: {str(e)}"
         )
+
+
+@router.get("/tasks/{task_id}/files/{filename}")
+async def download_file(
+    task_id: str,
+    filename: str,
+    current_user: User = Depends(verify_synthetic_permissions)
+):
+    """
+    Descarga un archivo generado específico
+    
+    El archivo debe pertenecer a una tarea completada.
+    Solo se permiten descargar archivos PDF.
+    
+    **Seguridad:**
+    - Valida que el archivo pertenezca a la tarea
+    - Solo permite archivos .pdf
+    - Previene path traversal attacks
+    """
+    # Validar filename (prevenir path traversal)
+    if '..' in filename or '/' in filename or '\\' in filename:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid filename"
+        )
+    
+    # Solo permitir PDFs
+    if not filename.lower().endswith('.pdf'):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Only PDF files can be downloaded"
+        )
+    
+    # Verificar que la tarea existe y está completada
+    status_data = await synthetic_data_service.get_task_status(task_id)
+    
+    if "error" in status_data:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Task {task_id} not found"
+        )
+    
+    if status_data.get("status") != "completed":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Task {task_id} is not completed yet"
+        )
+    
+    # Obtener ruta del archivo
+    output_path = status_data.get("output_path")
+    if not output_path:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Output path not found"
+        )
+    
+    file_path = Path(output_path) / filename
+    
+    # Verificar que el archivo existe
+    if not file_path.exists() or not file_path.is_file():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"File {filename} not found"
+        )
+    
+    # Retornar archivo
+    return FileResponse(
+        path=str(file_path),
+        media_type="application/pdf",
+        filename=filename
+    )

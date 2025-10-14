@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 
 export const Login: React.FC = () => {
-  const [username, setUsername] = useState('admin.demo');
+  const [username, setUsername] = useState('admin@demo.documental.com');
   const [password, setPassword] = useState('Demo2025!');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -29,7 +29,7 @@ export const Login: React.FC = () => {
       formData.append('username', username);
       formData.append('password', password);
 
-      const response = await fetch(`${API_BASE_URL.replace('/api/v1', '')}/api/v1/auth/login`, {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

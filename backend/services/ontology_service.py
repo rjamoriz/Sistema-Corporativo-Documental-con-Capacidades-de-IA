@@ -26,13 +26,17 @@ class RiskLevel(str, Enum):
 class OntologyService:
     """Servicio para trabajar con la ontología formal OWL"""
     
-    def __init__(self, ontology_file: str = "ontology/tefinancia.ttl"):
+    def __init__(self, ontology_file: str = None):
         """
         Inicializa el servicio cargando la ontología OWL
         
         Args:
             ontology_file: Ruta al archivo Turtle de la ontología
         """
+        if ontology_file is None:
+            # Get path relative to project root
+            current_dir = Path(__file__).parent.parent.parent
+            ontology_file = current_dir / "ontology" / "tefinancia.ttl"
         self.ontology_file = Path(ontology_file)
         self.graph = Graph()
         

@@ -11,7 +11,7 @@ from contextlib import asynccontextmanager
 import logging
 import time
 
-from api.v1 import documents, search, rag, risk, compliance, auth, synthetic, taxonomy, ontology
+from api.v1 import documents, search, rag, risk, compliance, auth, synthetic, taxonomy, ontology, ml, dashboard
 from api.graphql.router import graphql_router  # GraphQL API
 from core.config import settings
 from core.database import engine, Base
@@ -174,6 +174,8 @@ app.include_router(search.router, prefix="/api/v1/search", tags=["Search"])
 app.include_router(rag.router, prefix="/api/v1/rag", tags=["RAG"])
 app.include_router(risk.router, prefix="/api/v1/risk", tags=["Risk Analysis"])
 app.include_router(compliance.router, prefix="/api/v1/compliance", tags=["Compliance"])
+app.include_router(dashboard.router, prefix="/api/v1/dashboard", tags=["Dashboard"])
+app.include_router(ml.router, prefix="/api/v1", tags=["Machine Learning"])  # ✨ GPU Monitoring
 app.include_router(synthetic.router, prefix="/api/v1", tags=["Synthetic Data"])
 app.include_router(taxonomy.router, prefix="/api/v1", tags=["Taxonomy"])  # Sprint 1: Taxonomía jerárquica
 app.include_router(ontology.router, prefix="/api/v1", tags=["Ontology"])  # Sprint 2+3: Ontología OWL + SPARQL

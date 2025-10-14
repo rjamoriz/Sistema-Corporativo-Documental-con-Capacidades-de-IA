@@ -1,0 +1,109 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16
+    container_name: financia_postgres
+    environment:
+      POSTGRES_USER: financia
+      POSTGRES_PASSWORD: financia2030
+      POSTGRES_DB: financia_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U financia"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: |
+      bash -c "
+      apt-get update && apt-get install -y git build-essential postgresql-server-dev-16 && 
+      cd /tmp && 
+      git clone --branch v0.5.1 https://github.com/pgvector/pgvector.git && 
+      cd pgvector && 
+      make && make install && 
+      docker-entrypoint.sh postgres
+      "
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: financia_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Backend FastAPI
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: financia_backend
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://financia:financia2030@postgres:5432/financia_db
+      - REDIS_URL=redis://redis:6379/0
+      - LOG_LEVEL=INFO
+      # GPU Variables
+      - GPU_ENABLED=true
+      - CUDA_VISIBLE_DEVICES=0
+      - TORCH_DEVICE=auto
+      - ML_BATCH_SIZE_CPU=16
+      - ML_BATCH_SIZE_GPU=64
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - backend_logs:/app/logs
+      - backend_uploads:/app/uploads
+      - model_cache:/root/.cache
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 4G
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  # Frontend React
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: financia_frontend
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  backend_logs:
+  backend_uploads:
+  model_cache:
+
+networks:
+  default:
+    name: financia_network

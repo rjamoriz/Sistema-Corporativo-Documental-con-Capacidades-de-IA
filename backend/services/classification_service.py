@@ -31,51 +31,52 @@ class ClassificationService:
             logger.warning(f"Could not load custom model, using default: {e}")
             self.classifier = pipeline("text-classification", model="dccuchile/bert-base-spanish-wwm-uncased")
         
-        # Mapeo de categorías
+        # Mapeo de categorías (usando las disponibles en el enum)
         self.category_mapping = {
-            "LEGAL": DocumentClassification.LEGAL,
-            "FINANCIAL": DocumentClassification.FINANCIAL,
-            "HR": DocumentClassification.HR,
-            "TECHNICAL": DocumentClassification.TECHNICAL,
-            "MARKETING": DocumentClassification.MARKETING,
-            "OPERATIONS": DocumentClassification.OPERATIONS,
-            "COMPLIANCE": DocumentClassification.COMPLIANCE,
-            "SENSITIVE": DocumentClassification.SENSITIVE,
-            "UNCLASSIFIED": DocumentClassification.UNCLASSIFIED
+            "CONTRATO": DocumentClassification.CONTRATO_PRESTAMO_PERSONAL,
+            "CONTRATO_PROVEEDOR": DocumentClassification.CONTRATO_PROVEEDOR,
+            "IDENTIDAD": DocumentClassification.DOCUMENTO_IDENTIDAD,
+            "FACTURA": DocumentClassification.RECIBO_FACTURA,
+            "SEGURO": DocumentClassification.POLIZA_SEGURO,
+            "LLAMADA": DocumentClassification.TRANSCRIPCION_LLAMADA,
+            "INFORME": DocumentClassification.INFORME_INTERNO,
+            "OTRO": DocumentClassification.OTRO
         }
         
         # Palabras clave para clasificación basada en reglas (fallback)
+        # Mapeando a las categorías disponibles en el enum actual
         self.keyword_rules = {
-            DocumentClassification.LEGAL: [
-                "contrato", "acuerdo", "demanda", "sentencia", "tribunal", "juzgado",
-                "artículo", "ley", "normativa", "reglamento", "decreto", "resolución",
-                "litigio", "arbitraje", "cláusula", "firmante", "notario"
+            DocumentClassification.CONTRATO_PRESTAMO_PERSONAL: [
+                "contrato", "préstamo", "personal", "crédito", "financiación",
+                "acuerdo", "firmante", "notario", "cláusula", "condiciones"
             ],
-            DocumentClassification.FINANCIAL: [
-                "factura", "presupuesto", "balance", "cuenta", "ingreso", "gasto",
-                "iva", "importe", "precio", "coste", "inversión", "beneficio",
-                "pérdida", "activo", "pasivo", "patrimonio", "auditoría", "fiscal"
+            DocumentClassification.CONTRATO_PROVEEDOR: [
+                "proveedor", "suministro", "servicios", "compra", "venta",
+                "contrato comercial", "términos", "especificaciones"
             ],
-            DocumentClassification.HR: [
-                "nómina", "empleado", "trabajador", "salario", "contratación", "despido",
-                "vacaciones", "permiso", "baja", "convenio colectivo", "recursos humanos",
-                "formación", "evaluación", "rendimiento", "puesto", "cargo"
+            DocumentClassification.DOCUMENTO_IDENTIDAD: [
+                "dni", "nif", "pasaporte", "identidad", "carnet", "cedula",
+                "documento nacional", "identificación personal"
             ],
-            DocumentClassification.TECHNICAL: [
-                "especificación", "manual", "arquitectura", "diseño", "desarrollo",
-                "implementación", "código", "sistema", "software", "hardware",
-                "servidor", "base de datos", "api", "protocolo", "algoritmo"
+            DocumentClassification.RECIBO_FACTURA: [
+                "factura", "recibo", "presupuesto", "balance", "cuenta", "iva",
+                "importe", "precio", "coste", "pago", "cobro"
             ],
-            DocumentClassification.COMPLIANCE: [
-                "rgpd", "gdpr", "lopd", "protección de datos", "consentimiento",
-                "responsable del tratamiento", "encargado del tratamiento", "dpo",
-                "delegado de protección", "impacto", "riesgo", "cumplimiento",
-                "auditoría", "certificación", "iso", "norma"
+            DocumentClassification.POLIZA_SEGURO: [
+                "póliza", "seguro", "aseguradora", "prima", "cobertura",
+                "siniestro", "indemnización", "beneficiario"
             ],
-            DocumentClassification.SENSITIVE: [
-                "confidencial", "secreto", "reservado", "privado", "clasificado",
-                "datos personales", "datos sensibles", "salud", "ideología",
-                "afiliación sindical", "religión", "orientación sexual", "origen racial"
+            DocumentClassification.TRANSCRIPCION_LLAMADA: [
+                "transcripción", "llamada", "conversación", "audio", "grabación",
+                "diálogo", "comunicación telefónica"
+            ],
+            DocumentClassification.INFORME_INTERNO: [
+                "informe", "reporte", "análisis", "estudio", "evaluación",
+                "memoria", "resumen ejecutivo", "conclusiones"
+            ],
+            DocumentClassification.OTRO: [
+                "documento", "archivo", "texto", "información", "otros",
+                "misceláneo", "general"
             ]
         }
     
