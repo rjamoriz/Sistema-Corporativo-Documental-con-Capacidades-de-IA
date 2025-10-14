@@ -73,7 +73,7 @@ async def get_document(
 async def list_documents(
     skip: int = 0,
     limit: int = 100,
-    status: Optional[str] = None,
+    doc_status: Optional[str] = Query(None, alias="status"),
     classification: Optional[str] = None,
     department: Optional[str] = None,
     token: str = Depends(oauth2_scheme),
@@ -84,13 +84,14 @@ async def list_documents(
     
     - **skip**: Pagination offset
     - **limit**: Max results (max 100)
-    - **status**: Filter by status
+    - **doc_status**: Filter by status
     - **classification**: Filter by classification
     - **department**: Filter by department
     """
     # TODO: Implement list documents with filters
+    from fastapi import status as http_status
     raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
+        status_code=http_status.HTTP_501_NOT_IMPLEMENTED,
         detail="List documents not yet implemented"
     )
 
