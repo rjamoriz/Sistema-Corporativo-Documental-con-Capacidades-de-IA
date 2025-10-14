@@ -112,7 +112,7 @@ const CompliancePage: React.FC = () => {
               <Tooltip />
               <Bar dataKey="value" fill="#3b82f6">
                 {complianceDistribution.map((entry, index) => (
-                  <Cell key={cell-} fill={entry.color} />
+                  <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Bar>
             </BarChart>

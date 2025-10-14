@@ -108,7 +108,7 @@ const RisksPage: React.FC = () => {
               <Tooltip />
               <Bar dataKey="value" fill="#3b82f6">
                 {riskDistribution.map((entry, index) => (
-                  <Cell key={cell-} fill={entry.color} />
+                  <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Bar>
             </BarChart>
