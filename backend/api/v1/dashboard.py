@@ -43,7 +43,7 @@ async def get_dashboard_stats(
         category_counts = result.all()
         
         documents_by_category = {
-            category or "sin_clasificar": count 
+            (category.value if category else "sin_clasificar"): count 
             for category, count in category_counts
         }
         
@@ -55,7 +55,7 @@ async def get_dashboard_stats(
         status_counts = result.all()
         
         documents_by_status = {
-            status or "unknown": count 
+            (status.value if status else "unknown"): count 
             for status, count in status_counts
         }
         
@@ -85,11 +85,11 @@ async def get_dashboard_stats(
         recent_uploads_data = [
             {
                 "id": str(doc.id),
-                "filename": doc.filename,
-                "status": doc.status,
-                "classification": doc.classification,
+                "filename": doc.title,
+                "status": doc.status.value if doc.status else "unknown",
+                "classification": doc.classification.value if doc.classification else "sin_clasificar",
                 "created_at": doc.created_at.isoformat() if doc.created_at else None,
-                "file_size": doc.file_size,
+                "file_size": doc.file_size_bytes,
                 "mime_type": doc.mime_type
             }
             for doc in recent_uploads
