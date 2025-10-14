@@ -225,3 +225,11 @@ class DSRType(str, enum.Enum):
     OBJECT = "object"           # Right to object
     RESTRICT = "restrict"       # Right to restrict processing
     LODGE = "lodge"             # Right to lodge complaint
+
+
+class DSRStatus(str, enum.Enum):
+    """Data Subject Request Status"""
+    PENDING = "pending"
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+    REJECTED = "rejected"
