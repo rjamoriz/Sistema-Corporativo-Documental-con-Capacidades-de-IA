@@ -1,11 +1,13 @@
-﻿import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+﻿import React, { useState } from 'react';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   ShieldExclamationIcon,
   ChartBarIcon,
   ExclamationTriangleIcon,
   CheckCircleIcon,
   InformationCircleIcon,
+  CpuChipIcon,
+  DocumentMagnifyingGlassIcon,
 } from '@heroicons/react/24/outline';
 import apiClient from '@/lib/api';
 import {
@@ -19,6 +21,12 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  RadarChart,
+  Radar,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Legend,
 } from 'recharts';
 
 const RISK_COLORS = {
@@ -28,7 +36,26 @@ const RISK_COLORS = {
   critical: '#7f1d1d',
 };
 
+const AI_RISK_COLORS = {
+  MINIMAL: '#10b981',
+  LIMITED: '#3b82f6',
+  HIGH: '#f59e0b',
+  UNACCEPTABLE: '#ef4444',
+};
+
 const RisksPage: React.FC = () => {
+  const [showAIAssessment, setShowAIAssessment] = useState(false);
+  const [selectedRiskLevel, setSelectedRiskLevel] = useState<string>('HIGH');
+  const [aiUseCase, setAIUseCase] = useState({
+    use_case_title: '',
+    use_case_description: '',
+    sector: '',
+    involves_biometrics: false,
+    involves_critical_infrastructure: false,
+    involves_law_enforcement: false,
+    involves_employment: false,
+  });
+
   const { data: riskData, isLoading, error } = useQuery({
     queryKey: ['risk-dashboard'],
     queryFn: async () => {
@@ -48,6 +75,32 @@ const RisksPage: React.FC = () => {
       }
     },
   });
+
+  // NEW: Get AI Act requirements
+  const { data: aiActRequirements, isLoading: loadingAIAct } = useQuery({
+    queryKey: ['ai-act-requirements', selectedRiskLevel],
+    queryFn: async () => {
+      const response = await apiClient.get(`/risk/eu/ai-act/requirements?risk_level=${selectedRiskLevel}`);
+      return response.data;
+    },
+  });
+
+  // NEW: AI Use Case Assessment mutation
+  const assessAIUseCaseMutation = useMutation({
+    mutationFn: async (data: typeof aiUseCase) => {
+      const response = await apiClient.post('/risk/eu/ai-act/assess-use-case', data);
+      return response.data;
+    },
+  });
+
+  const handleAssessAIUseCase = async () => {
+    if (!aiUseCase.use_case_title || !aiUseCase.use_case_description) {
+      alert('Por favor complete título y descripción del caso de uso');
+      return;
+    }
+
+    assessAIUseCaseMutation.mutate(aiUseCase);
+  };
 
   if (isLoading) {
     return (
@@ -74,60 +127,7 @@ const RisksPage: React.FC = () => {
 
   const totalRiskDocuments = riskDistribution.reduce((sum, item) => sum + item.value, 0);
 
-  return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900">Análisis de Riesgos</h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="card">
-          <p className="text-sm font-medium text-gray-600">Total Documentos</p>
-          <p className="text-3xl font-bold text-gray-900 mt-2">{totalRiskDocuments}</p>
-        </div>
-        <div className="card">
-          <p className="text-sm font-medium text-gray-600">Riesgo Bajo</p>
-          <p className="text-3xl font-bold text-green-600 mt-2">{riskData?.risk_distribution.low || 0}</p>
-        </div>
-        <div className="card">
-          <p className="text-sm font-medium text-gray-600">Riesgo Alto</p>
-          <p className="text-3xl font-bold text-orange-600 mt-2">{riskData?.risk_distribution.high || 0}</p>
-        </div>
-        <div className="card">
-          <p className="text-sm font-medium text-gray-600">Riesgo Crítico</p>
-          <p className="text-3xl font-bold text-red-600 mt-2">{riskData?.risk_distribution.critical || 0}</p>
-        </div>
-      </div>
-
-      <div className="card">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Distribución de Riesgo</h3>
-        {totalRiskDocuments > 0 ? (
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={riskDistribution}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value" fill="#3b82f6">
-                {riskDistribution.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        ) : (
-          <div className="text-center py-8">
-            <InformationCircleIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500">No hay datos de riesgo disponibles</p>
-          </div>
-        )}
-      </div>
-
-      <div className="card bg-blue-50 border-blue-200">
-        <h3 className="font-semibold text-blue-900 mb-2">Acerca del Análisis de Riesgos</h3>
-        <p className="text-sm text-blue-700">
-          El sistema analiza documentos en 6 dimensiones: Legal (25%), Financiero (30%),
-          Operacional (20%), ESG (10%), Privacidad (10%) y Ciberseguridad (5%).
-        </p>
-      </div>
+  const riskLevels = ['UNACCEPTABLE', 'HIGH',
     </div>
   );
 };

@@ -65,7 +65,28 @@ export default function OntologyExplorer() {
     try {
       setLoading(true);
       const response = await apiClient.get(`${API_BASE}/ontology/hierarchy`);
-      setHierarchy(response.data.hierarchy || []);
+      
+      // La respuesta tiene formato: {root: {...}, total_classes: 33}
+      // Convertimos el root a un array con un solo elemento
+      const rootNode = response.data.root;
+      if (rootNode) {
+        // Convertir el nodo raíz en el formato esperado por el componente
+        const convertNode = (node: any): ClassTreeNode => ({
+          class_info: {
+            uri: node.uri,
+            name: node.name,
+            label: node.label,
+            comment: '',
+            parent_classes: [],
+            subclasses: [],
+            properties: [],
+            restrictions: []
+          },
+          children: (node.children || []).map(convertNode)
+        });
+        
+        setHierarchy([convertNode(rootNode)]);
+      }
       setError(null);
     } catch (err) {
       console.error('Error loading ontology:', err);

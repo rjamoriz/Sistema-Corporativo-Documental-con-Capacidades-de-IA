@@ -1,0 +1,30 @@
+@startuml c4-context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Sistema Corporativo Documental - Diagrama de Contexto C4
+
+Person(user, "Usuario Financiero", "Analista, Compliance Officer, Ejecutivo")
+Person(admin, "Administrador", "Administrador del sistema")
+
+System(dmsSystem, "Sistema Documental IA", "Gestión documental corporativa con capacidades de IA responsable y aceleración GPU")
+
+System_Ext(sharepoint, "SharePoint Online", "Repositorio corporativo Microsoft")
+System_Ext(sap, "SAP DMS", "Sistema de gestión documental SAP")
+System_Ext(ofac, "OFAC Sanctions API", "API de validación de sanciones")
+System_Ext(eurlex, "EUR-Lex API", "Base de datos legislativa de la UE")
+System_Ext(openai, "OpenAI GPT-4", "Modelos de lenguaje grandes")
+System_Ext(phoenix, "Arize Phoenix", "Observabilidad de LLMs")
+
+Rel(user, dmsSystem, "Usa", "HTTPS/WSS")
+Rel(admin, dmsSystem, "Administra", "HTTPS")
+
+Rel(dmsSystem, sharepoint, "Sincroniza documentos", "Microsoft Graph API")
+Rel(dmsSystem, sap, "Importa documentos", "GraphQL")
+Rel(dmsSystem, ofac, "Valida entidades", "REST API")
+Rel(dmsSystem, eurlex, "Consulta regulaciones", "SPARQL")
+Rel(dmsSystem, openai, "Procesa con IA", "REST API")
+Rel(dmsSystem, phoenix, "Monitoriza LLMs", "OpenTelemetry")
+
+@enduml

@@ -110,15 +110,15 @@ class IngestService:
             
             # Crear registro en base de datos
             document = Document(
-                filename=filename,
-                file_path=object_name,
-                file_size=file_size,
+                title=metadata.get("title", filename),
                 mime_type=mime_type,
-                file_hash=file_hash,
-                uploaded_by=user_id,
+                file_size_bytes=file_size,
+                checksum_sha256=file_hash,
+                storage_path=object_name,
+                owner_id=user_id,
+                department=metadata.get("department"),
                 status=DocumentStatus.PENDING,
-                classification=DocumentClassification.UNCLASSIFIED,
-                metadata_=metadata or {}
+                metadata_json=metadata or {}
             )
             
             db.add(document)
@@ -132,7 +132,7 @@ class IngestService:
                     "action": "document_ingest",
                     "user_id": str(user_id),
                     "document_id": str(document.id),
-                    "filename": filename,
+                    "document_title": document.title,
                     "file_size": file_size,
                     "mime_type": mime_type,
                     "file_hash": file_hash
@@ -149,7 +149,7 @@ class IngestService:
     async def _check_duplicate(self, db: AsyncSession, file_hash: str) -> Optional[Document]:
         """Verifica si un documento con el mismo hash ya existe"""
         result = await db.execute(
-            select(Document).where(Document.file_hash == file_hash)
+            select(Document).where(Document.checksum_sha256 == file_hash)
         )
         return result.scalar_one_or_none()
     
@@ -166,7 +166,7 @@ class IngestService:
         try:
             response = self.minio_client.get_object(
                 bucket_name=self.bucket_name,
-                object_name=document.file_path
+                object_name=document.storage_path
             )
             content = response.read()
             response.close()
@@ -191,12 +191,11 @@ class IngestService:
             # Eliminar de MinIO
             self.minio_client.remove_object(
                 bucket_name=self.bucket_name,
-                object_name=document.file_path
+                object_name=document.storage_path
             )
             
             # Marcar como eliminado en BD (soft delete)
-            document.deleted_at = datetime.utcnow()
-            document.status = DocumentStatus.DELETED
+            document.status = DocumentStatus.ARCHIVED
             
             await db.commit()
             
@@ -205,7 +204,7 @@ class IngestService:
                 extra={
                     "action": "document_delete",
                     "document_id": str(document.id),
-                    "filename": document.filename
+                    "title": document.title
                 }
             )
             

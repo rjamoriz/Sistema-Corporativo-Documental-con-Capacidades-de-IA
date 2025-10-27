@@ -474,14 +474,8 @@ async def get_ontology_hierarchy(
     ```
     """
     try:
-        # Si no se especifica root, usar Documento
-        if not root_class:
-            root_uri = ontology_service.TF.Documento
-        else:
-            root_uri = ontology_service.TF[root_class]
-        
-        # Obtener jerarquía
-        hierarchy = ontology_service.get_hierarchy(root_uri)
+        # Obtener jerarquía (siempre desde Documento como raíz)
+        hierarchy = ontology_service.get_hierarchy()
         
         # Contar total de clases
         def count_classes(node):

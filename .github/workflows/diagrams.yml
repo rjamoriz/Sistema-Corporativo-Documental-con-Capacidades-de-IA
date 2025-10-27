@@ -1,0 +1,121 @@
+name: 🎨 Auto-Generate Architecture Diagrams
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/diagrams/**'
+      - '.github/workflows/diagrams.yml'
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  generate-diagrams:
+    name: Generate Diagrams with Kroki
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 📦 Install Mermaid CLI
+        run: npm install -g @mermaid-js/mermaid-cli
+
+      - name: 🎨 Generate C4 Diagrams from PlantUML
+        run: |
+          mkdir -p docs/generated-diagrams
+          
+          # Generar diagramas C4 con Kroki
+          if [ -f "docs/diagrams/c4-context.puml" ]; then
+            curl -X POST -H "Content-Type: text/plain" \
+              --data-binary @docs/diagrams/c4-context.puml \
+              https://kroki.io/plantuml/svg > docs/generated-diagrams/c4-context.svg
+            echo "✅ Generated C4 Context diagram"
+          fi
+          
+          if [ -f "docs/diagrams/c4-container.puml" ]; then
+            curl -X POST -H "Content-Type: text/plain" \
+              --data-binary @docs/diagrams/c4-container.puml \
+              https://kroki.io/plantuml/svg > docs/generated-diagrams/c4-container.svg
+            echo "✅ Generated C4 Container diagram"
+          fi
+          
+          if [ -f "docs/diagrams/c4-component.puml" ]; then
+            curl -X POST -H "Content-Type: text/plain" \
+              --data-binary @docs/diagrams/c4-component.puml \
+              https://kroki.io/plantuml/svg > docs/generated-diagrams/c4-component.svg
+            echo "✅ Generated C4 Component diagram"
+          fi
+
+      - name: 🎨 Generate Architecture Diagrams
+        run: |
+          # Generar diagramas de arquitectura con Kroki
+          if [ -f "docs/diagrams/architecture.puml" ]; then
+            curl -X POST -H "Content-Type: text/plain" \
+              --data-binary @docs/diagrams/architecture.puml \
+              https://kroki.io/plantuml/svg > docs/generated-diagrams/architecture.svg
+            echo "✅ Generated Architecture diagram"
+          fi
+          
+          if [ -f "docs/diagrams/deployment.puml" ]; then
+            curl -X POST -H "Content-Type: text/plain" \
+              --data-binary @docs/diagrams/deployment.puml \
+              https://kroki.io/plantuml/svg > docs/generated-diagrams/deployment.svg
+            echo "✅ Generated Deployment diagram"
+          fi
+
+      - name: 🎨 Generate Mermaid Diagrams
+        run: |
+          # Buscar archivos .mmd y convertirlos a SVG
+          find docs/diagrams -name "*.mmd" -type f | while read file; do
+            filename=$(basename "$file" .mmd)
+            mmdc -i "$file" -o "docs/generated-diagrams/${filename}.svg"
+            echo "✅ Generated Mermaid diagram: ${filename}.svg"
+          done
+
+      - name: 📊 Generate Structurizr Diagrams (if DSL exists)
+        run: |
+          if [ -f "docs/diagrams/workspace.dsl" ]; then
+            # Usar Structurizr CLI si el workspace DSL existe
+            # Nota: Requiere configuración de Structurizr workspace ID
+            echo "ℹ️ Structurizr DSL found. Configure workspace ID in secrets for auto-generation."
+          fi
+
+      - name: 📈 Generate Statistics
+        run: |
+          echo "📊 Diagram Generation Statistics:" > docs/generated-diagrams/README.md
+          echo "" >> docs/generated-diagrams/README.md
+          echo "Generated on: $(date)" >> docs/generated-diagrams/README.md
+          echo "Total diagrams: $(ls -1 docs/generated-diagrams/*.svg 2>/dev/null | wc -l)" >> docs/generated-diagrams/README.md
+          echo "" >> docs/generated-diagrams/README.md
+          echo "## Available Diagrams:" >> docs/generated-diagrams/README.md
+          ls -1 docs/generated-diagrams/*.svg 2>/dev/null | while read file; do
+            basename=$(basename "$file")
+            echo "- [$basename](./$basename)" >> docs/generated-diagrams/README.md
+          done
+
+      - name: 💾 Commit Generated Diagrams
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: '🎨 Auto-generate architecture diagrams [skip ci]'
+          file_pattern: 'docs/generated-diagrams/*'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_author: 'github-actions[bot] <github-actions[bot]@users.noreply.github.com>'
+
+      - name: 📋 Summary
+        run: |
+          echo "### 🎨 Diagram Generation Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Generated diagrams are available in \`docs/generated-diagrams/\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "#### Generated Files:" >> $GITHUB_STEP_SUMMARY
+          ls -lh docs/generated-diagrams/*.svg 2>/dev/null | awk '{print "- " $9 " (" $5 ")"}' >> $GITHUB_STEP_SUMMARY || echo "No SVG files generated" >> $GITHUB_STEP_SUMMARY

@@ -1,3 +1,9 @@
+# Graph & Semantic Web (for EU Regulatory APIs)
+SPARQLWrapper==2.0.0
+rdflib==7.0.0
+beautifulsoup4==4.12.2
+lxml==4.9.3
+
 # FinancIA 2030 - Backend Dependencies
 # Python 3.11+
 

@@ -1,0 +1,39 @@
+@startuml c4-container
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Sistema Documental IA - Diagrama de Contenedores C4
+
+Person(user, "Usuario", "Usuario del sistema")
+
+System_Boundary(dms, "Sistema Documental IA") {
+    Container(web, "React SPA", "TypeScript, Vite", "Interfaz de usuario interactiva con dashboards y visualizaciones")
+    Container(api, "FastAPI Backend", "Python 3.11, FastAPI", "API REST y GraphQL para operaciones del sistema")
+    Container(ml, "ML Pipeline", "PyTorch, Scikit-learn", "Pipeline de procesamiento ML/AI")
+    Container(workers, "Celery Workers", "Python, Celery", "Procesamiento asíncrono de documentos")
+    
+    ContainerDb(postgres, "PostgreSQL", "PostgreSQL 15", "Almacena metadata de documentos y configuración")
+    ContainerDb(vector, "Qdrant", "Vector Database", "Almacena embeddings semánticos")
+    ContainerDb(redis, "Redis", "Redis 7", "Cache y message broker")
+    ContainerDb(minio, "MinIO", "Object Storage", "Almacenamiento S3-compatible de archivos")
+}
+
+System_Ext(openai, "OpenAI API", "Modelos GPT-4")
+System_Ext(ofac, "OFAC API", "Validación sanciones")
+System_Ext(phoenix, "Arize Phoenix", "Observabilidad")
+
+Rel(user, web, "Usa", "HTTPS")
+Rel(web, api, "Llama", "JSON/REST")
+Rel(api, ml, "Procesa", "Internal API")
+Rel(api, workers, "Encola tareas", "Celery")
+Rel(api, postgres, "Lee/Escribe", "SQLAlchemy ORM")
+Rel(api, redis, "Cache", "Redis Protocol")
+Rel(ml, vector, "Almacena embeddings", "gRPC")
+Rel(workers, postgres, "Actualiza", "SQL")
+Rel(workers, minio, "Almacena archivos", "S3 API")
+Rel(ml, openai, "Genera embeddings", "HTTPS")
+Rel(api, ofac, "Valida", "REST API")
+Rel(api, phoenix, "Telemetría", "OTLP")
+
+@enduml

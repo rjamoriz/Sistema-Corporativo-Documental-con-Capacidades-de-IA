@@ -116,6 +116,25 @@ class Settings(BaseSettings):
     
     # Document Processing
     MAX_FILE_SIZE_MB: int = 100
+    ALLOWED_FILE_TYPES: List[str] = [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.ms-powerpoint",
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "text/plain",
+        "text/csv",
+        "image/jpeg",
+        "image/png",
+        "image/tiff",
+        "audio/mpeg",
+        "audio/wav",
+        "video/mp4",
+        "application/json",
+        "application/xml"
+    ]
     CHUNK_SIZE: int = 512
     CHUNK_OVERLAP: int = 50
     

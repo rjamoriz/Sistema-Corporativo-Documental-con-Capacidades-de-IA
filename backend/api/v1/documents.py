@@ -42,16 +42,67 @@ async def upload_document(
     2. Stored in MinIO
     3. Queued for processing (OCR, NER, classification, etc.)
     """
-    # TODO: Implement document upload
-    # 1. Validate file (MIME, size)
-    # 2. Compute checksum SHA-256
-    # 3. Store in MinIO
-    # 4. Create DB record
-    # 5. Publish to Kafka for processing
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Document upload not yet implemented"
-    )
+    try:
+        # Decode and validate token to get user
+        from jose import JWTError, jwt
+        from core.config import settings
+        from sqlalchemy import select
+        from models.database_models import User
+        
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+            email: str = payload.get("sub")
+            if email is None:
+                raise HTTPException(status_code=401, detail="Invalid token")
+        except JWTError:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        
+        # Get user from database
+        result = await db.execute(select(User).where(User.email == email))
+        current_user = result.scalar_one_or_none()
+        
+        if current_user is None:
+            raise HTTPException(status_code=401, detail="User not found")
+        
+        # Initialize ingest service
+        from services.ingest_service import IngestService
+        ingest_service = IngestService()
+        
+        # Prepare metadata
+        metadata = {
+            "title": title or file.filename,
+            "department": department or current_user.department,
+            "original_filename": file.filename
+        }
+        
+        # Read file content
+        content = await file.read()
+        from io import BytesIO
+        file_obj = BytesIO(content)
+        
+        # Ingest document
+        document = await ingest_service.ingest_document(
+            file=file_obj,
+            filename=file.filename,
+            user_id=current_user.id,
+            db=db,
+            metadata=metadata
+        )
+        
+        logger.info(f"Document uploaded successfully: {document.id}")
+        
+        return DocumentUploadResponse(
+            document_id=document.id,
+            message="Document uploaded successfully",
+            status=document.status.value
+        )
+        
+    except ValueError as e:
+        logger.warning(f"Validation error during upload: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error uploading document: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
 
 @router.get("/{document_id}", response_model=DocumentResponse)
