@@ -1,0 +1,226 @@
+# Docker Compose - Quantum & GPU Enhancement
+# Version 2.0 - Nuevos servicios modulares
+# NO AFECTA servicios existentes - Completamente opcional
+
+version: '3.8'
+
+services:
+  # ========================================
+  # NUEVO: GPU Embedding Service
+  # ========================================
+  gpu-embedding-service:
+    build:
+      context: ./services/gpu-embedding
+      dockerfile: Dockerfile
+    container_name: financia_gpu_embedding
+    ports:
+      - "8001:8001"
+    environment:
+      - EMBEDDING_MODEL=paraphrase-multilingual-mpnet-base-v2
+      - SERVICE_PORT=8001
+      - LOG_LEVEL=INFO
+      - CUDA_VISIBLE_DEVICES=0
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    volumes:
+      - gpu-embedding-models:/root/.cache/torch
+    networks:
+      - financia-network
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import requests; requests.get('http://localhost:8001/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+    labels:
+      - "com.financia.service=gpu-embedding"
+      - "com.financia.version=2.0"
+
+  # ========================================
+  # NUEVO: Quantum Dedupe Service (D-Wave)
+  # ========================================
+  quantum-dwave-service:
+    build:
+      context: ./services/quantum-dwave
+      dockerfile: Dockerfile
+    container_name: financia_quantum_dwave
+    ports:
+      - "8002:8002"
+    environment:
+      - DWAVE_API_TOKEN=${DWAVE_API_TOKEN:-}
+      - SERVICE_PORT=8002
+      - LOG_LEVEL=INFO
+      - USE_SIMULATED_ANNEALING=true
+    networks:
+      - financia-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    labels:
+      - "com.financia.service=quantum-dwave"
+      - "com.financia.version=2.0"
+
+  # ========================================
+  # NUEVO: Quantum Dedupe Service (IBM Qiskit)
+  # ========================================
+  quantum-ibm-service:
+    build:
+      context: ./services/quantum-ibm
+      dockerfile: Dockerfile
+    container_name: financia_quantum_ibm
+    ports:
+      - "8003:8003"
+    environment:
+      - QISKIT_IBM_TOKEN=${QISKIT_IBM_TOKEN:-}
+      - SERVICE_PORT=8003
+      - LOG_LEVEL=INFO
+      - USE_SIMULATOR=true
+    networks:
+      - financia-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    labels:
+      - "com.financia.service=quantum-ibm"
+      - "com.financia.version=2.0"
+
+  # ========================================
+  # NUEVO: Quantum ML Service (NVIDIA cuQuantum)
+  # ========================================
+  quantum-nvidia-service:
+    build:
+      context: ./services/quantum-nvidia
+      dockerfile: Dockerfile
+    container_name: financia_quantum_nvidia
+    ports:
+      - "8004:8004"
+    environment:
+      - SERVICE_PORT=8004
+      - LOG_LEVEL=INFO
+      - CUDA_VISIBLE_DEVICES=0
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - financia-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    labels:
+      - "com.financia.service=quantum-nvidia"
+      - "com.financia.version=2.0"
+
+  # ========================================
+  # NUEVO: Enhanced RAG Service
+  # ========================================
+  rag-enhanced-service:
+    build:
+      context: ./services/rag-enhanced
+      dockerfile: Dockerfile
+    container_name: financia_rag_enhanced
+    ports:
+      - "8005:8005"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - SERVICE_PORT=8005
+      - LOG_LEVEL=INFO
+      - GPU_EMBEDDING_URL=http://gpu-embedding-service:8001
+    depends_on:
+      - gpu-embedding-service
+    networks:
+      - financia-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8005/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    labels:
+      - "com.financia.service=rag-enhanced"
+      - "com.financia.version=2.0"
+
+  # ========================================
+  # Prometheus (Monitoring)
+  # ========================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: financia_prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    networks:
+      - financia-network
+    restart: unless-stopped
+    labels:
+      - "com.financia.service=prometheus"
+      - "com.financia.version=2.0"
+
+  # ========================================
+  # Grafana (Dashboards)
+  # ========================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: financia_grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_INSTALL_PLUGINS=grafana-piechart-panel
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    depends_on:
+      - prometheus
+    networks:
+      - financia-network
+    restart: unless-stopped
+    labels:
+      - "com.financia.service=grafana"
+      - "com.financia.version=2.0"
+
+# ========================================
+# Networks
+# ========================================
+networks:
+  financia-network:
+    name: financia-network
+    driver: bridge
+
+# ========================================
+# Volumes
+# ========================================
+volumes:
+  gpu-embedding-models:
+    name: financia_gpu_models
+  prometheus-data:
+    name: financia_prometheus_data
+  grafana-data:
+    name: financia_grafana_data
