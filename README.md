@@ -111,16 +111,22 @@ graph TB
     
     CELERY --> REDIS
     
-    style UI fill:#e1f5ff
-    style API fill:#fff3e0
-    style DOC fill:#f3e5f5
-    style SEARCH fill:#f3e5f5
-    style RAG fill:#f3e5f5
-    style ML fill:#f3e5f5
-    style RISK fill:#e8f5e9
-    style COMP fill:#e8f5e9
-    style SYNTH fill:#e8f5e9
-    style PHOENIX fill:#fce4ec
+    style UI fill:#4FC3F7,stroke:#0277BD,stroke-width:3px,color:#000
+    style API fill:#FFB74D,stroke:#E65100,stroke-width:3px,color:#000
+    style DOC fill:#BA68C8,stroke:#6A1B9A,stroke-width:2px,color:#fff
+    style SEARCH fill:#9575CD,stroke:#4527A0,stroke-width:2px,color:#fff
+    style RAG fill:#7E57C2,stroke:#311B92,stroke-width:2px,color:#fff
+    style ML fill:#5C6BC0,stroke:#1A237E,stroke-width:2px,color:#fff
+    style RISK fill:#66BB6A,stroke:#1B5E20,stroke-width:2px,color:#000
+    style COMP fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#000
+    style SYNTH fill:#81C784,stroke:#388E3C,stroke-width:2px,color:#000
+    style PG fill:#42A5F5,stroke:#0D47A1,stroke-width:2px,color:#fff
+    style OS fill:#26C6DA,stroke:#006064,stroke-width:2px,color:#000
+    style REDIS fill:#EF5350,stroke:#B71C1C,stroke-width:2px,color:#fff
+    style MINIO fill:#FF7043,stroke:#BF360C,stroke-width:2px,color:#fff
+    style QDRANT fill:#AB47BC,stroke:#4A148C,stroke-width:2px,color:#fff
+    style CELERY fill:#FFA726,stroke:#E65100,stroke-width:2px,color:#000
+    style PHOENIX fill:#EC407A,stroke:#880E4F,stroke-width:2px,color:#fff
 ```
 
 ### Pipeline de Procesamiento Documental
@@ -136,15 +142,15 @@ graph LR
     D -->|Validación| H[⚖️ Compliance]
     D -->|Análisis| I[⚠️ Risk Scoring]
     
-    style A fill:#e3f2fd
-    style B fill:#f3e5f5
-    style C fill:#f3e5f5
-    style D fill:#f3e5f5
-    style E fill:#fff3e0
-    style F fill:#e8f5e9
-    style G fill:#e1f5ff
-    style H fill:#fce4ec
-    style I fill:#fff9c4
+    style A fill:#4FC3F7,stroke:#0277BD,stroke-width:3px,color:#000
+    style B fill:#BA68C8,stroke:#6A1B9A,stroke-width:3px,color:#fff
+    style C fill:#9575CD,stroke:#4527A0,stroke-width:3px,color:#fff
+    style D fill:#7E57C2,stroke:#311B92,stroke-width:3px,color:#fff
+    style E fill:#FFB74D,stroke:#E65100,stroke-width:3px,color:#000
+    style F fill:#66BB6A,stroke:#1B5E20,stroke-width:3px,color:#000
+    style G fill:#26C6DA,stroke:#006064,stroke-width:3px,color:#000
+    style H fill:#EC407A,stroke:#880E4F,stroke-width:3px,color:#fff
+    style I fill:#FFA726,stroke:#E65100,stroke-width:3px,color:#000
 ```
 
 ### Arquitectura de Microservicios (Vista Detallada)
@@ -210,8 +216,24 @@ graph TB
     RISKAPI --> DB1
     COMPAPI --> DB1
     
-    style FE fill:#e1f5ff
-    style AUTH fill:#ffebee
+    style FE fill:#4FC3F7,stroke:#0277BD,stroke-width:3px,color:#000
+    style AUTH fill:#EF5350,stroke:#B71C1C,stroke-width:3px,color:#fff
+    style DOCS fill:#BA68C8,stroke:#6A1B9A,stroke-width:2px,color:#fff
+    style SRCH fill:#9575CD,stroke:#4527A0,stroke-width:2px,color:#fff
+    style RAGAPI fill:#7E57C2,stroke:#311B92,stroke-width:2px,color:#fff
+    style MLAPI fill:#5C6BC0,stroke:#1A237E,stroke-width:2px,color:#fff
+    style RISKAPI fill:#66BB6A,stroke:#1B5E20,stroke-width:2px,color:#000
+    style COMPAPI fill:#4CAF50,stroke:#2E7D32,stroke-width:2px,color:#000
+    style SYNTHAPI fill:#81C784,stroke:#388E3C,stroke-width:2px,color:#000
+    style GRAPHQL fill:#26C6DA,stroke:#006064,stroke-width:2px,color:#000
+    style WORKER1 fill:#FFA726,stroke:#E65100,stroke-width:2px,color:#000
+    style WORKER2 fill:#FFB74D,stroke:#EF6C00,stroke-width:2px,color:#000
+    style WORKER3 fill:#FFCC80,stroke:#F57C00,stroke-width:2px,color:#000
+    style DB1 fill:#42A5F5,stroke:#0D47A1,stroke-width:2px,color:#fff
+    style DB2 fill:#26C6DA,stroke:#006064,stroke-width:2px,color:#000
+    style DB3 fill:#AB47BC,stroke:#4A148C,stroke-width:2px,color:#fff
+    style DB4 fill:#EF5350,stroke:#B71C1C,stroke-width:2px,color:#fff
+    style DB5 fill:#FF7043,stroke:#BF360C,stroke-width:2px,color:#fff
 ```
 
 ---
