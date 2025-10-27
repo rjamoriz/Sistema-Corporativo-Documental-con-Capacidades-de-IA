@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sistema Documental IA – Arquitectura (Interactiva)</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <style>
+    body { font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji"; margin: 0; color: #111 } 
+    header { padding: 24px 16px; border-bottom: 1px solid #eee; }
+    header h1 { margin: 0; font-size: 22px; }
+    main { padding: 16px; }
+    .toolbar { display:flex; gap:8px; align-items:center; margin-bottom:12px }
+    .btn { border: 1px solid #ddd; padding: 6px 10px; background:#fff; border-radius:6px; cursor:pointer }
+    .btn.active { background:#111; color:#fff; border-color:#111 }
+    .panel { border:1px solid #eee; border-radius:8px; padding:12px; }
+    .note { color:#555; font-size: 13px; }
+    .graph { width: 100%; height: 600px; border: 1px dashed #ddd; border-radius: 8px; background: #fafafa }
+    #mermaid { display:none }
+    .legend { font-size: 12px; color:#555; margin-top:8px }
+    svg text { font-family: inherit; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Arquitectura – Vista Interactiva</h1>
+    <div class="note">Alterna entre una vista Mermaid y un grafo interactivo con D3.</div>
+  </header>
+  <main>
+    <div class="toolbar">
+      <button id="btnMermaid" class="btn active">Mermaid</button>
+      <button id="btnD3" class="btn">D3 Interactivo</button>
+      <a class="btn" href="../README.md">Ver README</a>
+      <a class="btn" href="generated-diagrams/" target="_blank">SVGs Generados</a>
+    </div>
+
+    <div id="mermaid" class="panel">
+      <pre class="mermaid">
+flowchart TB
+  subgraph Client
+    UI[React SPA\nTypeScript + Vite]
+  end
+  subgraph Gateway
+    NGINX[NGINX\nTLS/Reverse Proxy]
+  end
+  subgraph Backend[Backend Services]
+    API[FastAPI API]
+    DOC[Document Service]
+    SRCH[Search Service]
+    COMP[Compliance Service]
+    RISK[Risk Scoring]
+  end
+  subgraph Workers[Async Workers]
+    CELERY[Celery Workers]
+    JOBS[Schedulers]
+  end
+  subgraph ML[ML/AI Pipeline]
+    OCR[OCR Engine]
+    NER[NER Model]
+    EMB[Embeddings]
+    CLF[Classifier]
+  end
+  subgraph Data[Data Stores]
+    PG[(PostgreSQL)]
+    QD[(Qdrant Vectors)]
+    RD[(Redis Cache)]
+    S3[(MinIO S3)]
+  end
+  subgraph External[External APIs]
+    OFAC[OFAC]
+    OPENAI[OpenAI GPT-4]
+    PHX[Arize Phoenix]
+  end
+  UI --> NGINX --> API
+  API --> DOC
+  API --> SRCH
+  API --> COMP
+  API --> RISK
+  DOC --> CELERY --> OCR --> NER --> CLF
+  SRCH --> EMB --> OPENAI
+  API --> PG
+  SRCH --> QD
+  API --> RD
+  DOC --> S3
+  COMP --> OFAC
+  API --> PHX
+      </pre>
+      <div class="legend">Leyenda: Bloques por capa con flujos principales API/ML/Datos.</div>
+    </div>
+
+    <div id="d3" class="panel" style="display:none">
+      <div id="graph" class="graph"></div>
+      <div class="legend">Arrastra los nodos. Haz click para destacar conexiones.</div>
+    </div>
+  </main>
+
+  <script>
+    // Init Mermaid
+    mermaid.initialize({ startOnLoad: true, theme: 'default' });
+
+    // Toggle logic
+    const btnMermaid = document.getElementById('btnMermaid');
+    const btnD3 = document.getElementById('btnD3');
+    const m = document.getElementById('mermaid');
+    const d = document.getElementById('d3');
+
+    btnMermaid.onclick = () => {
+      btnMermaid.classList.add('active');
+      btnD3.classList.remove('active');
+      m.style.display = '';
+      d.style.display = 'none';
+    };
+    btnD3.onclick = () => {
+      btnD3.classList.add('active');
+      btnMermaid.classList.remove('active');
+      m.style.display = 'none';
+      d.style.display = '';
+      if (!window.__d3Init) { window.__d3Init = true; initD3(); }
+    };
+
+    // Simple D3 force-directed graph
+    function initD3() {
+      const nodes = [
+        { id: 'UI', group:'Client' },
+        { id: 'NGINX', group:'Gateway' },
+        { id: 'API', group:'Backend' },
+        { id: 'DOC', group:'Backend' },
+        { id: 'SRCH', group:'Backend' },
+        { id: 'COMP', group:'Backend' },
+        { id: 'RISK', group:'Backend' },
+        { id: 'CELERY', group:'Workers' },
+        { id: 'JOBS', group:'Workers' },
+        { id: 'OCR', group:'ML' },
+        { id: 'NER', group:'ML' },
+        { id: 'EMB', group:'ML' },
+        { id: 'CLF', group:'ML' },
+        { id: 'PG', group:'Data' },
+        { id: 'QD', group:'Data' },
+        { id: 'RD', group:'Data' },
+        { id: 'S3', group:'Data' },
+        { id: 'OFAC', group:'External' },
+        { id: 'OPENAI', group:'External' },
+        { id: 'PHX', group:'External' },
+      ];
+      const links = [
+        { source:'UI', target:'NGINX' },
+        { source:'NGINX', target:'API' },
+        { source:'API', target:'DOC' },
+        { source:'API', target:'SRCH' },
+        { source:'API', target:'COMP' },
+        { source:'API', target:'RISK' },
+        { source:'DOC', target:'CELERY' },
+        { source:'CELERY', target:'OCR' },
+        { source:'OCR', target:'NER' },
+        { source:'NER', target:'CLF' },
+        { source:'SRCH', target:'EMB' },
+        { source:'EMB', target:'OPENAI' },
+        { source:'API', target:'PG' },
+        { source:'SRCH', target:'QD' },
+        { source:'API', target:'RD' },
+        { source:'DOC', target:'S3' },
+        { source:'COMP', target:'OFAC' },
+        { source:'API', target:'PHX' },
+      ];
+
+      const width = document.getElementById('graph').clientWidth;
+      const height = 600;
+
+      const svg = d3.select('#graph').append('svg')
+        .attr('width', width)
+        .attr('height', height);
+
+      const color = d3.scaleOrdinal()
+        .domain(['Client','Gateway','Backend','Workers','ML','Data','External'])
+        .range(['#5AB0FF','#ccc','#00bcd4','#f5a623','#9c27b0','#607d8b','#8bc34a']);
+
+      const simulation = d3.forceSimulation(nodes)
+        .force('link', d3.forceLink(links).id(d => d.id).distance(80))
+        .force('charge', d3.forceManyBody().strength(-220))
+        .force('center', d3.forceCenter(width/2, height/2))
+        .force('collision', d3.forceCollide().radius(35));
+
+      const link = svg.append('g').attr('stroke', '#bbb').attr('stroke-width', 1.5)
+        .selectAll('line')
+        .data(links)
+        .enter().append('line');
+
+      const node = svg.append('g').attr('stroke', '#fff').attr('stroke-width', 1.5)
+        .selectAll('circle')
+        .data(nodes)
+        .enter().append('circle')
+          .attr('r', 16)
+          .attr('fill', d => color(d.group))
+          .call(d3.drag()
+              .on('start', dragstarted)
+              .on('drag', dragged)
+              .on('end', dragended))
+          .on('click', (_, d)=> highlight(d.id));
+
+      const label = svg.append('g')
+        .selectAll('text')
+        .data(nodes)
+        .enter().append('text')
+          .attr('font-size', 12)
+          .attr('dx', 20)
+          .attr('dy', 4)
+          .text(d => d.id);
+
+      simulation.on('tick', () => {
+        link
+          .attr('x1', d => d.source.x)
+          .attr('y1', d => d.source.y)
+          .attr('x2', d => d.target.x)
+          .attr('y2', d => d.target.y);
+        node
+          .attr('cx', d => d.x)
+          .attr('cy', d => d.y);
+        label
+          .attr('x', d => d.x)
+          .attr('y', d => d.y);
+      });
+
+      function dragstarted(event, d) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x; d.fy = d.y;
+      }
+      function dragged(event, d) {
+        d.fx = event.x; d.fy = event.y;
+      }
+      function dragended(event, d) {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null; d.fy = null;
+      }
+      function highlight(id) {
+        link.attr('stroke', l => (l.source.id===id || l.target.id===id) ? '#1976d2' : '#bbb')
+            .attr('stroke-width', l => (l.source.id===id || l.target.id===id) ? 3 : 1.5);
+        node.attr('stroke', n => (n.id===id) ? '#1976d2' : '#fff')
+            .attr('stroke-width', n => (n.id===id) ? 3 : 1.5);
+      }
+    }
+  </script>
+</body>
+</html>
