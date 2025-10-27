@@ -136,333 +136,76 @@ Se incluyen dos diagramas Mermaid compatibles con GitHub: la vista de microservi
 ### Vista de microservicios
 
 ```mermaid
-flowchart TB
-  UI[React SPA<br/>TypeScript + Vite] --> NGINX[NGINX<br/>TLS/Reverse Proxy]
-  NGINX --> API[FastAPI API]
-  API --> DOC[Document Service]
-  API --> SRCH[Search Service]
-  API --> COMP[Compliance Service]
-  API --> RISK[Risk Scoring]
+# 🚀 Sistema Corporativo Documental con Capacidades de IA
 
-  DOC --> CELERY[Celery Workers] --> OCR[OCR Engine] --> NER[NER Model] --> CLF[Classifier]
-  SRCH --> EMB[Embeddings] --> OPENAI[OpenAI GPT-4]
+![Estado](https://img.shields.io/badge/Estado-✅%20Production%20Ready-brightgreen)
+![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)
+![RFP Coverage](https://img.shields.io/badge/RFP%20Coverage-100%25-gold)
 
-  API --> PG[(PostgreSQL)]
-  SRCH --> QD[(Qdrant Vectors)]
-  API --> RD[(Redis Cache)]
-  DOC --> S3[(MinIO S3)]
-  COMP --> OFAC[OFAC]
-  API --> PHX[Arize Phoenix]
-```
+Sistema corporativo de gestión documental con capacidades avanzadas de IA: ingestión, OCR, extracción de entidades, búsqueda híbrida (léxica + semántica), RAG con citación, scoring de riesgo y módulos de compliance (EU AI Act, GDPR).
 
-### Flujo de procesamiento de documentos
-
-```mermaid
-sequenceDiagram
-  autonumber
-  actor Usuario
-  participant UI as Frontend
-  participant API as Backend
-  participant S3 as MinIO
-  participant DB as PostgreSQL
-  participant ML as ML Pipeline
-  participant VDB as Qdrant
-
-  Usuario->>UI: Subir documento
-  UI->>API: POST /documents/upload
-  API->>S3: Guardar archivo
-  S3-->>API: file_id
-  API->>DB: Crear metadata
-  API->>ML: Encolar procesamiento
-  activate ML
-  ML->>ML: OCR + NER + Clasificacion
-  ML->>VDB: Generar embeddings
-  ML->>DB: Actualizar estado
-  deactivate ML
-  API-->>UI: Notificar documento procesado
-```
+Links rápidos: [Quickstart](#inicio-rápido) • [Documentación completa](docs/) • [Diagramas generados (SVG)](docs/generated-diagrams/) • [Vista interactiva (GitHub Pages)](docs/index.html)
 
 ---
 
-## 🎯 Características Principales
+## Descripción breve
 
-- IA Documental: clasificación, OCR, NER, resúmenes, detección de anomalías
-- Búsqueda híbrida y RAG con citación obligatoria
-- Compliance automatizado (EU AI Act, GDPR) con trazabilidad
-- Observabilidad de LLMs (Arize Phoenix) y explicabilidad (LIME/SHAP)
-- Alto rendimiento: p95 < 2s en 1M+ documentos, SLA 99.9%
+Plataforma optimizada para producción (GPU-ready) que combina microservicios, pipelines ML y vector DBs para ofrecer búsqueda y análisis de documentos a escala. Implementada con FastAPI (backend), React + Vite (frontend) y Qdrant/MinIO para datos.
+
+## Diagramas y visualizaciones
+
+- SVGs generados por CI: `docs/generated-diagrams/` (si no existen, el workflow `.github/workflows/diagrams.yml` los generará en el próximo push).
+- Versión interactiva (fallback): `docs/index.html` (útil si GitHub no procesa ciertos bloques Mermaid).
+
+Nota: He eliminado los bloques Mermaid inline del README (causaban errores de parseo en GitHub). Los diagramas fuente se mantienen en `docs/diagrams/` y se convierten a SVG por CI para máxima compatibilidad.
 
 ---
 
-## 🚀 Inicio Rápido
+## Inicio rápido
 
-```bash
-# 1) Clonar
+1. Clona el repo
+
+```powershell
 git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.git
-cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
+cd "Sistema-Corporativo-Documental-con-Capacidades-de-IA"
+```
 
-# 2) Variables de entorno
-cp .env.example .env
-# Edita .env (OPENAI_API_KEY y demas)
+2. Configura variables de entorno
 
-# 3) Levantar servicios
+```powershell
+copy .env.example .env
+# Edita .env (OPENAI_API_KEY y otras credenciales)
+```
+
+3. Levanta los servicios (Docker Compose)
+
+```powershell
 docker-compose up -d
-
-# 4) Acceso
-# Frontend:  http://localhost:3000
-# Backend:   http://localhost:8000/docs
-# Phoenix:   http://localhost:6006
 ```
 
----
-
-## 📚 Documentación
-
-- docs/ARCHITECTURE.md – Arquitectura técnica
-- docs/ADMIN_GUIDE.md – Guía de administración
-- docs/USER_GUIDE.md – Manual de usuario
-- docs/API_REFERENCE.md – Referencia API
+Accesos:
+- Frontend: http://localhost:3000
+- Backend (OpenAPI): http://localhost:8000/docs
 
 ---
 
-© 2024-2025 TeFinancia S.A. – Uso propietario
-- Compliance: EU AI Act, GDPR, NIS2.
-- Arquitectura: microservicios, ML pipeline, vector DB (Qdrant), object storage (MinIO).
+## Documentación principal
+
+- `docs/ARCHITECTURE.md` — Arquitectura técnica
+- `docs/ADMIN_GUIDE.md` — Guía de administración
+- `docs/USER_GUIDE.md` — Manual de usuario
+- `docs/API_REFERENCE.md` — Referencia API
 
 ---
 
-## 🏗️ Arquitectura (visualizaciones compatibles)
+## Cómo ayudar a que esto no vuelva a romperse
 
-Se incluyen dos diagramas Mermaid compatibles con GitHub: la vista de microservicios y el flujo de procesamiento. Evité todos los bloques Mermaid corruptos y texto mezclado que provocaba errores de parseo.
-
-### Vista de microservicios
-
-```mermaid
-flowchart TB
-  UI[React SPA\nTypeScript + Vite] --> NGINX[NGINX\nTLS/Reverse Proxy]
-  NGINX --> API[FastAPI API]
-  API --> DOC[Document Service]
-  API --> SRCH[Search Service]
-  API --> COMP[Compliance Service]
-  API --> RISK[Risk Scoring]
-
-  DOC --> CELERY[Celery Workers] --> OCR[OCR Engine] --> NER[NER Model] --> CLF[Classifier]
-  SRCH --> EMB[Embeddings] --> OPENAI[OpenAI GPT-4]
-
-  API --> PG[(PostgreSQL)]
-  SRCH --> QD[(Qdrant Vectors)]
-  API --> RD[(Redis Cache)]
-  DOC --> S3[(MinIO S3)]
-  COMP --> OFAC[OFAC]
-  API --> PHX[Arize Phoenix]
-```
-
-### Flujo de procesamiento de documentos
-
-```mermaid
-sequenceDiagram
-  autonumber
-  actor Usuario
-  participant UI as Frontend
-  participant API as Backend
-  participant S3 as MinIO
-  participant DB as PostgreSQL
-  participant ML as ML Pipeline
-  participant VDB as Qdrant
-
-  Usuario->>UI: Subir documento
-  UI->>API: POST /documents/upload
-  API->>S3: Guardar archivo
-  S3-->>API: file_id
-  API->>DB: Crear metadata
-  API->>ML: Encolar procesamiento
-  activate ML
-  ML->>ML: OCR + NER + Clasificacion
-  ML->>VDB: Generar embeddings
-  ML->>DB: Actualizar estado
-  deactivate ML
-  API-->>UI: Notificar documento procesado
-```
+- Mantén los diagramas en `docs/diagrams/` (PlantUML / Structurizr / .mmd). El CI genera SVGs en `docs/generated-diagrams/`.
+- Para cambios visuales complejos, edita las fuentes y deja que la acción de GitHub genere los SVGs. Evita bloques Mermaid complejos inline en `README.md`.
 
 ---
 
-## 🎯 Características Principales
-
-- IA Documental: clasificación, OCR, NER, resúmenes, detección de anomalías
-- Búsqueda híbrida y RAG con citación obligatoria
-- Compliance automatizado (EU AI Act, GDPR) con trazabilidad
-- Observabilidad de LLMs (Arize Phoenix) y explicabilidad (LIME/SHAP)
-- Alto rendimiento: p95 < 2s en 1M+ documentos, SLA 99.9%
-
----
-
-## 🚀 Inicio Rápido
-
-```bash
-# 1) Clonar
-git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.git
-cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
-
-# 2) Variables de entorno
-cp .env.example .env
-# Edita .env (OPENAI_API_KEY y demas)
-
-# 3) Levantar servicios
-docker-compose up -d
-
-# 4) Acceso
-# Frontend:  http://localhost:3000
-# Backend:   http://localhost:8000/docs
-# Phoenix:   http://localhost:6006
-```
-
----
-
-## 📚 Documentación
-
-- docs/ARCHITECTURE.md – Arquitectura técnica
-- docs/ADMIN_GUIDE.md – Guía de administración
-- docs/USER_GUIDE.md – Manual de usuario
-- docs/API_REFERENCE.md – Referencia API
-
----
-
-© 2024-2025 TeFinancia S.A. – Uso propietario
-
-
-**Credenciales Demo:**    Person(user, "Usuario", "Interactúa con el sistema")
-
-- Usuario: `admin.demo`
-
-- Password: `Demo2025!`    # 2. Setup automático (instala todo)
-
-
-
----    Container_Boundary(frontend, "Frontend Layer") {./scripts/setup.sh
-
-
-
-## 📊 Dashboard y Métricas        Container(web, "React SPA", "TypeScript, Vite", "UI interactiva con dashboards")
-
-
-
-### Métricas Clave    }# 3. Iniciar sistema completo
-
-
-
-```mermaid    ./scripts/start.sh
-
-graph LR
-
-    A[📈 Documentos<br/>Procesados] -->|Real-time| D[Dashboard<br/>Central]    Container_Boundary(backend, "Backend Layer") {
-
-    B[⚠️ Alertas<br/>de Riesgo] --> D
-
-    C[✅ Compliance<br/>Score] --> D        Container(api, "FastAPI Backend", "Python 3.11", "API REST + GraphQL")# 4. Iniciar aplicación
-
-    D --> E[📊 Visualizaciones]
-
-    D --> F[📧 Notificaciones]        Container(ml, "ML Pipeline", "Scikit-learn, PyTorch", "Modelos de IA")# Terminal 1 - Backend:
-
-    D --> G[📄 Reportes PDF]
-
-            Container(workers, "Celery Workers", "Python", "Procesamiento asíncrono")cd backend && source venv/bin/activate && uvicorn main:app --reload
-
-    style D fill:#4CAF50,color:#fff
-
-```    }
-
-
-
-**Disponibles:**    # Terminal 2 - Frontend:
-
-- 📊 Tasa de procesamiento: docs/hora
-
-- ⚡ Tiempo medio respuesta API    Container_Boundary(data, "Data Layer") {cd frontend && npm run dev
-
-- 🎯 Precisión clasificación ML
-
-- 🛡️ Incidencias compliance        ContainerDb(postgres, "PostgreSQL", "Base de datos relacional")
-
-- 🚀 Aceleración GPU vs CPU
-
-        ContainerDb(vector, "Qdrant", "Vector DB para embeddings")# 5. Acceder a la aplicación
-
----
-
-        ContainerDb(redis, "Redis", "Cache y message broker")# Frontend: http://localhost:3000
-
-## 🔐 Seguridad y Cumplimiento
-
-        ContainerDb(minio, "MinIO", "Object storage (S3-compatible)")# Backend API: http://localhost:8000/docs
-
-### Medidas de Seguridad
-
-    }```
-
-| Categoría | Implementación | Estado |
-
-|-----------|---------------|--------|    
-
-| **Autenticación** | OAuth2 + JWT + MFA | ✅ |
-
-| **Autorización** | RBAC granular | ✅ |    Rel(user, web, "Usa", "HTTPS")📖 **Guía completa:** [`QUICKSTART.md`](QUICKSTART.md)
-
-| **Encriptación** | TLS 1.3 + AES-256 | ✅ |
-
-| **Auditoría** | Logs inmutables | ✅ |    Rel(web, api, "Llama", "REST/GraphQL")
-
-| **Backup** | Incremental + Geo-redundancia | ✅ |
-
-| **DLP** | Detección datos sensibles | ✅ |    Rel(api, ml, "Procesa", "Internal")---
-
-| **Vulnerability Scan** | Dependabot + Trivy | ✅ |
-
-    Rel(api, workers, "Encola", "Celery")
-
-### Niveles de Riesgo EU AI Act
-
-    Rel(api, postgres, "Lee/Escribe", "SQLAlchemy")## 📁 Documentación Principal
-
-```mermaid
-
-pie title Distribución Casos de Uso por Nivel de Riesgo    Rel(ml, vector, "Almacena embeddings", "gRPC")
-
-    "Mínimo" : 45
-
-    "Limitado" : 30    Rel(workers, redis, "Pub/Sub", "Redis Protocol")- 🎮 [`GPU_ACCELERATION_GUIDE.md`](GPU_ACCELERATION_GUIDE.md) — **✨ NUEVO** Guía completa de aceleración GPU
-
-    "Alto" : 20
-
-    "Inaceptable" : 5    Rel(api, minio, "Almacena archivos", "S3 API")- 🐳 [`DOCKER_SETUP_LOCAL.md`](DOCKER_SETUP_LOCAL.md) — **Setup local con Docker** (nuevo)
-
-```
-
-```- 🚀 [`QUICKSTART.md`](QUICKSTART.md) — **¡Empieza aquí!** Guía de inicio rápido (< 10 min)
-
----
-
-- 🐳 [`DEPLOYMENT.md`](DEPLOYMENT.md) — **✨ NUEVO** Guía completa de deployment con Docker Hub
-
-## 🧪 Testing y Calidad
-
-### ⚙️ Arquitectura de Microservicios y Flujos- 📄 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Arquitectura técnica completa (6k palabras)
-
-### Pipeline CI/CD
-
-- 🏛️ [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) — Gobernanza de IA y compliance (8.5k palabras)
-
-```mermaid
-
-graph TD```mermaid- 🔒 [`docs/DPIA.md`](docs/DPIA.md) — Data Protection Impact Assessment (7k palabras)
-
-    A[Code Push] --> B{GitHub Actions}
-
-    B --> C[Unit Tests]graph TB- 🔍 [`docs/PHOENIX_OBSERVABILITY.md`](docs/PHOENIX_OBSERVABILITY.md) — Observabilidad de LLMs con Arize Phoenix
-
-    B --> D[Integration Tests]
-
-    B --> E[E2E Tests]    subgraph "Frontend - React SPA"- 🎯 [`docs/SPRINT6_COMPLETE.md`](docs/SPRINT6_COMPLETE.md) — **✨ NUEVO** Sprint 6: Sistema de Validación Automatizada
+© 2024-2025 TeFinancia S.A. — Uso propietario
 
     
 
