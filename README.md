@@ -282,239 +282,136 @@ sequenceDiagram        participant API as Backend (FastAPI)
 
 - Backend: FastAPI (Python 3.11), SQLAlchemy 2.0, Pydantic v2, Celery
 
-## 🧠 Stack Tecnológico- ML/AI: SpaCy, Sentence-BERT, Scikit-learn, PyTorch, LIME/SHAP, Tesseract
+# 🚀 Sistema Corporativo Documental con Capacidades de IA
 
-- Datos: PostgreSQL, Qdrant, Redis, MinIO (S3)
+<div align="center">
 
-- **Frontend:** React 18.3, TypeScript 5.5, Vite, TanStack Query, Tailwind- DevOps: Docker Compose, GitHub Actions, NGINX, Prometheus/Grafana
+![Estado](https://img.shields.io/badge/Estado-✅%20Production%20Ready-brightgreen)
+![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)
+![RFP Coverage](https://img.shields.io/badge/RFP%20Coverage-100%25-gold)
+![Tests](https://img.shields.io/badge/Tests-78%20passing-brightgreen)
+![Coverage](https://img.shields.io/badge/Coverage-90%25-green)
+![Python](https://img.shields.io/badge/Python-3.11+-green)
+![React](https://img.shields.io/badge/React-18.3-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)
+![Docker](https://img.shields.io/badge/Docker-Ready-blue)
+![GPU](https://img.shields.io/badge/GPU-NVIDIA%20RTX%204070-76B900)
 
-- **Backend:** FastAPI (Python 3.11), SQLAlchemy 2.0, Pydantic v2, Celery- Observabilidad IA: Arize Phoenix (OTLP)
+**Sistema enterprise de gestión documental con IA responsable**
 
-- **ML/AI:** SpaCy, Sentence-BERT, Scikit-learn, PyTorch, LIME/SHAP, Tesseract
+Procesamiento inteligente | Cumplimiento normativo | Aceleración GPU
 
-- **Datos:** PostgreSQL, Qdrant, Redis, MinIO (S3)---
+[Inicio rápido](#-inicio-rápido) • [Arquitectura](#-arquitectura-del-sistema) • [Características](#-características-principales) • [Documentación](#-documentación-completa)
 
-- **DevOps:** Docker Compose, GitHub Actions, NGINX, Prometheus/Grafana
+</div>
 
-- **Observabilidad:** Arize Phoenix (OTLP)## 🚀 Inicio Rápido
+---
 
+## Resumen rápido
 
+- Plataforma para ingestión, procesamiento y búsqueda de documentos a escala con IA responsable.
+- Compliance: EU AI Act, GDPR, NIS2.
+- Arquitectura: microservicios, ML pipeline, vector DB (Qdrant), object storage (MinIO).
 
----```bash
+---
 
-# 1) Clonar
+## 🏗️ Arquitectura (visualizaciones compatibles)
 
-## 🚀 Inicio Rápidogit clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.git
+Se incluyen dos diagramas Mermaid compatibles con GitHub: la vista de microservicios y el flujo de procesamiento. Evité todos los bloques Mermaid corruptos y texto mezclado que provocaba errores de parseo.
 
-cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
+### Vista de microservicios
+
+```mermaid
+flowchart TB
+  UI[React SPA\nTypeScript + Vite] --> NGINX[NGINX\nTLS/Reverse Proxy]
+  NGINX --> API[FastAPI API]
+  API --> DOC[Document Service]
+  API --> SRCH[Search Service]
+  API --> COMP[Compliance Service]
+  API --> RISK[Risk Scoring]
+
+  DOC --> CELERY[Celery Workers] --> OCR[OCR Engine] --> NER[NER Model] --> CLF[Classifier]
+  SRCH --> EMB[Embeddings] --> OPENAI[OpenAI GPT-4]
+
+  API --> PG[(PostgreSQL)]
+  SRCH --> QD[(Qdrant Vectors)]
+  API --> RD[(Redis Cache)]
+  DOC --> S3[(MinIO S3)]
+  COMP --> OFAC[OFAC]
+  API --> PHX[Arize Phoenix]
+```
+
+### Flujo de procesamiento de documentos
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor Usuario
+  participant UI as Frontend
+  participant API as Backend
+  participant S3 as MinIO
+  participant DB as PostgreSQL
+  participant ML as ML Pipeline
+  participant VDB as Qdrant
+
+  Usuario->>UI: Subir documento
+  UI->>API: POST /documents/upload
+  API->>S3: Guardar archivo
+  S3-->>API: file_id
+  API->>DB: Crear metadata
+  API->>ML: Encolar procesamiento
+  activate ML
+  ML->>ML: OCR + NER + Clasificacion
+  ML->>VDB: Generar embeddings
+  ML->>DB: Actualizar estado
+  deactivate ML
+  API-->>UI: Notificar documento procesado
+```
+
+---
+
+## 🎯 Características Principales
+
+- IA Documental: clasificación, OCR, NER, resúmenes, detección de anomalías
+- Búsqueda híbrida y RAG con citación obligatoria
+- Compliance automatizado (EU AI Act, GDPR) con trazabilidad
+- Observabilidad de LLMs (Arize Phoenix) y explicabilidad (LIME/SHAP)
+- Alto rendimiento: p95 < 2s en 1M+ documentos, SLA 99.9%
+
+---
+
+## 🚀 Inicio Rápido
 
 ```bash
+# 1) Clonar
+git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.git
+cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
 
-# 1) Clonar# 2) Variables de entorno
-
-git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.gitcp .env.example .env
-
-cd Sistema-Corporativo-Documental-con-Capacidades-de-IA# Edita .env (OPENAI_API_KEY y demás)
-
-
-
-# 2) Variables de entorno# 3) Levantar servicios
-
-cp .env.example .envdocker-compose up -d
-
+# 2) Variables de entorno
+cp .env.example .env
 # Edita .env (OPENAI_API_KEY y demas)
 
+# 3) Levantar servicios
+docker-compose up -d
+
 # 4) Acceso
-
-# 3) Levantar servicios# Frontend:  http://localhost:3000
-
-docker-compose up -d# Backend:   http://localhost:8000/docs
-
-# Phoenix:   http://localhost:6006
-
-# 4) Acceso```
-
 # Frontend:  http://localhost:3000
-
-# Backend:   http://localhost:8000/docsModo desarrollo (opcional):
-
+# Backend:   http://localhost:8000/docs
 # Phoenix:   http://localhost:6006
+```
 
-``````bash
+---
 
-# Backend
+## 📚 Documentación
 
-**Modo desarrollo (opcional):**cd backend
-
-python -m venv venv
-
-```bashvenv\Scripts\activate  # Windows
-
-# Backendpip install -r requirements.txt
-
-cd backenduvicorn main:app --reload
-
-python -m venv venv
-
-venv\Scripts\activate  # Windows# Frontend (otra terminal)
-
-pip install -r requirements.txtcd frontend
-
-uvicorn main:app --reloadnpm install
-
-npm run dev
-
-# Frontend (otra terminal)```
-
-cd frontend
-
-npm installCredenciales demo: usuario admin.demo / password Demo2025!
-
-npm run dev
-
-```---
-
-
-
-**Credenciales demo:** `admin.demo` / `Demo2025!`## 🔒 Seguridad y Compliance
-
-
-
----- OAuth2 + JWT + MFA, RBAC granular, TLS 1.3
-
-- Auditoría completa y DLP (detección de datos sensibles)
-
-## 🔒 Seguridad y Compliance- DPIA completo y alineamiento con EU AI Act y GDPR
-
-
-
-- **Autenticación:** OAuth2 + JWT + MFA---
-
-- **Autorización:** RBAC granular
-
-- **Encriptación:** TLS 1.3, AES-256## � Documentación completa
-
-- **Auditoría:** Logs inmutables con retención 2+ años
-
-- **DLP:** Detección automática de datos sensibles- docs/ARCHITECTURE.md – Arquitectura técnica
-
-- **Compliance:** EU AI Act, GDPR, NIS2- docs/ADMIN_GUIDE.md – Guía de administración
-
+- docs/ARCHITECTURE.md – Arquitectura técnica
+- docs/ADMIN_GUIDE.md – Guía de administración
 - docs/USER_GUIDE.md – Manual de usuario
-
----- docs/API_REFERENCE.md – Referencia API
-
-
-
-## 📚 Documentación completa---
-
-
-
-| Documento | Descripción |## 🧪 Calidad y CI/CD
-
-|-----------|-------------|
-
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Arquitectura técnica detallada |- Tests unitarios e integración (coverage 90%)
-
-| [docs/ADMIN_GUIDE.md](docs/ADMIN_GUIDE.md) | Guía para administradores |- GitHub Actions: build, tests, análisis seguridad y despliegue
-
-| [docs/USER_GUIDE.md](docs/USER_GUIDE.md) | Manual de usuario |
-
-| [docs/API_REFERENCE.md](docs/API_REFERENCE.md) | Referencia API |---
-
-| [docs/GOVERNANCE.md](docs/GOVERNANCE.md) | Gobernanza de IA |
-
-| [docs/DPIA.md](docs/DPIA.md) | Data Protection Impact Assessment |## 👥 Equipo
-
-
-
----- Lead Developer: @rjamoriz
-
-- Arquitectura y ML: Equipo IA / Seguridad
-
-## 🧪 Calidad y CI/CD
+- docs/API_REFERENCE.md – Referencia API
 
 ---
 
-- **Tests:** 78 tests unitarios + integración (coverage 90%)
-
-- **CI/CD:** GitHub Actions (build, tests, security scan, deploy)© 2024-2025 TeFinancia S.A. – Uso propietario
-
-- **Análisis de seguridad:** Dependabot, Trivy
-
-git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.git    Rel(admin, dms, "Administra", "HTTPS")docker-compose -f docker-compose.hub.yml up -d
-
----
-
-cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
-
-## 👥 Equipo
-
-    Rel(dms, sharepoint, "Sincroniza", "Microsoft Graph")
-
-- **Lead Developer:** [@rjamoriz](https://github.com/rjamoriz)
-
-- **Arquitectura y ML:** Equipo IA / Seguridad# 2. Configurar variables de entorno
-
-
-
----cp .env.example .env    Rel(dms, sap, "Importa", "GraphQL")# 4. Acceder a la aplicación
-
-
-
-© 2024-2025 TeFinancia S.A. – Uso propietarionano .env  # Añadir OPENAI_API_KEY
-
-
-    Rel(dms, ofac, "Valida", "REST API")# Frontend: http://localhost:3000
-
-# 3. Desplegar con Docker Compose
-
-docker-compose up -d    Rel(dms, openai, "Procesa", "REST API")# Backend API: http://localhost:8000/docs
-
-
-
-# 4. Acceder a la aplicación    Rel(dms, phoenix, "Monitoriza", "OpenTelemetry")# Phoenix (Observability): http://localhost:6006
-
-# Frontend:     http://localhost:3000
-
-# Backend API:  http://localhost:8000/docs    ```
-
-# Phoenix:      http://localhost:6006
-
-```    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
-
-
-
-### Opción B: Desarrollo Local```📖 **Guía completa de deployment:** [`DEPLOYMENT.md`](DEPLOYMENT.md)
-
-
-
-```bash
-
-# Backend
-
-cd backend### 🔍 Vista de Contenedores C4 (Level 2 - Container Diagram)### Opción B: Build Local (Desarrollo)
-
-python -m venv venv
-
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
-pip install -r requirements.txt
-
-uvicorn main:app --reload```mermaid```bash
-
-
-
-# Frontend (terminal separado)C4Container# 1. Clonar repositorio
-
-cd frontend
-
-npm install    title Sistema Documental IA - Arquitectura de Contenedoresgit clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA
-
-npm run dev
-
-```    cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
-
+© 2024-2025 TeFinancia S.A. – Uso propietario
 
 
 **Credenciales Demo:**    Person(user, "Usuario", "Interactúa con el sistema")
