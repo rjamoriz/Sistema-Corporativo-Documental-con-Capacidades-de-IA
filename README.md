@@ -2,23 +2,50 @@
 
 ![Estado](https://img.shields.io/badge/Estado-✅%20Production%20Ready-brightgreen) ![Versión](https://img.shields.io/badge/Versión-1.0.0-blue) ![RFP Coverage](https://img.shields.io/badge/RFP%20Coverage-100%25-gold)
 
-Plataforma enterprise para ingestión, procesamiento y búsqueda de documentos con funcionalidades de IA (OCR, NER, embeddings, RAG) y módulos de compliance (EU AI Act, GDPR).
+Plataforma enterprise para ingestión, procesamiento y búsqueda de documentos con IA (OCR, NER, embeddings, RAG) y módulos de cumplimiento (EU AI Act, GDPR). Optimizada para GPU y operación en producción.
 
-Links rápidos: [Quickstart](#inicio-rápido) • [Docs](docs/) • [Diagramas (SVG)](docs/generated-diagrams/) • [Vista interactiva (docs/index.html)](docs/index.html)
+Links rápidos: [Inicio rápido](#inicio-rápido) • [Documentación](docs/) • [Diagramas (SVG)](docs/generated-diagrams/) • [Vista interactiva](docs/index.html)
 
 ---
 
-## Descripción breve
+## Resumen ejecutivo
 
-Solución de gestión documental en producción: microservicios, pipelines ML y vector DB para búsqueda y análisis. Backend: FastAPI. Frontend: React + Vite. Data: PostgreSQL, Qdrant, MinIO.
+Solución end‑to‑end que integra pipelines de ML, búsqueda híbrida (léxica + semántica), almacenamiento de objetos y base vectorial para habilitar casos de uso corporativos: clasificación, extracción de entidades, validación de compliance y análisis de riesgo. Arquitectura modular, observable y escalable con componentes desacoplados.
 
-## Diagramas y visualizaciones
+---
 
-- Fuentes: `docs/diagrams/` (PlantUML, Structurizr, .mmd).
-- SVGs generados por CI: `docs/generated-diagrams/` (si no existen, el workflow se ejecutará tras el siguiente push).
-- Vista interactiva (fallback): `docs/index.html`.
+## Arquitectura (visual listo para presentar)
 
-> Nota: este README evita incluir bloques de diagrama inline para garantizar compatibilidad con el render de GitHub. Usa los SVG generados por CI para representaciones visuales.
+Vista de contexto (C4):
+
+<img src="docs/generated-diagrams/c4-context.svg" alt="C4 Context" width="100%" />
+
+Vista de contenedores (C4):
+
+<img src="docs/generated-diagrams/c4-container.svg" alt="C4 Container" width="100%" />
+
+Nota: Los SVG se generan automáticamente desde `docs/diagrams/` mediante GitHub Actions. Si aún no aparecen, consulta la versión interactiva en `docs/index.html`.
+
+---
+
+## Características principales
+
+- Ingesta y procesamiento documental a escala (PDF/Office/Imagen) con OCR.
+- Búsqueda híbrida + RAG con citación de fuentes y trazabilidad.
+- Extracción de entidades (NER) y clasificación automática.
+- Módulos de cumplimiento (GDPR, EU AI Act) con auditoría de evidencias.
+- Observabilidad de LLMs y métricas operativas (latencia, throughput, errores).
+- Despliegue reproducible con Docker Compose; listo para CI/CD.
+
+---
+
+## Stack tecnológico
+
+- Backend: FastAPI (Python 3.11), SQLAlchemy, Celery.
+- Frontend: React 18, TypeScript, Vite.
+- Datos: PostgreSQL, Qdrant (vectores), Redis, MinIO (S3).
+- ML/IA: OpenAI/SBERT, SpaCy, PyTorch.
+- DevOps: Docker Compose, GitHub Actions, NGINX.
 
 ---
 
@@ -31,14 +58,14 @@ git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacid
 cd "Sistema-Corporativo-Documental-con-Capacidades-de-IA"
 ```
 
-2) Variables de entorno
+2) Configura variables de entorno
 
 ```powershell
 copy .env.example .env
 # Edita .env (OPENAI_API_KEY y demás credenciales)
 ```
 
-3) Levanta servicios (Docker Compose)
+3) Levanta los servicios
 
 ```powershell
 docker-compose up -d
@@ -50,7 +77,7 @@ Accesos:
 
 ---
 
-## Documentación principal
+## Documentación
 
 - `docs/ARCHITECTURE.md` — Arquitectura técnica
 - `docs/ADMIN_GUIDE.md` — Guía de administración
