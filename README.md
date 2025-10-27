@@ -16,6 +16,10 @@ Solución endtoend que integra pipelines de ML, búsqueda híbrida (léxica + se
 
 ## Arquitectura (visual listo para presentar)
 
+Vista ejecutiva de microservicios:
+
+<img src="docs/generated-diagrams/microservices-overview.svg" alt="Microservices Overview" width="100%" />
+
 Vista de contexto (C4):
 
 <img src="docs/generated-diagrams/c4-context.svg" alt="C4 Context" width="100%" />
