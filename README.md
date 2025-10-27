@@ -1,566 +1,1130 @@
-# 🚀 Sistema Corporativo Documental con Capacidades de IA# Sistema Corporativo Documental con Capacidades de IA
+# 🚀 Sistema Corporativo Documental con Capacidades de IA# 🚀 Sistema Corporativo Documental con Capacidades de IA# Sistema Corporativo Documental con Capacidades de IA
 
 
 
-<div align="center">## 🎯 GPU Acceleration Available! 
+<div align="center">
 
 
 
-![Estado](https://img.shields.io/badge/Estado-✅%20Production%20Ready-brightgreen)**✅ NVIDIA GeForce RTX 4070 Support Verified**
+![Estado](https://img.shields.io/badge/Estado-✅%20Production%20Ready-brightgreen)<div align="center">## 🎯 GPU Acceleration Available! 
 
 ![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)
 
-![RFP Coverage](https://img.shields.io/badge/RFP%20Coverage-100%25-gold)Este sistema ahora incluye **aceleración GPU** para operaciones de ML/AI:
+![RFP Coverage](https://img.shields.io/badge/RFP%20Coverage-100%25-gold)
+
+![Tests](https://img.shields.io/badge/Tests-78%20passing-brightgreen)
+
+![Coverage](https://img.shields.io/badge/Coverage-90%25-green)![Estado](https://img.shields.io/badge/Estado-✅%20Production%20Ready-brightgreen)**✅ NVIDIA GeForce RTX 4070 Support Verified**
+
+![Python](https://img.shields.io/badge/Python-3.11+-green)
+
+![React](https://img.shields.io/badge/React-18.3-blue)![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)
+
+![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)
+
+![Docker](https://img.shields.io/badge/Docker-Ready-blue)![RFP Coverage](https://img.shields.io/badge/RFP%20Coverage-100%25-gold)Este sistema ahora incluye **aceleración GPU** para operaciones de ML/AI:
+
+![GPU](https://img.shields.io/badge/GPU-NVIDIA%20RTX%204070-76B900)
 
 ![Tests](https://img.shields.io/badge/Tests-78%20passing-brightgreen)- 🚀 **7.5x más rápido** en generación de embeddings
 
-![Coverage](https://img.shields.io/badge/Coverage-90%25-green)- ⚡ **6x más rápido** en clasificación de documentos  
+**Sistema Enterprise de Gestión Documental con IA Responsable**  
 
-![Python](https://img.shields.io/badge/Python-3.11+-green)- 🔥 **3x más rápido** en OCR y procesamiento
+*Procesamiento Inteligente | Cumplimiento Normativo | Aceleración GPU*![Coverage](https://img.shields.io/badge/Coverage-90%25-green)- ⚡ **6x más rápido** en clasificación de documentos  
 
-![React](https://img.shields.io/badge/React-18.3-blue)
 
-![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)📖 **Ver guía completa:** [`GPU_ACCELERATION_GUIDE.md`](./GPU_ACCELERATION_GUIDE.md)
 
-![Docker](https://img.shields.io/badge/Docker-Ready-blue)
+[🚀 Inicio Rápido](#-inicio-rápido) • [📚 Documentación](#-documentación-completa) • [🏗️ Arquitectura](#-arquitectura-del-sistema) • [🎯 Características](#-características-principales)![Python](https://img.shields.io/badge/Python-3.11+-green)- 🔥 **3x más rápido** en OCR y procesamiento
 
-![GPU](https://img.shields.io/badge/GPU-NVIDIA%20RTX%204070-76B900)```bash
 
-# Despliegue con GPU (recomendado)
 
-**Sistema Enterprise de Gestión Documental con IA Responsable**  ./deploy-gpu.sh  # Linux/WSL
+</div>![React](https://img.shields.io/badge/React-18.3-blue)
 
-*Procesamiento Inteligente | Cumplimiento Normativo | Aceleración GPU*# o
+
+
+---![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)📖 **Ver guía completa:** [`GPU_ACCELERATION_GUIDE.md`](./GPU_ACCELERATION_GUIDE.md)
+
+
+
+## 📋 Descripción del Proyecto![Docker](https://img.shields.io/badge/Docker-Ready-blue)
+
+
+
+Sistema corporativo de gestión documental de **última generación** que integra capacidades avanzadas de Inteligencia Artificial para:![GPU](https://img.shields.io/badge/GPU-NVIDIA%20RTX%204070-76B900)```bash
+
+
+
+- 🤖 **Procesamiento Automático** de 100k+ documentos/año multi-formato# Despliegue con GPU (recomendado)
+
+- 🔍 **Búsqueda Híbrida Semántica** con RAG y citación obligatoria
+
+- ⚖️ **Scoring de Riesgo Multidimensional** con explicabilidad total (LIME/SHAP)**Sistema Enterprise de Gestión Documental con IA Responsable**  ./deploy-gpu.sh  # Linux/WSL
+
+- 🛡️ **Validación Automatizada** contra listas de sanciones (OFAC, EU, World Bank)
+
+- 📊 **IA Responsable** con supervisión humana y cumplimiento EU AI Act*Procesamiento Inteligente | Cumplimiento Normativo | Aceleración GPU*# o
+
+- 🚀 **Aceleración GPU** (NVIDIA RTX 4070): 7.5x más rápido en embeddings
 
 .\deploy-gpu.ps1  # PowerShell
 
+**Cliente:** TeFinancia S.A. | **Proyecto:** FinancIA 2030 | **Estado:** ✅ Production Ready
+
 [🚀 Inicio Rápido](#-inicio-rápido) • [📚 Documentación](#-documentación-completa) • [🏗️ Arquitectura](#-arquitectura-del-sistema) • [🎯 Características](#-características-principales) • [🐳 Deploy](#-despliegue-con-docker)
+
+---
 
 # Test rápido
 
-</div>./test-gpu.sh    # Verifica que GPU está funcionando
-
-```
-
----
-
----
-
-## 📋 Descripción del Proyecto
-
-## ⚡ Quick Start con Docker (Local Setup)
-
-Sistema corporativo de gestión documental de **última generación** que integra capacidades avanzadas de Inteligencia Artificial para:
-
-### 🚀 Inicio Rápido:
-
-- 🤖 **Procesamiento Automático** de 100k+ documentos/año multi-formato```bash
-
-- 🔍 **Búsqueda Híbrida Semántica** con RAG y citación obligatoria# 1. Clonar repositorio
-
-- ⚖️ **Scoring de Riesgo Multidimensional** con explicabilidad total (LIME/SHAP)git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.git
-
-- 🛡️ **Validación Automatizada** contra listas de sanciones (OFAC, EU, World Bank)cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
-
-- 📊 **IA Responsable** con supervisión humana y cumplimiento EU AI Act
-
-- 🚀 **Aceleración GPU** (NVIDIA RTX 4070): 7.5x más rápido en embeddings# 2. Configurar environment
-
-cp .env.example .env
-
-**Cliente:** TeFinancia S.A. | **Proyecto:** FinancIA 2030 | **Estado:** ✅ Production Ready# Editar .env con tu OPENAI_API_KEY
-
-
-
----# 3. Iniciar servicios
-
-docker-compose up -d
-
 ## 🎯 Características Principales
 
-# 4. Acceder
+</div>./test-gpu.sh    # Verifica que GPU está funcionando
 
-<table># Frontend: http://localhost:3000
+<table>
 
-<tr># Backend API: http://localhost:8000/docs
+<tr>```
 
-<td width="50%"># Login: admin.demo / Demo2025!
+<td width="50%">
 
-```
+---
 
 ### 🧠 Capacidades de IA
 
-📖 **Guía completa:** [`DOCKER_SETUP_LOCAL.md`](./DOCKER_SETUP_LOCAL.md)
+---
 
 - ✅ Clasificación automática multi-etiqueta
 
-- ✅ Extracción de entidades (NER) + relaciones**Requisitos:** Docker Desktop, 12GB+ RAM, 30GB disco
+- ✅ Extracción de entidades (NER) + relaciones## 📋 Descripción del Proyecto
 
 - ✅ OCR avanzado con corrección ortográfica
 
-- ✅ Generación de resúmenes ejecutivos---
+- ✅ Generación de resúmenes ejecutivos## ⚡ Quick Start con Docker (Local Setup)
 
 - ✅ Análisis de sentimiento y riesgo
 
-- ✅ Detección de anomalías con ML## 📁 Documentación Principal
+- ✅ Detección de anomalías con MLSistema corporativo de gestión documental de **última generación** que integra capacidades avanzadas de Inteligencia Artificial para:
 
-- ✅ Embeddings semánticos (OpenAI/Sentence-BERT)
+- ✅ Embeddings semánticos (OpenAI/SentenceBERT)
 
-- ✅ RAG con citación de fuentes- 🎮 [`GPU_ACCELERATION_GUIDE.md`](GPU_ACCELERATION_GUIDE.md) — **✨ NUEVO** Guía completa de aceleración GPU
+- ✅ RAG con citación de fuentes### 🚀 Inicio Rápido:
 
-- 🐳 [`DOCKER_SETUP_LOCAL.md`](DOCKER_SETUP_LOCAL.md) — **Setup local con Docker** (nuevo)
 
-</td>- 🚀 [`QUICKSTART.md`](QUICKSTART.md) — **¡Empieza aquí!** Guía de inicio rápido (< 10 min)
 
-<td width="50%">- 🐳 [`DEPLOYMENT.md`](DEPLOYMENT.md) — **✨ NUEVO** Guía completa de deployment con Docker Hub
+</td>- 🤖 **Procesamiento Automático** de 100k+ documentos/año multi-formato```bash
 
-- 📄 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Arquitectura técnica completa (6k palabras)
+<td width="50%">
 
-### 🔒 Seguridad & Compliance- 🏛️ [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) — Gobernanza de IA y compliance (8.5k palabras)
+- 🔍 **Búsqueda Híbrida Semántica** con RAG y citación obligatoria# 1. Clonar repositorio
 
-- 🔒 [`docs/DPIA.md`](docs/DPIA.md) — Data Protection Impact Assessment (7k palabras)
+### 🔒 Seguridad & Compliance
 
-- ✅ Cumplimiento EU AI Act (todos los niveles)- 🔍 [`docs/PHOENIX_OBSERVABILITY.md`](docs/PHOENIX_OBSERVABILITY.md) — Observabilidad de LLMs con Arize Phoenix
+- ⚖️ **Scoring de Riesgo Multidimensional** con explicabilidad total (LIME/SHAP)git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.git
 
-- ✅ GDPR by design + DPIA completo- 🎯 [`docs/SPRINT6_COMPLETE.md`](docs/SPRINT6_COMPLETE.md) — **✨ NUEVO** Sprint 6: Sistema de Validación Automatizada
+- ✅ Cumplimiento EU AI Act (todos los niveles)
 
-- ✅ NIS2 Directive (ciberseguridad)- 📚 [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md) — **✨ NUEVO** Guía completa para usuarios finales
+- ✅ GDPR by design + DPIA completo- 🛡️ **Validación Automatizada** contra listas de sanciones (OFAC, EU, World Bank)cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
 
-- ✅ Validación AML/KYC automatizada- 🔧 [`docs/ADMIN_GUIDE.md`](docs/ADMIN_GUIDE.md) — **✨ NUEVO** Guía para administradores del sistema
+- ✅ NIS2 Directive (ciberseguridad)
 
-- ✅ Auditoría completa (blockchain-ready)- 🎬 [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md) — **✨ NUEVO** Guión de demostración para stakeholders
+- ✅ Validación AML/KYC automatizada- 📊 **IA Responsable** con supervisión humana y cumplimiento EU AI Act
 
-- ✅ Encriptación en reposo y tránsito- ✅ [`PROJECT_COMPLETE.md`](PROJECT_COMPLETE.md) — Resumen de proyecto completado
+- ✅ Auditoría completa (blockchain-ready)
+
+- ✅ Encriptación en reposo y tránsito- 🚀 **Aceleración GPU** (NVIDIA RTX 4070): 7.5x más rápido en embeddings# 2. Configurar environment
 
 - ✅ RBAC + MFA obligatorio
 
-- ✅ Monitorización continua (Phoenix)![Estado](https://img.shields.io/badge/Estado-✅%20Production%20Ready-brightgreen)
+- ✅ Monitorización continua (Phoenix)cp .env.example .env
 
-![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)
 
-</td>![Completado](https://img.shields.io/badge/Completado-100%25-success)
 
-</tr>![RFP Coverage](https://img.shields.io/badge/RFP%20Coverage-100%25%20🎯-gold)
+</td>**Cliente:** TeFinancia S.A. | **Proyecto:** FinancIA 2030 | **Estado:** ✅ Production Ready# Editar .env con tu OPENAI_API_KEY
 
-<tr>![Sprint 6](https://img.shields.io/badge/Sprint%206-✅%20Complete-success)
+</tr>
 
-<td>![Tests](https://img.shields.io/badge/Tests-78%20passing-brightgreen)
+<tr>
 
-![Coverage](https://img.shields.io/badge/Coverage-90%25-green)
+<td>
 
-### ⚡ Rendimiento![Python](https://img.shields.io/badge/Python-3.11+-green)
+---# 3. Iniciar servicios
 
-![React](https://img.shields.io/badge/React-18.3-blue)
+### ⚡ Rendimiento
 
-- ✅ Búsqueda < 2s (p95) en 1M+ docs![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)
+docker-compose up -d
 
-- ✅ SLA 99.9% disponibilidad![License](https://img.shields.io/badge/License-Proprietary-red)
+- ✅ Búsqueda < 2s (p95) en 1M+ docs
+
+- ✅ SLA 99.9% disponibilidad## 🎯 Características Principales
 
 - ✅ Procesamiento paralelo GPU
 
-- ✅ Cache distribuido (Redis)---
+- ✅ Cache distribuido (Redis)# 4. Acceder
 
-- ✅ CDN para assets estáticos
+- ✅ Auto-scaling horizontal
 
-- ✅ Auto-scaling horizontal## 📋 Descripción del Proyecto
-
-- ✅ Load balancing inteligente
-
-Sistema corporativo de gestión documental de última generación que integra capacidades avanzadas de **Inteligencia Artificial** para procesamiento, clasificación, búsqueda híbrida, RAG con citación obligatoria y scoring de riesgo multidimensional con explicabilidad total.
-
-</td>
-
-<td>**Cliente:** TeFinancia S.A.  
-
-**Proyecto:** FinancIA 2030  
-
-### 🔌 Integraciones**Estado:** ✅ **100% RFP COVERAGE ACHIEVED** 🎉 - Production Ready
+- ✅ Load balancing inteligente<table># Frontend: http://localhost:3000
 
 
 
-- ✅ SharePoint Online (Microsoft Graph)### 🎯 Sprint 6 - Completado
+</td><tr># Backend API: http://localhost:8000/docs
 
-- ✅ SAP DMS / SuccessFactors
+<td>
 
-- ✅ IBM FileNet P8✅ **Enhanced Document Viewer** - Visor PDF avanzado con zoom, rotación, thumbnails  
+<td width="50%"># Login: admin.demo / Demo2025!
 
-- ✅ Alfresco / Documentum✅ **Annotation System** - Sistema colaborativo de anotaciones con Canvas overlay  
+### 🔌 Integraciones
 
-- ✅ Azure Blob Storage✅ **Document Comparison** - Comparación lado a lado de versiones con sync scroll  
+```
 
-- ✅ Amazon S3✅ **GraphQL API** - API completa con SharePoint y SAP DMS connectors  
+- ✅ SharePoint Online (Microsoft Graph)
 
-- ✅ FTP/SFTP legacy✅ **100% RFP Coverage** - Todos los requisitos implementados
+- ✅ SAP DMS / SuccessFactors### 🧠 Capacidades de IA
+
+- ✅ IBM FileNet P8
+
+- ✅ Alfresco / Documentum📖 **Guía completa:** [`DOCKER_SETUP_LOCAL.md`](./DOCKER_SETUP_LOCAL.md)
+
+- ✅ Azure Blob Storage / Amazon S3
+
+- ✅ FTP/SFTP legacy- ✅ Clasificación automática multi-etiqueta
 
 - ✅ GraphQL API moderna
 
-### 🎯 Objetivos Clave Alcanzados
+- ✅ Extracción de entidades (NER) + relaciones**Requisitos:** Docker Desktop, 12GB+ RAM, 30GB disco
 
 </td>
 
-</tr>- ✅ **Procesamiento automático** de 100k+ documentos/año multi-formato
+</tr>- ✅ OCR avanzado con corrección ortográfica
 
-</table>- ✅ **Validación automatizada** contra listas de sanciones (OFAC, EU, World Bank)
+</table>
 
-- ✅ **IA Responsable** con explicabilidad y supervisión humana
+- ✅ Generación de resúmenes ejecutivos---
 
----- ✅ **Cumplimiento normativo** total (EU AI Act, GDPR, NIS2)
+---
 
-- ✅ **Alta disponibilidad** (SLA 99.9%) y rendimiento (búsqueda <2s p95)
+- ✅ Análisis de sentimiento y riesgo
 
-## 🏗️ Arquitectura del Sistema- ✅ **Seguridad por diseño** con auditoría completa
+## 🏗️ Arquitectura del Sistema
 
+- ✅ Detección de anomalías con ML## 📁 Documentación Principal
 
+### Vista General de Arquitectura
 
-### 📐 Vista General C4 Model (Level 1 - System Context)---
+- ✅ Embeddings semánticos (OpenAI/Sentence-BERT)
 
+```mermaid
 
+graph TB- ✅ RAG con citación de fuentes- 🎮 [`GPU_ACCELERATION_GUIDE.md`](GPU_ACCELERATION_GUIDE.md) — **✨ NUEVO** Guía completa de aceleración GPU
 
-```mermaid## 🚀 Inicio Rápido
+    subgraph "Frontend Layer"
 
-C4Context
-
-    title Sistema Corporativo Documental - Contexto General¿Quieres probar el sistema? Tienes **dos opciones**:
-
-    
-
-    Person(user, "Usuario Financiero", "Analista, Compliance, Ejecutivo")### Opción A: Docker Hub (Recomendado - Más Rápido) 🐳
-
-    Person(admin, "Administrador", "Gestiona sistema y usuarios")
-
-    ```bash
-
-    System(dms, "Sistema Documental IA", "Gestión documental inteligente<br/>con IA responsable y GPU")# 1. Clonar repositorio
-
-    git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA
-
-    System_Ext(sharepoint, "SharePoint", "Repositorio corporativo")cd Sistema-Corporativo-Documental-con-Capacidades-de-IA/infrastructure/docker
-
-    System_Ext(sap, "SAP DMS", "Documentos SAP")
-
-    System_Ext(ofac, "OFAC API", "Lista sanciones")# 2. Configurar variables de entorno
-
-    System_Ext(openai, "OpenAI API", "LLMs GPT-4")cp .env.example .env
-
-    System_Ext(phoenix, "Arize Phoenix", "Observabilidad LLMs")# Editar .env con tu OPENAI_API_KEY y otras credenciales
-
-    
-
-    Rel(user, dms, "Usa", "HTTPS")# 3. Desplegar con imágenes pre-construidas desde Docker Hub
-
-    Rel(admin, dms, "Administra", "HTTPS")docker-compose -f docker-compose.hub.yml up -d
-
-    Rel(dms, sharepoint, "Sincroniza", "Microsoft Graph")
-
-    Rel(dms, sap, "Importa", "GraphQL")# 4. Acceder a la aplicación
-
-    Rel(dms, ofac, "Valida", "REST API")# Frontend: http://localhost:3000
-
-    Rel(dms, openai, "Procesa", "REST API")# Backend API: http://localhost:8000/docs
-
-    Rel(dms, phoenix, "Monitoriza", "OpenTelemetry")# Phoenix (Observability): http://localhost:6006
-
-    ```
-
-    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
-
-```📖 **Guía completa de deployment:** [`DEPLOYMENT.md`](DEPLOYMENT.md)
-
-
-
-### 🔍 Vista de Contenedores C4 (Level 2 - Container Diagram)### Opción B: Build Local (Desarrollo)
-
-
-
-```mermaid```bash
-
-C4Container# 1. Clonar repositorio
-
-    title Sistema Documental IA - Arquitectura de Contenedoresgit clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA
-
-    cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
-
-    Person(user, "Usuario", "Interactúa con el sistema")
-
-    # 2. Setup automático (instala todo)
-
-    Container_Boundary(frontend, "Frontend Layer") {./scripts/setup.sh
-
-        Container(web, "React SPA", "TypeScript, Vite", "UI interactiva con dashboards")
-
-    }# 3. Iniciar sistema completo
-
-    ./scripts/start.sh
-
-    Container_Boundary(backend, "Backend Layer") {
-
-        Container(api, "FastAPI Backend", "Python 3.11", "API REST + GraphQL")# 4. Iniciar aplicación
-
-        Container(ml, "ML Pipeline", "Scikit-learn, PyTorch", "Modelos de IA")# Terminal 1 - Backend:
-
-        Container(workers, "Celery Workers", "Python", "Procesamiento asíncrono")cd backend && source venv/bin/activate && uvicorn main:app --reload
-
-    }
-
-    # Terminal 2 - Frontend:
-
-    Container_Boundary(data, "Data Layer") {cd frontend && npm run dev
-
-        ContainerDb(postgres, "PostgreSQL", "Base de datos relacional")
-
-        ContainerDb(vector, "Qdrant", "Vector DB para embeddings")# 5. Acceder a la aplicación
-
-        ContainerDb(redis, "Redis", "Cache y message broker")# Frontend: http://localhost:3000
-
-        ContainerDb(minio, "MinIO", "Object storage (S3-compatible)")# Backend API: http://localhost:8000/docs
-
-    }```
-
-    
-
-    Rel(user, web, "Usa", "HTTPS")📖 **Guía completa:** [`QUICKSTART.md`](QUICKSTART.md)
-
-    Rel(web, api, "Llama", "REST/GraphQL")
-
-    Rel(api, ml, "Procesa", "Internal")---
-
-    Rel(api, workers, "Encola", "Celery")
-
-    Rel(api, postgres, "Lee/Escribe", "SQLAlchemy")## 📁 Documentación Principal
-
-    Rel(ml, vector, "Almacena embeddings", "gRPC")
-
-    Rel(workers, redis, "Pub/Sub", "Redis Protocol")- 🎮 [`GPU_ACCELERATION_GUIDE.md`](GPU_ACCELERATION_GUIDE.md) — **✨ NUEVO** Guía completa de aceleración GPU
-
-    Rel(api, minio, "Almacena archivos", "S3 API")- 🐳 [`DOCKER_SETUP_LOCAL.md`](DOCKER_SETUP_LOCAL.md) — **Setup local con Docker** (nuevo)
-
-```- 🚀 [`QUICKSTART.md`](QUICKSTART.md) — **¡Empieza aquí!** Guía de inicio rápido (< 10 min)
-
-- 🐳 [`DEPLOYMENT.md`](DEPLOYMENT.md) — **✨ NUEVO** Guía completa de deployment con Docker Hub
-
-### ⚙️ Arquitectura de Microservicios y Flujos- 📄 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Arquitectura técnica completa (6k palabras)
-
-- 🏛️ [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) — Gobernanza de IA y compliance (8.5k palabras)
-
-```mermaid- 🔒 [`docs/DPIA.md`](docs/DPIA.md) — Data Protection Impact Assessment (7k palabras)
-
-graph TB- 🔍 [`docs/PHOENIX_OBSERVABILITY.md`](docs/PHOENIX_OBSERVABILITY.md) — Observabilidad de LLMs con Arize Phoenix
-
-    subgraph "Frontend - React SPA"- 🎯 [`docs/SPRINT6_COMPLETE.md`](docs/SPRINT6_COMPLETE.md) — **✨ NUEVO** Sprint 6: Sistema de Validación Automatizada
-
-        UI[React UI Layer]- 📚 [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md) — **✨ NUEVO** Guía completa para usuarios finales
-
-        RT[React Router]- 🔧 [`docs/ADMIN_GUIDE.md`](docs/ADMIN_GUIDE.md) — **✨ NUEVO** Guía para administradores del sistema
-
-        TQ[TanStack Query]- 🎬 [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md) — **✨ NUEVO** Guión de demostración para stakeholders
-
-        Z[Zustand State]- ✅ [`PROJECT_COMPLETE.md`](PROJECT_COMPLETE.md) — Resumen de proyecto completado
+        UI[React SPA<br/>TypeScript + Vite]- 🐳 [`DOCKER_SETUP_LOCAL.md`](DOCKER_SETUP_LOCAL.md) — **Setup local con Docker** (nuevo)
 
     end
 
-    ![Estado](https://img.shields.io/badge/Estado-✅%20Production%20Ready-brightgreen)
+    </td>- 🚀 [`QUICKSTART.md`](QUICKSTART.md) — **¡Empieza aquí!** Guía de inicio rápido (< 10 min)
 
-    subgraph "API Gateway"![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)
+    subgraph "API Gateway"
 
-        NGINX[NGINX + SSL]![Completado](https://img.shields.io/badge/Completado-100%25-success)
-
-        AUTH[Auth Middleware]![RFP Coverage](https://img.shields.io/badge/RFP%20Coverage-100%25%20🎯-gold)
-
-        RATE[Rate Limiter]![Sprint 6](https://img.shields.io/badge/Sprint%206-✅%20Complete-success)
-
-    end![Tests](https://img.shields.io/badge/Tests-78%20passing-brightgreen)
-
-    ![Coverage](https://img.shields.io/badge/Coverage-90%25-green)
-
-    subgraph "Backend Services"![Python](https://img.shields.io/badge/Python-3.11+-green)
-
-        API[FastAPI Main]![React](https://img.shields.io/badge/React-18.3-blue)
-
-        DOC[Document Service]![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)
-
-        CLS[Classification Service]![License](https://img.shields.io/badge/License-Proprietary-red)
-
-        RAG[RAG Service]
-
-        VAL[Validation Service]---
-
-        RISK[Risk Scoring]
-
-    end## 📋 Descripción del Proyecto
-
-    
-
-    subgraph "ML/AI Pipeline"Sistema corporativo de gestión documental de última generación que integra capacidades avanzadas de **Inteligencia Artificial** para procesamiento, clasificación, búsqueda híbrida, RAG con citación obligatoria y scoring de riesgo multidimensional con explicabilidad total.
-
-        OCR[OCR Engine<br/>Tesseract/PaddleOCR]
-
-        NER[NER Model<br/>SpaCy]**Cliente:** TeFinancia S.A.  
-
-        EMB[Embeddings<br/>OpenAI/SentenceBERT]**Proyecto:** FinancIA 2030  
-
-        CLF[Classifier<br/>Random Forest]**Estado:** ✅ **100% RFP COVERAGE ACHIEVED** 🎉 - Production Ready
-
-        XAI[Explainability<br/>LIME/SHAP]
-
-    end### 🎯 Sprint 6 - Completado
-
-    
-
-    subgraph "Async Workers"✅ **Enhanced Document Viewer** - Visor PDF avanzado con zoom, rotación, thumbnails  
-
-        CEL[Celery]✅ **Annotation System** - Sistema colaborativo de anotaciones con Canvas overlay  
-
-        W1[Document Processor]✅ **Document Comparison** - Comparación lado a lado de versiones con sync scroll  
-
-        W2[ML Inference]✅ **GraphQL API** - API completa con SharePoint y SAP DMS connectors  
-
-        W3[Batch Jobs]✅ **100% RFP Coverage** - Todos los requisitos implementados
+        NGINX[NGINX + SSL<br/>Reverse Proxy]<td width="50%">- 🐳 [`DEPLOYMENT.md`](DEPLOYMENT.md) — **✨ NUEVO** Guía completa de deployment con Docker Hub
 
     end
 
-    ### 🎯 Objetivos Clave Alcanzados
+    - 📄 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Arquitectura técnica completa (6k palabras)
 
-    subgraph "Data Stores"
+    subgraph "Backend Services"
 
-        PG[(PostgreSQL<br/>Metadata)]- ✅ **Procesamiento automático** de 100k+ documentos/año multi-formato
+        API[FastAPI Backend<br/>Python 3.11]### 🔒 Seguridad & Compliance- 🏛️ [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) — Gobernanza de IA y compliance (8.5k palabras)
 
-        QD[(Qdrant<br/>Vectors)]- ✅ **Validación automatizada** contra listas de sanciones (OFAC, EU, World Bank)
+        DOC[Document Service]
 
-        RD[(Redis<br/>Cache)]- ✅ **IA Responsable** con explicabilidad y supervisión humana
+        SEARCH[Search Service]- 🔒 [`docs/DPIA.md`](docs/DPIA.md) — Data Protection Impact Assessment (7k palabras)
 
-        MN[(MinIO<br/>Files)]- ✅ **Cumplimiento normativo** total (EU AI Act, GDPR, NIS2)
+        COMP[Compliance Service]
 
-    end- ✅ **Alta disponibilidad** (SLA 99.9%) y rendimiento (búsqueda <2s p95)
+        RISK[Risk Service]- ✅ Cumplimiento EU AI Act (todos los niveles)- 🔍 [`docs/PHOENIX_OBSERVABILITY.md`](docs/PHOENIX_OBSERVABILITY.md) — Observabilidad de LLMs con Arize Phoenix
 
-    - ✅ **Seguridad por diseño** con auditoría completa
+    end
+
+    - ✅ GDPR by design + DPIA completo- 🎯 [`docs/SPRINT6_COMPLETE.md`](docs/SPRINT6_COMPLETE.md) — **✨ NUEVO** Sprint 6: Sistema de Validación Automatizada
+
+    subgraph "ML/AI Pipeline"
+
+        OCR[OCR Engine]- ✅ NIS2 Directive (ciberseguridad)- 📚 [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md) — **✨ NUEVO** Guía completa para usuarios finales
+
+        NER[NER Model]
+
+        EMB[Embeddings]- ✅ Validación AML/KYC automatizada- 🔧 [`docs/ADMIN_GUIDE.md`](docs/ADMIN_GUIDE.md) — **✨ NUEVO** Guía para administradores del sistema
+
+        CLF[Classifier]
+
+    end- ✅ Auditoría completa (blockchain-ready)- 🎬 [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md) — **✨ NUEVO** Guión de demostración para stakeholders
+
+    
+
+    subgraph "Data Stores"- ✅ Encriptación en reposo y tránsito- ✅ [`PROJECT_COMPLETE.md`](PROJECT_COMPLETE.md) — Resumen de proyecto completado
+
+        PG[(PostgreSQL<br/>Metadata)]
+
+        QD[(Qdrant<br/>Vectors)]- ✅ RBAC + MFA obligatorio
+
+        RD[(Redis<br/>Cache)]
+
+        S3[(MinIO<br/>Files)]- ✅ Monitorización continua (Phoenix)![Estado](https://img.shields.io/badge/Estado-✅%20Production%20Ready-brightgreen)
+
+    end
+
+    ![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)
 
     subgraph "External APIs"
 
-        OFAC[OFAC API]---
+        OFAC[OFAC API]</td>![Completado](https://img.shields.io/badge/Completado-100%25-success)
 
         OPENAI[OpenAI GPT-4]
 
-        PHX[Arize Phoenix]## 🚀 Inicio Rápido
+        PHX[Arize Phoenix]</tr>![RFP Coverage](https://img.shields.io/badge/RFP%20Coverage-100%25%20🎯-gold)
 
     end
 
-    ¿Quieres probar el sistema? Tienes **dos opciones**:
+    <tr>![Sprint 6](https://img.shields.io/badge/Sprint%206-✅%20Complete-success)
 
     UI --> NGINX
 
-    NGINX --> AUTH --> RATE --> API### Opción A: Docker Hub (Recomendado - Más Rápido) 🐳
+    NGINX --> API<td>![Tests](https://img.shields.io/badge/Tests-78%20passing-brightgreen)
+
+    API --> DOC
+
+    API --> SEARCH![Coverage](https://img.shields.io/badge/Coverage-90%25-green)
+
+    API --> COMP
+
+    API --> RISK### ⚡ Rendimiento![Python](https://img.shields.io/badge/Python-3.11+-green)
 
     
 
-    API --> DOC --> W1```bash
+    DOC --> OCR![React](https://img.shields.io/badge/React-18.3-blue)
 
-    API --> CLS --> CLF# 1. Clonar repositorio
+    SEARCH --> EMB
 
-    API --> RAG --> EMBgit clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA
+    EMB --> OPENAI- ✅ Búsqueda < 2s (p95) en 1M+ docs![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)
 
-    API --> VAL --> OFACcd Sistema-Corporativo-Documental-con-Capacidades-de-IA/infrastructure/docker
+    
 
-    API --> RISK --> XAI
+    API --> PG- ✅ SLA 99.9% disponibilidad![License](https://img.shields.io/badge/License-Proprietary-red)
 
-    # 2. Configurar variables de entorno
+    SEARCH --> QD
 
-    DOC --> OCR --> NERcp .env.example .env
+    API --> RD- ✅ Procesamiento paralelo GPU
 
-    EMB --> OPENAI# Editar .env con tu OPENAI_API_KEY y otras credenciales
+    DOC --> S3
 
-    EMB --> QD
+    - ✅ Cache distribuido (Redis)---
 
-    # 3. Desplegar con imágenes pre-construidas desde Docker Hub
+    COMP --> OFAC
 
-    W1 --> CEL --> RDdocker-compose -f docker-compose.hub.yml up -d
+    API --> PHX- ✅ CDN para assets estáticos
 
-    W2 --> CEL
+    
 
-    W3 --> CEL# 4. Acceder a la aplicación
+    style UI fill:#61DAFB- ✅ Auto-scaling horizontal## 📋 Descripción del Proyecto
 
-    # Frontend: http://localhost:3000
+    style API fill:#009688
 
-    DOC --> PG# Backend API: http://localhost:8000/docs
+    style PG fill:#336791- ✅ Load balancing inteligente
 
-    DOC --> MN# Phoenix (Observability): http://localhost:6006
+    style QD fill:#DC477D
 
-    RAG --> QD```
+```Sistema corporativo de gestión documental de última generación que integra capacidades avanzadas de **Inteligencia Artificial** para procesamiento, clasificación, búsqueda híbrida, RAG con citación obligatoria y scoring de riesgo multidimensional con explicabilidad total.
 
-    API --> RD
 
-    📖 **Guía completa de deployment:** [`DEPLOYMENT.md`](DEPLOYMENT.md)
 
-    API -.Observability.-> PHX
+### Flujo de Procesamiento de Documentos</td>
 
-    ### Opción B: Build Local (Desarrollo)
 
-    style UI fill:#61DAFB,stroke:#333,stroke-width:2px
 
-    style API fill:#009688,stroke:#333,stroke-width:2px```bash
-
-    style OCR fill:#FF6B6B,stroke:#333,stroke-width:2px# 1. Clonar repositorio
-
-    style EMB fill:#FFD93D,stroke:#333,stroke-width:2pxgit clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA
-
-    style PG fill:#336791,stroke:#333,stroke-width:2px,color:#fffcd Sistema-Corporativo-Documental-con-Capacidades-de-IA
-
-    style QD fill:#DC477D,stroke:#333,stroke-width:2px,color:#fff
-
-```# 2. Setup automático (instala todo)
-
-./scripts/setup.sh
-
-### 🌊 Flujo de Procesamiento de Documentos
-
-# 3. Iniciar sistema completo
-
-```mermaid./scripts/start.sh
+```mermaid<td>**Cliente:** TeFinancia S.A.  
 
 sequenceDiagram
 
-    autonumber# 4. Iniciar aplicación
+    autonumber**Proyecto:** FinancIA 2030  
 
-    actor Usuario# Terminal 1 - Backend:
+    actor Usuario
 
-    participant UI as React Frontendcd backend && source venv/bin/activate && uvicorn main:app --reload
+    participant UI as React Frontend### 🔌 Integraciones**Estado:** ✅ **100% RFP COVERAGE ACHIEVED** 🎉 - Production Ready
 
     participant API as FastAPI Backend
 
-    participant Val as Validation Service# Terminal 2 - Frontend:
+    participant ML as ML Pipeline
 
-    participant ML as ML Pipelinecd frontend && npm run dev
+    participant VDB as Qdrant
 
-    participant VDB as Qdrant (Vectors)
+    participant DB as PostgreSQL- ✅ SharePoint Online (Microsoft Graph)### 🎯 Sprint 6 - Completado
 
-    participant DB as PostgreSQL# 5. Acceder a la aplicación
+    participant S3 as MinIO
 
-    participant S3 as MinIO (S3)# Frontend: http://localhost:3000
-
-    participant OFAC as OFAC API# Backend API: http://localhost:8000/docs
-
-    ```
+    - ✅ SAP DMS / SuccessFactors
 
     Usuario->>UI: Sube documento PDF
 
-    UI->>API: POST /documents/upload📖 **Guía completa:** [`QUICKSTART.md`](QUICKSTART.md)
+    UI->>API: POST /documents/upload- ✅ IBM FileNet P8✅ **Enhanced Document Viewer** - Visor PDF avanzado con zoom, rotación, thumbnails  
 
-    API->>Val: Valida archivo (tamaño, tipo, malware)
+    API->>S3: Almacena archivo
 
-    Val-->>API: ✅ Válido---
+    S3-->>API: file_id- ✅ Alfresco / Documentum✅ **Annotation System** - Sistema colaborativo de anotaciones con Canvas overlay  
+
+    API->>DB: Crea registro
+
+    DB-->>API: document_id- ✅ Azure Blob Storage✅ **Document Comparison** - Comparación lado a lado de versiones con sync scroll  
 
     
 
-    API->>S3: Almacena archivo original## 📁 Documentación Principal
+    API->>ML: Encola procesamiento- ✅ Amazon S3✅ **GraphQL API** - API completa con SharePoint y SAP DMS connectors  
 
-    S3-->>API: file_id, url
+    activate ML
 
-    - 🎮 [`GPU_ACCELERATION_GUIDE.md`](GPU_ACCELERATION_GUIDE.md) — **✨ NUEVO** Guía completa de aceleración GPU
+    ML->>ML: OCR extracción texto- ✅ FTP/SFTP legacy✅ **100% RFP Coverage** - Todos los requisitos implementados
 
-    API->>DB: Crea registro metadata- 🐳 [`DOCKER_SETUP_LOCAL.md`](DOCKER_SETUP_LOCAL.md) — **Setup local con Docker** (nuevo)
+    ML->>ML: NER extrae entidades
+
+    ML->>ML: Clasificación automática- ✅ GraphQL API moderna
+
+    ML->>VDB: Genera embeddings
+
+    ML->>DB: Actualiza documento### 🎯 Objetivos Clave Alcanzados
+
+    deactivate ML
+
+    </td>
+
+    API-->>UI: Notificación WebSocket
+
+    UI-->>Usuario: ✅ Documento procesado!</tr>- ✅ **Procesamiento automático** de 100k+ documentos/año multi-formato
+
+```
+
+</table>- ✅ **Validación automatizada** contra listas de sanciones (OFAC, EU, World Bank)
+
+### Stack Tecnológico
+
+- ✅ **IA Responsable** con explicabilidad y supervisión humana
+
+```mermaid
+
+mindmap---- ✅ **Cumplimiento normativo** total (EU AI Act, GDPR, NIS2)
+
+  root((Sistema DMS))
+
+    Frontend- ✅ **Alta disponibilidad** (SLA 99.9%) y rendimiento (búsqueda <2s p95)
+
+      React 18.3
+
+      TypeScript 5.5## 🏗️ Arquitectura del Sistema- ✅ **Seguridad por diseño** con auditoría completa
+
+      Vite
+
+      TanStack Query
+
+      Tailwind CSS
+
+    Backend### 📐 Vista General C4 Model (Level 1 - System Context)---
+
+      FastAPI
+
+      Python 3.11
+
+      SQLAlchemy 2.0
+
+      Celery```mermaid## 🚀 Inicio Rápido
+
+      GraphQL
+
+    ML/AIC4Context
+
+      OpenAI GPT-4
+
+      Sentence-BERT    title Sistema Corporativo Documental - Contexto General¿Quieres probar el sistema? Tienes **dos opciones**:
+
+      SpaCy NER
+
+      PyTorch    
+
+      LIME/SHAP
+
+    Databases    Person(user, "Usuario Financiero", "Analista, Compliance, Ejecutivo")### Opción A: Docker Hub (Recomendado - Más Rápido) 🐳
+
+      PostgreSQL 15
+
+      Qdrant    Person(admin, "Administrador", "Gestiona sistema y usuarios")
+
+      Redis 7
+
+      MinIO S3    ```bash
+
+    DevOps
+
+      Docker    System(dms, "Sistema Documental IA", "Gestión documental inteligente<br/>con IA responsable y GPU")# 1. Clonar repositorio
+
+      GitHub Actions
+
+      NGINX    git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA
+
+      Prometheus
+
+    GPU    System_Ext(sharepoint, "SharePoint", "Repositorio corporativo")cd Sistema-Corporativo-Documental-con-Capacidades-de-IA/infrastructure/docker
+
+      CUDA 12.1
+
+      cuDNN 8.9    System_Ext(sap, "SAP DMS", "Documentos SAP")
+
+      PyTorch GPU
+
+```    System_Ext(ofac, "OFAC API", "Lista sanciones")# 2. Configurar variables de entorno
+
+
+
+---    System_Ext(openai, "OpenAI API", "LLMs GPT-4")cp .env.example .env
+
+
+
+## 🚀 Inicio Rápido    System_Ext(phoenix, "Arize Phoenix", "Observabilidad LLMs")# Editar .env con tu OPENAI_API_KEY y otras credenciales
+
+
+
+### Opción A: Docker Compose (Recomendado) 🐳    
+
+
+
+```bash    Rel(user, dms, "Usa", "HTTPS")# 3. Desplegar con imágenes pre-construidas desde Docker Hub
+
+# 1. Clonar repositorio
+
+git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.git    Rel(admin, dms, "Administra", "HTTPS")docker-compose -f docker-compose.hub.yml up -d
+
+cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
+
+    Rel(dms, sharepoint, "Sincroniza", "Microsoft Graph")
+
+# 2. Configurar variables de entorno
+
+cp .env.example .env    Rel(dms, sap, "Importa", "GraphQL")# 4. Acceder a la aplicación
+
+nano .env  # Añadir OPENAI_API_KEY
+
+    Rel(dms, ofac, "Valida", "REST API")# Frontend: http://localhost:3000
+
+# 3. Desplegar con Docker Compose
+
+docker-compose up -d    Rel(dms, openai, "Procesa", "REST API")# Backend API: http://localhost:8000/docs
+
+
+
+# 4. Acceder a la aplicación    Rel(dms, phoenix, "Monitoriza", "OpenTelemetry")# Phoenix (Observability): http://localhost:6006
+
+# Frontend:     http://localhost:3000
+
+# Backend API:  http://localhost:8000/docs    ```
+
+# Phoenix:      http://localhost:6006
+
+```    UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
+
+
+
+### Opción B: Desarrollo Local```📖 **Guía completa de deployment:** [`DEPLOYMENT.md`](DEPLOYMENT.md)
+
+
+
+```bash
+
+# Backend
+
+cd backend### 🔍 Vista de Contenedores C4 (Level 2 - Container Diagram)### Opción B: Build Local (Desarrollo)
+
+python -m venv venv
+
+source venv/bin/activate  # Windows: venv\Scripts\activate
+
+pip install -r requirements.txt
+
+uvicorn main:app --reload```mermaid```bash
+
+
+
+# Frontend (terminal separado)C4Container# 1. Clonar repositorio
+
+cd frontend
+
+npm install    title Sistema Documental IA - Arquitectura de Contenedoresgit clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA
+
+npm run dev
+
+```    cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
+
+
+
+**Credenciales Demo:**    Person(user, "Usuario", "Interactúa con el sistema")
+
+- Usuario: `admin.demo`
+
+- Password: `Demo2025!`    # 2. Setup automático (instala todo)
+
+
+
+---    Container_Boundary(frontend, "Frontend Layer") {./scripts/setup.sh
+
+
+
+## 📊 Dashboard y Métricas        Container(web, "React SPA", "TypeScript, Vite", "UI interactiva con dashboards")
+
+
+
+### Métricas Clave    }# 3. Iniciar sistema completo
+
+
+
+```mermaid    ./scripts/start.sh
+
+graph LR
+
+    A[📈 Documentos<br/>Procesados] -->|Real-time| D[Dashboard<br/>Central]    Container_Boundary(backend, "Backend Layer") {
+
+    B[⚠️ Alertas<br/>de Riesgo] --> D
+
+    C[✅ Compliance<br/>Score] --> D        Container(api, "FastAPI Backend", "Python 3.11", "API REST + GraphQL")# 4. Iniciar aplicación
+
+    D --> E[📊 Visualizaciones]
+
+    D --> F[📧 Notificaciones]        Container(ml, "ML Pipeline", "Scikit-learn, PyTorch", "Modelos de IA")# Terminal 1 - Backend:
+
+    D --> G[📄 Reportes PDF]
+
+            Container(workers, "Celery Workers", "Python", "Procesamiento asíncrono")cd backend && source venv/bin/activate && uvicorn main:app --reload
+
+    style D fill:#4CAF50,color:#fff
+
+```    }
+
+
+
+**Disponibles:**    # Terminal 2 - Frontend:
+
+- 📊 Tasa de procesamiento: docs/hora
+
+- ⚡ Tiempo medio respuesta API    Container_Boundary(data, "Data Layer") {cd frontend && npm run dev
+
+- 🎯 Precisión clasificación ML
+
+- 🛡️ Incidencias compliance        ContainerDb(postgres, "PostgreSQL", "Base de datos relacional")
+
+- 🚀 Aceleración GPU vs CPU
+
+        ContainerDb(vector, "Qdrant", "Vector DB para embeddings")# 5. Acceder a la aplicación
+
+---
+
+        ContainerDb(redis, "Redis", "Cache y message broker")# Frontend: http://localhost:3000
+
+## 🔐 Seguridad y Cumplimiento
+
+        ContainerDb(minio, "MinIO", "Object storage (S3-compatible)")# Backend API: http://localhost:8000/docs
+
+### Medidas de Seguridad
+
+    }```
+
+| Categoría | Implementación | Estado |
+
+|-----------|---------------|--------|    
+
+| **Autenticación** | OAuth2 + JWT + MFA | ✅ |
+
+| **Autorización** | RBAC granular | ✅ |    Rel(user, web, "Usa", "HTTPS")📖 **Guía completa:** [`QUICKSTART.md`](QUICKSTART.md)
+
+| **Encriptación** | TLS 1.3 + AES-256 | ✅ |
+
+| **Auditoría** | Logs inmutables | ✅ |    Rel(web, api, "Llama", "REST/GraphQL")
+
+| **Backup** | Incremental + Geo-redundancia | ✅ |
+
+| **DLP** | Detección datos sensibles | ✅ |    Rel(api, ml, "Procesa", "Internal")---
+
+| **Vulnerability Scan** | Dependabot + Trivy | ✅ |
+
+    Rel(api, workers, "Encola", "Celery")
+
+### Niveles de Riesgo EU AI Act
+
+    Rel(api, postgres, "Lee/Escribe", "SQLAlchemy")## 📁 Documentación Principal
+
+```mermaid
+
+pie title Distribución Casos de Uso por Nivel de Riesgo    Rel(ml, vector, "Almacena embeddings", "gRPC")
+
+    "Mínimo" : 45
+
+    "Limitado" : 30    Rel(workers, redis, "Pub/Sub", "Redis Protocol")- 🎮 [`GPU_ACCELERATION_GUIDE.md`](GPU_ACCELERATION_GUIDE.md) — **✨ NUEVO** Guía completa de aceleración GPU
+
+    "Alto" : 20
+
+    "Inaceptable" : 5    Rel(api, minio, "Almacena archivos", "S3 API")- 🐳 [`DOCKER_SETUP_LOCAL.md`](DOCKER_SETUP_LOCAL.md) — **Setup local con Docker** (nuevo)
+
+```
+
+```- 🚀 [`QUICKSTART.md`](QUICKSTART.md) — **¡Empieza aquí!** Guía de inicio rápido (< 10 min)
+
+---
+
+- 🐳 [`DEPLOYMENT.md`](DEPLOYMENT.md) — **✨ NUEVO** Guía completa de deployment con Docker Hub
+
+## 🧪 Testing y Calidad
+
+### ⚙️ Arquitectura de Microservicios y Flujos- 📄 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Arquitectura técnica completa (6k palabras)
+
+### Pipeline CI/CD
+
+- 🏛️ [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) — Gobernanza de IA y compliance (8.5k palabras)
+
+```mermaid
+
+graph TD```mermaid- 🔒 [`docs/DPIA.md`](docs/DPIA.md) — Data Protection Impact Assessment (7k palabras)
+
+    A[Code Push] --> B{GitHub Actions}
+
+    B --> C[Unit Tests]graph TB- 🔍 [`docs/PHOENIX_OBSERVABILITY.md`](docs/PHOENIX_OBSERVABILITY.md) — Observabilidad de LLMs con Arize Phoenix
+
+    B --> D[Integration Tests]
+
+    B --> E[E2E Tests]    subgraph "Frontend - React SPA"- 🎯 [`docs/SPRINT6_COMPLETE.md`](docs/SPRINT6_COMPLETE.md) — **✨ NUEVO** Sprint 6: Sistema de Validación Automatizada
+
+    
+
+    C --> F{Coverage > 90%?}        UI[React UI Layer]- 📚 [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md) — **✨ NUEVO** Guía completa para usuarios finales
+
+    D --> F
+
+    E --> F        RT[React Router]- 🔧 [`docs/ADMIN_GUIDE.md`](docs/ADMIN_GUIDE.md) — **✨ NUEVO** Guía para administradores del sistema
+
+    
+
+    F -->|Sí| G[Security Scan]        TQ[TanStack Query]- 🎬 [`docs/DEMO_SCRIPT.md`](docs/DEMO_SCRIPT.md) — **✨ NUEVO** Guión de demostración para stakeholders
+
+    F -->|No| H[❌ Build Failed]
+
+            Z[Zustand State]- ✅ [`PROJECT_COMPLETE.md`](PROJECT_COMPLETE.md) — Resumen de proyecto completado
+
+    G --> I{Vulnerabilities?}
+
+    I -->|No| J[Docker Build]    end
+
+    I -->|Sí| H
+
+        ![Estado](https://img.shields.io/badge/Estado-✅%20Production%20Ready-brightgreen)
+
+    J --> K[🚀 Deploy Production]
+
+        subgraph "API Gateway"![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)
+
+    style K fill:#4CAF50,color:#fff
+
+    style H fill:#f44336,color:#fff        NGINX[NGINX + SSL]![Completado](https://img.shields.io/badge/Completado-100%25-success)
+
+```
+
+        AUTH[Auth Middleware]![RFP Coverage](https://img.shields.io/badge/RFP%20Coverage-100%25%20🎯-gold)
+
+**Cobertura:**
+
+- ✅ Backend: 92% (78 tests)        RATE[Rate Limiter]![Sprint 6](https://img.shields.io/badge/Sprint%206-✅%20Complete-success)
+
+- ✅ Frontend: 87% (45 tests)
+
+- ✅ E2E: 15 escenarios críticos    end![Tests](https://img.shields.io/badge/Tests-78%20passing-brightgreen)
+
+
+
+---    ![Coverage](https://img.shields.io/badge/Coverage-90%25-green)
+
+
+
+## 📚 Documentación Completa    subgraph "Backend Services"![Python](https://img.shields.io/badge/Python-3.11+-green)
+
+
+
+| Documento | Descripción | Palabras |        API[FastAPI Main]![React](https://img.shields.io/badge/React-18.3-blue)
+
+|-----------|-------------|----------|
+
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Arquitectura técnica detallada | 6,000 |        DOC[Document Service]![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)
+
+| [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) | Gobernanza de IA y compliance | 8,500 |
+
+| [`docs/DPIA.md`](docs/DPIA.md) | Data Protection Impact Assessment | 7,000 |        CLS[Classification Service]![License](https://img.shields.io/badge/License-Proprietary-red)
+
+| [`docs/ADMIN_GUIDE.md`](docs/ADMIN_GUIDE.md) | Guía para administradores | 4,500 |
+
+| [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md) | Manual de usuario final | 5,000 |        RAG[RAG Service]
+
+| [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md) | Referencia completa API | 3,000 |
+
+        VAL[Validation Service]---
+
+---
+
+        RISK[Risk Scoring]
+
+## 🐳 Despliegue con Docker
+
+    end## 📋 Descripción del Proyecto
+
+### Stack de Servicios
+
+    
+
+| Servicio | Puerto | Descripción |
+
+|----------|--------|-------------|    subgraph "ML/AI Pipeline"Sistema corporativo de gestión documental de última generación que integra capacidades avanzadas de **Inteligencia Artificial** para procesamiento, clasificación, búsqueda híbrida, RAG con citación obligatoria y scoring de riesgo multidimensional con explicabilidad total.
+
+| `frontend` | 3000 | React SPA con Vite |
+
+| `backend` | 8000 | FastAPI + Uvicorn |        OCR[OCR Engine<br/>Tesseract/PaddleOCR]
+
+| `postgres` | 5432 | Base de datos principal |
+
+| `qdrant` | 6333 | Vector database |        NER[NER Model<br/>SpaCy]**Cliente:** TeFinancia S.A.  
+
+| `redis` | 6379 | Cache y message broker |
+
+| `minio` | 9000 | Object storage (S3) |        EMB[Embeddings<br/>OpenAI/SentenceBERT]**Proyecto:** FinancIA 2030  
+
+| `phoenix` | 6006 | LLM observability |
+
+| `nginx` | 80/443 | Reverse proxy + SSL |        CLF[Classifier<br/>Random Forest]**Estado:** ✅ **100% RFP COVERAGE ACHIEVED** 🎉 - Production Ready
+
+
+
+### Comandos Útiles        XAI[Explainability<br/>LIME/SHAP]
+
+
+
+```bash    end### 🎯 Sprint 6 - Completado
+
+# Ver logs en tiempo real
+
+docker-compose logs -f backend    
+
+
+
+# Reiniciar servicio    subgraph "Async Workers"✅ **Enhanced Document Viewer** - Visor PDF avanzado con zoom, rotación, thumbnails  
+
+docker-compose restart backend
+
+        CEL[Celery]✅ **Annotation System** - Sistema colaborativo de anotaciones con Canvas overlay  
+
+# Escalar workers
+
+docker-compose up -d --scale celery-worker=4        W1[Document Processor]✅ **Document Comparison** - Comparación lado a lado de versiones con sync scroll  
+
+
+
+# Backup de base de datos        W2[ML Inference]✅ **GraphQL API** - API completa con SharePoint y SAP DMS connectors  
+
+docker-compose exec postgres pg_dump -U dms > backup.sql
+
+```        W3[Batch Jobs]✅ **100% RFP Coverage** - Todos los requisitos implementados
+
+
+
+---    end
+
+
+
+## 🎯 Casos de Uso    ### 🎯 Objetivos Clave Alcanzados
+
+
+
+### 1. 📄 Procesamiento Automático de Contratos    subgraph "Data Stores"
+
+
+
+```python        PG[(PostgreSQL<br/>Metadata)]- ✅ **Procesamiento automático** de 100k+ documentos/año multi-formato
+
+import requests
+
+        QD[(Qdrant<br/>Vectors)]- ✅ **Validación automatizada** contra listas de sanciones (OFAC, EU, World Bank)
+
+response = requests.post(
+
+    "http://localhost:8000/api/v1/documents/upload",        RD[(Redis<br/>Cache)]- ✅ **IA Responsable** con explicabilidad y supervisión humana
+
+    files={"file": open("contrato.pdf", "rb")},
+
+    headers={"Authorization": f"Bearer {token}"}        MN[(MinIO<br/>Files)]- ✅ **Cumplimiento normativo** total (EU AI Act, GDPR, NIS2)
+
+)
+
+    end- ✅ **Alta disponibilidad** (SLA 99.9%) y rendimiento (búsqueda <2s p95)
+
+document_id = response.json()["document_id"]
+
+# → { "status": "completed", "risk_score": 0.23, "entities": [...] }    - ✅ **Seguridad por diseño** con auditoría completa
+
+```
+
+    subgraph "External APIs"
+
+### 2. 🔍 Búsqueda Semántica con RAG
+
+        OFAC[OFAC API]---
+
+```python
+
+results = requests.post(        OPENAI[OpenAI GPT-4]
+
+    "/api/v1/search/hybrid",
+
+    json={        PHX[Arize Phoenix]## 🚀 Inicio Rápido
+
+        "query": "clausulas de confidencialidad en contratos 2024",
+
+        "filters": {"document_type": "contract", "year": 2024},    end
+
+        "limit": 10
+
+    }    ¿Quieres probar el sistema? Tienes **dos opciones**:
+
+).json()
+
+    UI --> NGINX
+
+for result in results:
+
+    print(f"📄 {result['title']}")    NGINX --> AUTH --> RATE --> API### Opción A: Docker Hub (Recomendado - Más Rápido) 🐳
+
+    print(f"📍 Fuente: {result['citation']}")
+
+    print(f"🎯 Relevancia: {result['score']}")    
+
+```
+
+    API --> DOC --> W1```bash
+
+---
+
+    API --> CLS --> CLF# 1. Clonar repositorio
+
+## 🚦 Roadmap 2025-2026
+
+    API --> RAG --> EMBgit clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA
+
+```mermaid
+
+timeline    API --> VAL --> OFACcd Sistema-Corporativo-Documental-con-Capacidades-de-IA/infrastructure/docker
+
+    title Roadmap Sistema DMS IA
+
+        API --> RISK --> XAI
+
+    Q1 2025 : MVP Production Ready
+
+            : 100% RFP Coverage    # 2. Configurar variables de entorno
+
+            : GPU Acceleration
+
+                DOC --> OCR --> NERcp .env.example .env
+
+    Q2 2025 : Multi-idioma (ES/EN/FR)
+
+            : Fine-tuning modelos propios    EMB --> OPENAI# Editar .env con tu OPENAI_API_KEY y otras credenciales
+
+            
+
+    Q3 2025 : Integración Azure/AWS    EMB --> QD
+
+            : Mobile app React Native
+
+                # 3. Desplegar con imágenes pre-construidas desde Docker Hub
+
+    Q4 2025 : IA Generativa avanzada
+
+            : Predicción riesgos ML    W1 --> CEL --> RDdocker-compose -f docker-compose.hub.yml up -d
+
+            
+
+    Q1 2026 : Expansión internacional    W2 --> CEL
+
+            : ISO 27001
+
+```    W3 --> CEL# 4. Acceder a la aplicación
+
+
+
+---    # Frontend: http://localhost:3000
+
+
+
+## 🎨 Visualizaciones Avanzadas    DOC --> PG# Backend API: http://localhost:8000/docs
+
+
+
+### 📊 Diagramas Auto-generados con Kroki    DOC --> MN# Phoenix (Observability): http://localhost:6006
+
+
+
+Este proyecto usa **GitHub Actions** para auto-generar diagramas arquitectónicos:    RAG --> QD```
+
+
+
+- 🏛️ **PlantUML C4 Model** → Ver [`docs/diagrams/c4-context.puml`](docs/diagrams/c4-context.puml)    API --> RD
+
+- 📐 **Structurizr DSL** → Ver [`docs/diagrams/workspace.dsl`](docs/diagrams/workspace.dsl)
+
+- 🔄 **Auto-generación CI/CD** → Ver [`.github/workflows/diagrams.yml`](.github/workflows/diagrams.yml)    📖 **Guía completa de deployment:** [`DEPLOYMENT.md`](DEPLOYMENT.md)
+
+
+
+**Herramientas utilizadas:**    API -.Observability.-> PHX
+
+- [Mermaid](https://mermaid.js.org/) - Diagramas en Markdown
+
+- [Structurizr](https://structurizr.com/) - C4 Model DSL    ### Opción B: Build Local (Desarrollo)
+
+- [Kroki](https://kroki.io/) - Generación automática
+
+- [PlantUML](https://plantuml.com/) - Diagramas UML    style UI fill:#61DAFB,stroke:#333,stroke-width:2px
+
+
+
+---    style API fill:#009688,stroke:#333,stroke-width:2px```bash
+
+
+
+## 🤝 Contribución y Soporte    style OCR fill:#FF6B6B,stroke:#333,stroke-width:2px# 1. Clonar repositorio
+
+
+
+### Equipo de Desarrollo    style EMB fill:#FFD93D,stroke:#333,stroke-width:2pxgit clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA
+
+
+
+- 👨‍💻 **Lead Developer**: [@rjamoriz](https://github.com/rjamoriz)    style PG fill:#336791,stroke:#333,stroke-width:2px,color:#fffcd Sistema-Corporativo-Documental-con-Capacidades-de-IA
+
+- 🏛️ **Arquitecto**: Roberto Amoriz
+
+- 🤖 **ML Engineer**: Equipo IA    style QD fill:#DC477D,stroke:#333,stroke-width:2px,color:#fff
+
+
+
+### Reportar Issues```# 2. Setup automático (instala todo)
+
+
+
+```markdown./scripts/setup.sh
+
+**Descripción**: Breve descripción del error
+
+**Pasos para reproducir**: ### 🌊 Flujo de Procesamiento de Documentos
+
+1. Ir a...
+
+2. Hacer clic en...# 3. Iniciar sistema completo
+
+3. Ver error
+
+```mermaid./scripts/start.sh
+
+**Entorno**: 
+
+- OS: Windows 11 / Ubuntu 22.04sequenceDiagram
+
+- Docker: 24.0.5
+
+- Navegador: Chrome 120    autonumber# 4. Iniciar aplicación
+
+```
+
+    actor Usuario# Terminal 1 - Backend:
+
+---
+
+    participant UI as React Frontendcd backend && source venv/bin/activate && uvicorn main:app --reload
+
+## 📜 Licencia
+
+    participant API as FastAPI Backend
+
+```
+
+Copyright © 2024-2025 TeFinancia S.A. - Proyecto FinancIA 2030    participant Val as Validation Service# Terminal 2 - Frontend:
+
+Licencia: Propietaria - Uso exclusivo cliente
+
+```    participant ML as ML Pipelinecd frontend && npm run dev
+
+
+
+---    participant VDB as Qdrant (Vectors)
+
+
+
+## 🎓 Referencias    participant DB as PostgreSQL# 5. Acceder a la aplicación
+
+
+
+### Frameworks Principales    participant S3 as MinIO (S3)# Frontend: http://localhost:3000
+
+
+
+- **Frontend**: [React](https://react.dev/) | [TypeScript](https://www.typescriptlang.org/) | [Vite](https://vitejs.dev/)    participant OFAC as OFAC API# Backend API: http://localhost:8000/docs
+
+- **Backend**: [FastAPI](https://fastapi.tiangolo.com/) | [SQLAlchemy](https://www.sqlalchemy.org/)
+
+- **ML/AI**: [OpenAI](https://openai.com/) | [Sentence-Transformers](https://www.sbert.net/) | [SpaCy](https://spacy.io/)    ```
+
+- **Databases**: [PostgreSQL](https://www.postgresql.org/) | [Qdrant](https://qdrant.tech/) | [Redis](https://redis.io/)
+
+    Usuario->>UI: Sube documento PDF
+
+### Normativas Compliance
+
+    UI->>API: POST /documents/upload📖 **Guía completa:** [`QUICKSTART.md`](QUICKSTART.md)
+
+- [EU AI Act](https://artificialintelligenceact.eu/) - Regulación IA Europea
+
+- [GDPR](https://gdpr.eu/) - Protección de Datos (EU)    API->>Val: Valida archivo (tamaño, tipo, malware)
+
+- [NIS2](https://www.enisa.europa.eu/topics/nis-directive) - Ciberseguridad
+
+- [OFAC](https://ofac.treasury.gov/) - Sanciones USA    Val-->>API: ✅ Válido---
+
+
+
+---    
+
+
+
+<div align="center">    API->>S3: Almacena archivo original## 📁 Documentación Principal
+
+
+
+**🚀 Sistema Corporativo Documental con IA - FinancIA 2030**    S3-->>API: file_id, url
+
+
+
+Made with ❤️ by [Roberto Amoriz](https://github.com/rjamoriz)    - 🎮 [`GPU_ACCELERATION_GUIDE.md`](GPU_ACCELERATION_GUIDE.md) — **✨ NUEVO** Guía completa de aceleración GPU
+
+
+
+[![GitHub](https://img.shields.io/badge/GitHub-rjamoriz-181717?logo=github)](https://github.com/rjamoriz)    API->>DB: Crea registro metadata- 🐳 [`DOCKER_SETUP_LOCAL.md`](DOCKER_SETUP_LOCAL.md) — **Setup local con Docker** (nuevo)
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?logo=linkedin)](https://linkedin.com/in/rjamoriz)
 
     DB-->>API: document_id- 🚀 [`QUICKSTART.md`](QUICKSTART.md) — **¡Empieza aquí!** Guía de inicio rápido (< 10 min)
 
+[⬆️ Volver arriba](#-sistema-corporativo-documental-con-capacidades-de-ia)
+
     - 🐳 [`DEPLOYMENT.md`](DEPLOYMENT.md) — **✨ NUEVO** Guía completa de deployment con Docker Hub
+
+</div>
 
     API->>ML: Encola procesamiento asíncrono- 📄 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Arquitectura técnica completa (6k palabras)
 
