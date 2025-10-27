@@ -599,13 +599,42 @@ Para consultas sobre licenciamiento: legal@tefinancia.es
 - 🚧 Mobile app (iOS/Android)
 - 🚧 Exportación a blockchain
 
-### 🔮 Planificado (v2.0)
+### ⚛️ Planificado (v2.0) - Quantum & GPU Enhancement
+
+**🚀 Plan de Mejora Integral con Computación Cuántica y Aceleración GPU**
+
+Ver documento completo: **[QUANTUM_GPU_ENHANCEMENT_PLAN.md](docs/QUANTUM_GPU_ENHANCEMENT_PLAN.md)**
+
+**Objetivos principales:**
+
+- ⚡ **Aceleración GPU (NVIDIA RTX)**: Embeddings y FAISS-GPU para reducir tiempo de indexado > 80%
+- ⚛️ **Computación Cuántica**: Optimización QUBO para deduplicación y clustering (D-Wave + IBM Qiskit + NVIDIA cuQuantum)
+- 🧠 **Quantum Machine Learning**: Kernels cuánticos para clasificación avanzada
+- 🤖 **RAG Optimizado**: LLMs con contexto mejorado y trazabilidad 100%
+- 📊 **Observabilidad Avanzada**: Prometheus + Grafana + Arize Phoenix
+
+**Componentes nuevos (modulares, sin romper app actual):**
+
+1. `gpu-embedding-service` - Aceleración de embeddings con GPU
+2. `quantum-dedupe-dwave` - Deduplicación con D-Wave Ocean SDK
+3. `quantum-dedupe-ibm` - Deduplicación con IBM Qiskit
+4. `qml-classifier-nvidia` - ML cuántico con cuQuantum
+5. `rag-enhanced-service` - RAG optimizado con GPU
+
+**Beneficios esperados:**
+
+- 🚀 Ingestión 3-5× más rápida
+- 🎯 +15% precisión en deduplicación
+- 📉 -20-30% reducción en revisión manual
+- ⚛️ Capacidades de investigación cuántica sin hardware externo
+
+### 🔮 Futuro (v3.0+)
 
 - 🔮 Multi-tenancy completo
 - 🔮 IA explicable (XAI) avanzada
 - 🔮 Federación de búsqueda
 - 🔮 Integración con ERP/CRM
-- 🔮 Análisis predictivo
+- 🔮 Análisis predictivo con quantum computing
 
 ---
 

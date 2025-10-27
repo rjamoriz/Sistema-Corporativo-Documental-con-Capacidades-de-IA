@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1400" height="900" viewBox="0 0 1400 900">
+  <title>Arquitectura Profesional - Sistema Documental IA</title>
+  <defs>
+    <linearGradient id="grad-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1117;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#161b22;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="5" dy="5" stdDeviation="10" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+    <style>
+      .bg { fill: url(#grad-bg); }
+      .title { font: 700 32px 'Segoe UI', sans-serif; fill: #c9d1d9; }
+      .subtitle { font: 400 16px 'Segoe UI', sans-serif; fill: #8b949e; }
+      .zone-title { font: 600 18px 'Segoe UI', sans-serif; fill: #8b949e; text-anchor: middle; }
+      .service-box { fill: #161b22; stroke: #30363d; stroke-width: 1.5; rx: 8; filter: url(#shadow); }
+      .service-title { font: 600 15px 'Segoe UI', sans-serif; fill: #c9d1d9; }
+      .service-desc { font: 400 12px 'Segoe UI', sans-serif; fill: #8b949e; }
+      .arrow { stroke: #444c56; stroke-width: 2; marker-end: url(#arrowhead); }
+      .arrow-strong { stroke: #388bfd; stroke-width: 2.5; marker-end: url(#arrowhead-strong); }
+      .arrow-async { stroke: #d29922; stroke-width: 2; stroke-dasharray: 5, 5; marker-end: url(#arrowhead-async); }
+    </style>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#444c56" /></marker>
+    <marker id="arrowhead-strong" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#388bfd" /></marker>
+    <marker id="arrowhead-async" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#d29922" /></marker>
+  </defs>
+
+  <rect width="1400" height="900" class="bg"/>
+  <text x="50" y="60" class="title">Arquitectura Profesional - Sistema Documental con IA</text>
+  <text x="50" y="90" class="subtitle">Vista detallada de flujos de datos, microservicios y componentes cloud.</text>
+
+  <!-- ZONES -->
+  <rect x="30" y="120" width="1340" height="750" rx="15" fill="none" stroke="#21262d" stroke-width="2"/>
+  <rect x="30" y="120" width="320" height="750" fill="#161b22" rx="15"/>
+  <text class="zone-title" x="190" y="150">Usuarios y Clientes</text>
+  <rect x="350" y="120" width="700" height="750" fill="#0d1117" rx="15"/>
+  <text class="zone-title" x="700" y="150">Backend y Procesamiento (Cloud)</text>
+  <rect x="1050" y="120" width="320" height="750" fill="#161b22" rx="15"/>
+  <text class="zone-title" x="1210" y="150">Almacenamiento y Datos</text>
+
+  <!-- CLIENTS -->
+  <g id="user">
+    <rect x="80" y="180" width="180" height="70" class="service-box"/>
+    <text x="170" y="210" class="service-title" text-anchor="middle">Usuario Final</text>
+    <text x="170" y="230" class="service-desc" text-anchor="middle">Analista, Compliance</text>
+  </g>
+  <g id="spa">
+    <rect x="80" y="280" width="180" height="70" class="service-box"/>
+    <text x="170" y="310" class="service-title" text-anchor="middle">React SPA</text>
+    <text x="170" y="330" class="service-desc" text-anchor="middle">Frontend (Vite)</text>
+  </g>
+
+  <!-- BACKEND -->
+  <g id="bff">
+    <rect x="400" y="280" width="180" height="70" class="service-box"/>
+    <text x="490" y="310" class="service-title" text-anchor="middle">BFF (Backend-for-Frontend)</text>
+    <text x="490" y="330" class="service-desc" text-anchor="middle">API para el cliente</text>
+  </g>
+  <g id="gateway">
+    <rect x="400" y="400" width="180" height="70" class="service-box"/>
+    <text x="490" y="430" class="service-title" text-anchor="middle">API Gateway</text>
+    <text x="490" y="450" class="service-desc" text-anchor="middle">Auth, Rate Limit, Routing</text>
+  </g>
+  
+  <!-- CORE SERVICES -->
+  <g id="ingestion">
+    <rect x="630" y="180" width="180" height="70" class="service-box"/>
+    <text x="720" y="210" class="service-title" text-anchor="middle">Ingestion Service</text>
+    <text x="720" y="230" class="service-desc" text-anchor="middle">Carga y validación</text>
+  </g>
+  <g id="search">
+    <rect x="630" y="280" width="180" height="70" class="service-box"/>
+    <text x="720" y="310" class="service-title" text-anchor="middle">Search Service</text>
+    <text x="720" y="330" class="service-desc" text-anchor="middle">Búsqueda Híbrida</text>
+  </g>
+  <g id="rag">
+    <rect x="630" y="380" width="180" height="70" class="service-box"/>
+    <text x="720" y="410" class="service-title" text-anchor="middle">RAG & QA Service</text>
+    <text x="720" y="430" class="service-desc" text-anchor="middle">Generación con citas</text>
+  </g>
+  <g id="compliance">
+    <rect x="630" y="480" width="180" height="70" class="service-box"/>
+    <text x="720" y="510" class="service-title" text-anchor="middle">Compliance Service</text>
+    <text x="720" y="530" class="service-desc" text-anchor="middle">GDPR, AI Act, OFAC</text>
+  </g>
+
+  <!-- ASYNC PROCESSING -->
+  <g id="workers">
+    <rect x="860" y="330" width="140" height="200" class="service-box"/>
+    <text x="930" y="360" class="service-title" text-anchor="middle">Celery Workers</text>
+  </g>
+  <g id="ocr">
+    <rect x="880" y="380" width="100" height="50" class="service-box" style="fill:#21262d"/>
+    <text x="930" y="405" class="service-title" text-anchor="middle">OCR</text>
+  </g>
+  <g id="nlp">
+    <rect x="880" y="440" width="100" height="50" class="service-box" style="fill:#21262d"/>
+    <text x="930" y="465" class="service-title" text-anchor="middle">NLP</text>
+  </g>
+
+  <!-- DATA STORES -->
+  <g id="postgres">
+    <rect x="1100" y="180" width="220" height="70" class="service-box"/>
+    <text x="1210" y="210" class="service-title" text-anchor="middle">PostgreSQL</text>
+    <text x="1210" y="230" class="service-desc" text-anchor="middle">Metadatos, Usuarios, Auditoría</text>
+  </g>
+  <g id="qdrant">
+    <rect x="1100" y="280" width="220" height="70" class="service-box"/>
+    <text x="1210" y="310" class="service-title" text-anchor="middle">Qdrant</text>
+    <text x="1210" y="330" class="service-desc" text-anchor="middle">Embeddings Vectoriales</text>
+  </g>
+  <g id="redis">
+    <rect x="1100" y="380" width="220" height="70" class="service-box"/>
+    <text x="1210" y="410" class="service-title" text-anchor="middle">Redis</text>
+    <text x="1210" y="430" class="service-desc" text-anchor="middle">Cache y Message Broker</text>
+  </g>
+  <g id="minio">
+    <rect x="1100" y="480" width="220" height="70" class="service-box"/>
+    <text x="1210" y="510" class="service-title" text-anchor="middle">MinIO (S3)</text>
+    <text x="1210" y="530" class="service-desc" text-anchor="middle">Almacenamiento de Documentos</text>
+  </g>
+  
+  <!-- EXTERNAL -->
+   <g id="external">
+    <rect x="630" y="600" width="420" height="70" class="service-box"/>
+    <text x="840" y="630" class="service-title" text-anchor="middle">Sistemas Externos (APIs)</text>
+    <text x="840" y="650" class="service-desc" text-anchor="middle">OpenAI, EUR-Lex, OFAC, Arize Phoenix</text>
+  </g>
+
+  <!-- ARROWS -->
+  <path d="M 260 315 H 400" class="arrow-strong"/>
+  <path d="M 580 315 H 630" class="arrow-strong"/>
+  <path d="M 580 435 H 630" class="arrow"/>
+  <path d="M 810 215 H 1100" class="arrow"/>
+  <path d="M 810 315 H 1100" class="arrow"/>
+  <path d="M 810 415 H 1100" class="arrow"/>
+  <path d="M 810 515 H 1100" class="arrow"/>
+  <path d="M 810 635 H 1050" class="arrow"/>
+  
+  <!-- Async Flow -->
+  <path d="M 810 215 C 830 215, 830 380, 860 380" class="arrow-async" fill="none"/>
+  <path d="M 860 430 C 830 430, 830 215, 810 215" class="arrow-async" fill="none"/>
+  <path d="M 1000 405 H 1100" class="arrow-async"/>
+  <path d="M 1000 465 H 1100" class="arrow-async"/>
+  
+  <path d="M 490 350 V 400" class="arrow"/>
+</svg>
