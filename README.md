@@ -1,3 +1,65 @@
+# Sistema Corporativo Documental con Capacidades de IA
+
+![Estado](https://img.shields.io/badge/Estado-✅%20Production%20Ready-brightgreen) ![Versión](https://img.shields.io/badge/Versión-1.0.0-blue) ![RFP Coverage](https://img.shields.io/badge/RFP%20Coverage-100%25-gold)
+
+Plataforma enterprise para ingestión, procesamiento y búsqueda de documentos con funcionalidades de IA (OCR, NER, embeddings, RAG) y módulos de compliance (EU AI Act, GDPR).
+
+Links rápidos: [Quickstart](#inicio-rápido) • [Docs](docs/) • [Diagramas (SVG)](docs/generated-diagrams/) • [Vista interactiva (docs/index.html)](docs/index.html)
+
+---
+
+## Descripción breve
+
+Solución de gestión documental en producción: microservicios, pipelines ML y vector DB para búsqueda y análisis. Backend: FastAPI. Frontend: React + Vite. Data: PostgreSQL, Qdrant, MinIO.
+
+## Diagramas y visualizaciones
+
+- Fuentes: `docs/diagrams/` (PlantUML, Structurizr, .mmd).
+- SVGs generados por CI: `docs/generated-diagrams/` (si no existen, el workflow se ejecutará tras el siguiente push).
+- Vista interactiva (fallback): `docs/index.html`.
+
+> Nota: este README evita incluir bloques de diagrama inline para garantizar compatibilidad con el render de GitHub. Usa los SVG generados por CI para representaciones visuales.
+
+---
+
+## Inicio rápido
+
+1) Clona el repositorio
+
+```powershell
+git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.git
+cd "Sistema-Corporativo-Documental-con-Capacidades-de-IA"
+```
+
+2) Variables de entorno
+
+```powershell
+copy .env.example .env
+# Edita .env (OPENAI_API_KEY y demás credenciales)
+```
+
+3) Levanta servicios (Docker Compose)
+
+```powershell
+docker-compose up -d
+```
+
+Accesos:
+- Frontend: http://localhost:3000
+- Backend (OpenAPI): http://localhost:8000/docs
+
+---
+
+## Documentación principal
+
+- `docs/ARCHITECTURE.md` — Arquitectura técnica
+- `docs/ADMIN_GUIDE.md` — Guía de administración
+- `docs/USER_GUIDE.md` — Manual de usuario
+- `docs/API_REFERENCE.md` — Referencia API
+
+---
+
+© 2024-2025 TeFinancia S.A. — Uso propietario
 # 🚀 Sistema Corporativo Documental con Capacidades de IA# 🚀 Sistema Corporativo Documental con Capacidades de IA
 
 
