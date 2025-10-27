@@ -1,0 +1,25 @@
+name: Check README for Mermaid blocks
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-readme:
+    runs-on: ubuntu-latest
+    name: Fail if README contains ```mermaid blocks
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Search for mermaid blocks in README.md
+        run: |
+          if grep -n "```mermaid" README.md >/dev/null 2>&1; then
+            echo "ERROR: README.md contains '```mermaid' blocks. Please remove or replace with CI-generated SVGs in docs/generated-diagrams/.";
+            grep -n "```mermaid" README.md || true;
+            exit 1;
+          else
+            echo "No mermaid blocks found in README.md";
+          fi
