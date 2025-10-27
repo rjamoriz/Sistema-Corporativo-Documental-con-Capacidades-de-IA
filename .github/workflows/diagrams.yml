@@ -102,7 +102,19 @@ jobs:
             echo "- [$basename](./$basename)" >> docs/generated-diagrams/README.md
           done
 
-      - name: 💾 Commit Generated Diagrams
+      - name: �️ Convert SVGs to PNGs (fallbacks)
+        run: |
+          # Install rsvg-convert (librsvg) for SVG -> PNG conversion
+          sudo apt-get update && sudo apt-get install -y librsvg2-bin || true
+          mkdir -p docs/generated-diagrams
+          for svg in docs/generated-diagrams/*.svg; do
+            [ -f "$svg" ] || continue
+            png="${svg%.svg}.png"
+            echo "Converting $svg -> $png"
+            rsvg-convert -w 1600 -h 900 "$svg" -o "$png" || echo "rsvg-convert failed for $svg"
+          done
+
+      - name: �💾 Commit Generated Diagrams
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: '🎨 Auto-generate architecture diagrams [skip ci]'
