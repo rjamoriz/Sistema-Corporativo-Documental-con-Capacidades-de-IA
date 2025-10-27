@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="200" viewBox="0 0 1200 200" role="img" aria-labelledby="title desc">
+  <title id="title">C4 Component Diagram (Generating)</title>
+  <desc id="desc">El diagrama de microservicios se está generando automáticamente. Este es un marcador temporal.</desc>
+  <rect x="0" y="0" width="1200" height="200" fill="#0f172a"/>
+  <rect x="10" y="10" width="1180" height="180" fill="#111827" stroke="#334155" stroke-width="2" rx="8"/>
+  <text x="600" y="85" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="28" fill="#e5e7eb" text-anchor="middle">Microservicios — Vista de Componentes</text>
+  <text x="600" y="120" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="16" fill="#94a3b8" text-anchor="middle">Generando SVG desde docs/diagrams/c4-component.puml (GitHub Actions)</text>
+  <text x="600" y="150" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="14" fill="#9ca3af" text-anchor="middle">Si no ves el diagrama completo, recarga esta página en 1-2 minutos o visita docs/index.html</text>
+</svg>
