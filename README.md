@@ -96,192 +96,6 @@ Plataforma corporativa para gestionar, buscar y analizar documentos a escala con
 
 ## 🏗️ Arquitectura del Sistema```mermaid
 
-flowchart TB
-
-### Vista de microservicios        subgraph Client
-
-            UI[React SPA\nTypeScript + Vite]
-
-```mermaid        end
-
-flowchart TB
-
-    subgraph Client        subgraph Gateway
-
-        UI[React SPA<br/>TypeScript + Vite]            NGINX[NGINX\nTLS/Reverse Proxy]
-
-    end        end
-
-
-
-    subgraph Gateway        subgraph Backend[Backend Services]
-
-        NGINX[NGINX<br/>TLS/Reverse Proxy]            API[FastAPI API]
-
-    end            DOC[Document Service]
-
-            SRCH[Search Service]
-
-    subgraph Backend[Backend Services]            COMP[Compliance Service]
-
-        API[FastAPI API]            RISK[Risk Scoring]
-
-        DOC[Document Service]        end
-
-        SRCH[Search Service]
-
-        COMP[Compliance Service]        subgraph Workers[Async Workers]
-
-        RISK[Risk Scoring]            CELERY[Celery Workers]
-
-    end            JOBS[Schedulers]
-
-        end
-
-    subgraph Workers[Async Workers]
-
-        CELERY[Celery Workers]        subgraph ML[ML/AI Pipeline]
-
-        JOBS[Schedulers]            OCR[OCR Engine]
-
-    end            NER[NER Model]
-
-            EMB[Embeddings]
-
-    subgraph ML[ML/AI Pipeline]            CLF[Classifier]
-
-        OCR[OCR Engine]        end
-
-        NER[NER Model]
-
-        EMB[Embeddings]        subgraph Data[Data Stores]
-
-        CLF[Classifier]            PG[(PostgreSQL)]
-
-    end            QD[(Qdrant Vectors)]
-
-            RD[(Redis Cache)]
-
-    subgraph Data[Data Stores]            S3[(MinIO S3)]
-
-        PG[(PostgreSQL)]        end
-
-        QD[(Qdrant Vectors)]
-
-        RD[(Redis Cache)]        subgraph External[External APIs]
-
-        S3[(MinIO S3)]            OFAC[OFAC]
-
-    end            OPENAI[OpenAI GPT-4]
-
-            PHX[Arize Phoenix]
-
-    subgraph External[External APIs]        end
-
-        OFAC[OFAC]
-
-        OPENAI[OpenAI GPT-4]        UI --> NGINX --> API
-
-        PHX[Arize Phoenix]        API --> DOC
-
-    end        API --> SRCH
-
-        API --> COMP
-
-    UI --> NGINX --> API        API --> RISK
-
-    API --> DOC
-
-    API --> SRCH        DOC --> CELERY --> OCR --> NER --> CLF
-
-    API --> COMP        SRCH --> EMB --> OPENAI
-
-    API --> RISK
-
-        API --> PG
-
-    DOC --> CELERY --> OCR --> NER --> CLF        SRCH --> QD
-
-    SRCH --> EMB --> OPENAI        API --> RD
-
-        DOC --> S3
-
-    API --> PG
-
-    SRCH --> QD        COMP --> OFAC
-
-    API --> RD        API --> PHX
-
-    DOC --> S3```
-
-
-
-    COMP --> OFAC### Flujo de procesamiento de documentos
-
-    API --> PHX
-
-``````mermaid
-
-sequenceDiagram
-
-### Flujo de procesamiento de documentos        autonumber
-
-        actor Usuario
-
-```mermaid        participant UI as Frontend (React)
-
-sequenceDiagram        participant API as Backend (FastAPI)
-
-    autonumber        participant S3 as MinIO (S3)
-
-    actor Usuario        participant DB as PostgreSQL
-
-    participant UI as Frontend        participant ML as ML Pipeline
-
-    participant API as Backend        participant VDB as Qdrant
-
-    participant S3 as MinIO
-
-    participant DB as PostgreSQL        Usuario->>UI: Subir documento
-
-    participant ML as ML Pipeline        UI->>API: POST /documents/upload
-
-    participant VDB as Qdrant        API->>S3: Guardar archivo
-
-        S3-->>API: file_id
-
-    Usuario->>UI: Subir documento        API->>DB: Crear metadata (document_id)
-
-    UI->>API: POST /documents/upload        API->>ML: Encolar procesamiento
-
-    API->>S3: Guardar archivo        activate ML
-
-    S3-->>API: file_id        ML->>ML: OCR + NER + Clasificación
-
-    API->>DB: Crear metadata        ML->>VDB: Generar embeddings
-
-    API->>ML: Encolar procesamiento        ML->>DB: Actualizar estado y resultados
-
-    activate ML        deactivate ML
-
-    ML->>ML: OCR + NER + Clasificacion        API-->>UI: Notificar documento procesado
-
-    ML->>VDB: Generar embeddings```
-
-    ML->>DB: Actualizar estado
-
-    deactivate ML---
-
-    API-->>UI: Notificar documento procesado
-
-```## 🧠 Stack Tecnológico
-
-
-
----- Frontend: React 18.3, TypeScript 5.5, Vite, TanStack Query, Tailwind
-
-- Backend: FastAPI (Python 3.11), SQLAlchemy 2.0, Pydantic v2, Celery
-
 # 🚀 Sistema Corporativo Documental con Capacidades de IA
 
 <div align="center">
@@ -310,6 +124,108 @@ Procesamiento inteligente | Cumplimiento normativo | Aceleración GPU
 ## Resumen rápido
 
 - Plataforma para ingestión, procesamiento y búsqueda de documentos a escala con IA responsable.
+- Compliance: EU AI Act, GDPR, NIS2.
+- Arquitectura: microservicios, ML pipeline, vector DB (Qdrant), object storage (MinIO).
+
+---
+
+## 🏗️ Arquitectura (visualizaciones compatibles)
+
+Se incluyen dos diagramas Mermaid compatibles con GitHub: la vista de microservicios y el flujo de procesamiento.
+
+### Vista de microservicios
+
+```mermaid
+flowchart TB
+  UI[React SPA<br/>TypeScript + Vite] --> NGINX[NGINX<br/>TLS/Reverse Proxy]
+  NGINX --> API[FastAPI API]
+  API --> DOC[Document Service]
+  API --> SRCH[Search Service]
+  API --> COMP[Compliance Service]
+  API --> RISK[Risk Scoring]
+
+  DOC --> CELERY[Celery Workers] --> OCR[OCR Engine] --> NER[NER Model] --> CLF[Classifier]
+  SRCH --> EMB[Embeddings] --> OPENAI[OpenAI GPT-4]
+
+  API --> PG[(PostgreSQL)]
+  SRCH --> QD[(Qdrant Vectors)]
+  API --> RD[(Redis Cache)]
+  DOC --> S3[(MinIO S3)]
+  COMP --> OFAC[OFAC]
+  API --> PHX[Arize Phoenix]
+```
+
+### Flujo de procesamiento de documentos
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor Usuario
+  participant UI as Frontend
+  participant API as Backend
+  participant S3 as MinIO
+  participant DB as PostgreSQL
+  participant ML as ML Pipeline
+  participant VDB as Qdrant
+
+  Usuario->>UI: Subir documento
+  UI->>API: POST /documents/upload
+  API->>S3: Guardar archivo
+  S3-->>API: file_id
+  API->>DB: Crear metadata
+  API->>ML: Encolar procesamiento
+  activate ML
+  ML->>ML: OCR + NER + Clasificacion
+  ML->>VDB: Generar embeddings
+  ML->>DB: Actualizar estado
+  deactivate ML
+  API-->>UI: Notificar documento procesado
+```
+
+---
+
+## 🎯 Características Principales
+
+- IA Documental: clasificación, OCR, NER, resúmenes, detección de anomalías
+- Búsqueda híbrida y RAG con citación obligatoria
+- Compliance automatizado (EU AI Act, GDPR) con trazabilidad
+- Observabilidad de LLMs (Arize Phoenix) y explicabilidad (LIME/SHAP)
+- Alto rendimiento: p95 < 2s en 1M+ documentos, SLA 99.9%
+
+---
+
+## 🚀 Inicio Rápido
+
+```bash
+# 1) Clonar
+git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.git
+cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
+
+# 2) Variables de entorno
+cp .env.example .env
+# Edita .env (OPENAI_API_KEY y demas)
+
+# 3) Levantar servicios
+docker-compose up -d
+
+# 4) Acceso
+# Frontend:  http://localhost:3000
+# Backend:   http://localhost:8000/docs
+# Phoenix:   http://localhost:6006
+```
+
+---
+
+## 📚 Documentación
+
+- docs/ARCHITECTURE.md – Arquitectura técnica
+- docs/ADMIN_GUIDE.md – Guía de administración
+- docs/USER_GUIDE.md – Manual de usuario
+- docs/API_REFERENCE.md – Referencia API
+
+---
+
+© 2024-2025 TeFinancia S.A. – Uso propietario
 - Compliance: EU AI Act, GDPR, NIS2.
 - Arquitectura: microservicios, ML pipeline, vector DB (Qdrant), object storage (MinIO).
 
