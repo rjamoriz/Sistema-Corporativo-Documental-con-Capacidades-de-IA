@@ -1,0 +1,67 @@
+@startuml c4-component
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+LAYOUT_WITH_LEGEND()
+
+title Sistema Documental IA - Vista de Microservicios (C4 Component)
+
+Person(user, "Usuario", "Usuarios de negocio y compliance")
+
+System_Boundary(dms, "Sistema Documental IA") {
+  Component(gateway, "API Gateway", "FastAPI", "Punto de entrada REST/GraphQL, validación JWT y ruteo")
+  Component(auth, "Auth Service", "FastAPI", "Gestión de autenticación y autorización (JWT, RBAC)")
+  Component(ingest, "Ingestion Service", "Python", "Carga de documentos, normalización, validaciones")
+  Component(ocr, "OCR Service", "Tesseract/TrOCR", "OCR y extracción de texto de imágenes/PDF")
+  Component(ner, "NLP & Embeddings Service", "SpaCy/SBERT", "Extracción de entidades y generación de embeddings")
+  Component(rag, "RAG/QA Service", "LLM", "Búsqueda semántica + generación con citas")
+  Component(search, "Search API", "FastAPI", "Búsqueda híbrida (léxica + semántica)")
+  Component(compliance, "Compliance Service", "Python", "GDPR, EU AI Act, validaciones OFAC/EUR-Lex")
+  Component(notify, "Notification Service", "Python", "Eventos y notificaciones (email/webhooks)")
+  Component(workers, "Workers/Orchestrator", "Celery", "Ejecución asíncrona de tareas y pipelines")
+  Component(filesvc, "Files Service", "Python", "Gestión de objetos y versiones (S3 API)")
+  Component(mon, "Telemetry", "OTel", "Métricas, trazas y logs de servicios")
+
+  ComponentDb(pg, "PostgreSQL", "DB", "Metadatos, permisos, auditoría")
+  ComponentDb(vec, "Qdrant", "Vector DB", "Embeddings semánticos")
+  ComponentDb(cache, "Redis", "Cache/Queue", "Cache y colas de trabajo")
+  ComponentDb(obj, "MinIO", "Object Storage", "Almacenamiento de documentos")
+}
+
+System_Ext(openai, "OpenAI API", "Modelos GPT-4/Embeddings")
+System_Ext(ofac, "OFAC API", "Sanciones")
+System_Ext(eurlex, "EUR-Lex API", "Legislación UE")
+System_Ext(phoenix, "Arize Phoenix", "Observabilidad LLM")
+
+Rel(user, gateway, "Usa", "HTTPS")
+Rel(gateway, auth, "Valida sesión/JWT")
+Rel(gateway, ingest, "Carga documentos")
+Rel(ingest, filesvc, "Guarda archivos", "S3 API")
+Rel(filesvc, obj, "Persistencia", "S3")
+
+Rel(ingest, workers, "Encola procesamiento", "Celery")
+Rel(workers, ocr, "Invoca OCR")
+Rel(ocr, ner, "Envía texto extraído")
+Rel(ner, vec, "Guarda embeddings", "gRPC")
+
+Rel(gateway, search, "Consulta búsqueda")
+Rel(search, vec, "Vector search")
+
+Rel(gateway, rag, "Pregunta/QA")
+Rel(rag, vec, "Recupera pasajes")
+Rel(rag, openai, "LLM/Generación")
+
+Rel(gateway, compliance, "Valida cumplimiento")
+Rel(compliance, ofac, "Consulta sanciones")
+Rel(compliance, eurlex, "Consulta regulaciones", "SPARQL")
+
+Rel_U(gateway, notify, "Emite eventos")
+
+Rel(gateway, pg, "Lee/Escribe")
+Rel(auth, pg, "Usuarios/Permisos")
+Rel(workers, pg, "Estados/Resultados")
+Rel(search, cache, "Cachea consultas")
+
+Rel_R(gateway, mon, "Trazas/Métricas", "OTLP")
+Rel(mon, phoenix, "Exporta", "OTLP")
+
+@enduml

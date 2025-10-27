@@ -20,6 +20,10 @@ Vista de contexto (C4):
 
 <img src="docs/generated-diagrams/c4-context.svg" alt="C4 Context" width="100%" />
 
+Vista de microservicios (C4-Componentes):
+
+<img src="docs/generated-diagrams/c4-component.svg" alt="C4 Components / Microservices" width="100%" />
+
 Vista de contenedores (C4):
 
 <img src="docs/generated-diagrams/c4-container.svg" alt="C4 Container" width="100%" />
