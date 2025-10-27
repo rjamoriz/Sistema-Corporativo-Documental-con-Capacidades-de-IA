@@ -154,6 +154,8 @@ class Settings(BaseSettings):
     
     # Compliance
     COMPLIANCE_RULES_PATH: str = "config/compliance_rules.yaml"
+    EU_REGULATORY_API_ENABLED: bool = True
+    EUR_LEX_SPARQL_ENDPOINT: str = "http://publications.europa.eu/webapi/rdf/sparql"
     
     # Audit
     AUDIT_LOG_RETENTION_DAYS: int = 730  # 2 years

@@ -7,6 +7,7 @@ import requests
 from typing import Dict, List, Optional
 from datetime import datetime
 import logging
+from core.config import settings
 from bs4 import BeautifulSoup
 import asyncio
 from functools import lru_cache
@@ -22,9 +23,7 @@ class EURegulatoryService:
     """
     
     def __init__(self):
-        self.eurlex_sparql = SPARQLWrapper(
-            "http://publications.europa.eu/webapi/rdf/sparql"
-        )
+        self.eurlex_sparql = SPARQLWrapper(settings.EUR_LEX_SPARQL_ENDPOINT)
         self.eurlex_sparql.setReturnFormat(JSON)
         self.eurlex_rest = "https://eur-lex.europa.eu/legal-content"
         

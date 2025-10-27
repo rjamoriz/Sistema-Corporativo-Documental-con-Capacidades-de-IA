@@ -17,6 +17,7 @@ from models.schemas import (
 )
 from api.v1.auth import oauth2_scheme
 from services.eu_regulatory_service import get_eu_regulatory_service
+from core.config import settings
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -44,6 +45,8 @@ async def get_gdpr_requirements(
     - Requirements per article
     - Risk levels
     """
+    if not settings.EU_REGULATORY_API_ENABLED:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="EU regulatory APIs disabled via feature flag")
     try:
         eu_service = get_eu_regulatory_service()
         requirements = await eu_service.get_gdpr_requirements()
@@ -74,6 +77,8 @@ async def search_eu_regulations(
     Returns:
     - List of regulations with CELEX, title, date, URL
     """
+    if not settings.EU_REGULATORY_API_ENABLED:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="EU regulatory APIs disabled via feature flag")
     try:
         eu_service = get_eu_regulatory_service()
         regulations = await eu_service.search_regulations(
@@ -111,6 +116,8 @@ async def check_document_eu_compliance(
     - List of violations with severity
     - Recommendations for remediation
     """
+    if not settings.EU_REGULATORY_API_ENABLED:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="EU regulatory APIs disabled via feature flag")
     try:
         eu_service = get_eu_regulatory_service()
         compliance_report = await eu_service.check_document_compliance(
