@@ -1,236 +1,469 @@
-# 🚀 Sistema Corporativo Documental con Capacidades de IA
+# 🚀 Sistema Corporativo Documental con Capacidades de IA# 🚀 Sistema Corporativo Documental con Capacidades de IA
 
-<div align="center">
 
-![Estado](https://img.shields.io/badge/Estado-✅%20Production%20Ready-brightgreen)
-![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)
-![RFP Coverage](https://img.shields.io/badge/RFP%20Coverage-100%25-gold)
-![Tests](https://img.shields.io/badge/Tests-78%20passing-brightgreen)
-![Coverage](https://img.shields.io/badge/Coverage-90%25-green)
-![Python](https://img.shields.io/badge/Python-3.11+-green)
-![React](https://img.shields.io/badge/React-18.3-blue)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)
-![Docker](https://img.shields.io/badge/Docker-Ready-blue)
-![GPU](https://img.shields.io/badge/GPU-NVIDIA%20RTX%204070-76B900)
 
-Sistema enterprise de gestión documental con IA responsable.  
+<div align="center"><div align="center">
+
+
+
+![Estado](https://img.shields.io/badge/Estado-✅%20Production%20Ready-brightgreen)![Estado](https://img.shields.io/badge/Estado-✅%20Production%20Ready-brightgreen)
+
+![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)
+
+![RFP Coverage](https://img.shields.io/badge/RFP%20Coverage-100%25-gold)![RFP Coverage](https://img.shields.io/badge/RFP%20Coverage-100%25-gold)
+
+![Tests](https://img.shields.io/badge/Tests-78%20passing-brightgreen)![Tests](https://img.shields.io/badge/Tests-78%20passing-brightgreen)
+
+![Coverage](https://img.shields.io/badge/Coverage-90%25-green)![Coverage](https://img.shields.io/badge/Coverage-90%25-green)
+
+![Python](https://img.shields.io/badge/Python-3.11+-green)![Python](https://img.shields.io/badge/Python-3.11+-green)
+
+![React](https://img.shields.io/badge/React-18.3-blue)![React](https://img.shields.io/badge/React-18.3-blue)
+
+![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue)
+
+![Docker](https://img.shields.io/badge/Docker-Ready-blue)![Docker](https://img.shields.io/badge/Docker-Ready-blue)
+
+![GPU](https://img.shields.io/badge/GPU-NVIDIA%20RTX%204070-76B900)![GPU](https://img.shields.io/badge/GPU-NVIDIA%20RTX%204070-76B900)
+
+
+
+**Sistema enterprise de gestión documental con IA responsable**Sistema enterprise de gestión documental con IA responsable.  
+
 Procesamiento inteligente | Cumplimiento normativo | Aceleración GPU
+
+Procesamiento inteligente | Cumplimiento normativo | Aceleración GPU
+
+[Inicio rápido](#-inicio-rápido) • [Arquitectura](#-arquitectura-del-sistema) • [Características](#-características-principales) • [Documentación](#-documentación-completa)
 
 [Inicio rápido](#-inicio-rápido) • [Arquitectura](#-arquitectura-del-sistema) • [Características](#-características-principales) • [Documentación](#-documentación-completa)
 
 </div>
 
+</div>
+
 ### 📌 Diagrama estático (backup SVG) e interactivo
 
+### 📌 Diagramas de arquitectura
+
 - SVGs generados por CI: [C4 Context](docs/generated-diagrams/c4-context.svg) • [C4 Container](docs/generated-diagrams/c4-container.svg) • [Índice](docs/generated-diagrams/README.md)
-- Versión interactiva (GitHub Pages): https://rjamoriz.github.io/Sistema-Corporativo-Documental-con-Capacidades-de-IA/  
-    (si aún no está activo, ver archivo estático: [docs/index.html](docs/index.html))
 
----
+- **SVGs generados por CI:** [C4 Context](docs/generated-diagrams/c4-context.svg) • [C4 Container](docs/generated-diagrams/c4-container.svg) • [Índice](docs/generated-diagrams/README.md)- Versión interactiva (GitHub Pages): https://rjamoriz.github.io/Sistema-Corporativo-Documental-con-Capacidades-de-IA/  
 
-## 📋 Descripción
+- **Versión interactiva:** https://rjamoriz.github.io/Sistema-Corporativo-Documental-con-Capacidades-de-IA/ (o ver [docs/index.html](docs/index.html))    (si aún no está activo, ver archivo estático: [docs/index.html](docs/index.html))
 
-Plataforma corporativa para gestionar, buscar y analizar documentos a escala con IA: clasificación, extracción de entidades, RAG con citación, scoring de riesgo y compliance automatizado (EU AI Act, GDPR). Optimizada para GPU (RTX 4070).
 
----
 
-## 🎯 Características Principales
+------
 
-- IA Documental: clasificación, OCR, NER, resúmenes, anomalías
+
+
+## 📋 Descripción## 📋 Descripción
+
+
+
+Plataforma corporativa para gestionar, buscar y analizar documentos a escala con IA: clasificación, extracción de entidades, RAG con citación, scoring de riesgo y compliance automatizado (EU AI Act, GDPR). Optimizada para GPU (RTX 4070).Plataforma corporativa para gestionar, buscar y analizar documentos a escala con IA: clasificación, extracción de entidades, RAG con citación, scoring de riesgo y compliance automatizado (EU AI Act, GDPR). Optimizada para GPU (RTX 4070).
+
+
+
+**Cliente:** TeFinancia S.A. | **Proyecto:** FinancIA 2030 | **Estado:** Production Ready---
+
+
+
+---## 🎯 Características Principales
+
+
+
+## 🎯 Características Principales- IA Documental: clasificación, OCR, NER, resúmenes, anomalías
+
 - Búsqueda híbrida y RAG con citación obligatoria de fuentes
-- Compliance automatizado (EU AI Act, GDPR) con trazabilidad
-- Observabilidad de LLMs (Phoenix) y explicabilidad (LIME/SHAP)
-- Alto rendimiento: p95 < 2s en 1M+ documentos, SLA 99.9%
 
----
+- **IA Documental:** clasificación, OCR, NER, resúmenes, detección de anomalías- Compliance automatizado (EU AI Act, GDPR) con trazabilidad
 
-## 🏗️ Arquitectura del Sistema (vista microservicios)
+- **Búsqueda híbrida:** léxica (BM25) + semántica (embeddings) con RAG y citación obligatoria- Observabilidad de LLMs (Phoenix) y explicabilidad (LIME/SHAP)
 
-```mermaid
+- **Compliance automatizado:** EU AI Act, GDPR, NIS2 con trazabilidad completa- Alto rendimiento: p95 < 2s en 1M+ documentos, SLA 99.9%
+
+- **Observabilidad de LLMs:** Arize Phoenix (OTLP) con explicabilidad (LIME/SHAP)
+
+- **Alto rendimiento:** p95 < 2s en 1M+ documentos, SLA 99.9%---
+
+
+
+---## 🏗️ Arquitectura del Sistema (vista microservicios)
+
+
+
+## 🏗️ Arquitectura del Sistema```mermaid
+
 flowchart TB
-        subgraph Client
+
+### Vista de microservicios        subgraph Client
+
             UI[React SPA\nTypeScript + Vite]
-        end
 
-        subgraph Gateway
-            NGINX[NGINX\nTLS/Reverse Proxy]
-        end
+```mermaid        end
 
-        subgraph Backend[Backend Services]
-            API[FastAPI API]
-            DOC[Document Service]
+flowchart TB
+
+    subgraph Client        subgraph Gateway
+
+        UI[React SPA<br/>TypeScript + Vite]            NGINX[NGINX\nTLS/Reverse Proxy]
+
+    end        end
+
+
+
+    subgraph Gateway        subgraph Backend[Backend Services]
+
+        NGINX[NGINX<br/>TLS/Reverse Proxy]            API[FastAPI API]
+
+    end            DOC[Document Service]
+
             SRCH[Search Service]
-            COMP[Compliance Service]
-            RISK[Risk Scoring]
+
+    subgraph Backend[Backend Services]            COMP[Compliance Service]
+
+        API[FastAPI API]            RISK[Risk Scoring]
+
+        DOC[Document Service]        end
+
+        SRCH[Search Service]
+
+        COMP[Compliance Service]        subgraph Workers[Async Workers]
+
+        RISK[Risk Scoring]            CELERY[Celery Workers]
+
+    end            JOBS[Schedulers]
+
         end
 
-        subgraph Workers[Async Workers]
-            CELERY[Celery Workers]
-            JOBS[Schedulers]
-        end
+    subgraph Workers[Async Workers]
 
-        subgraph ML[ML/AI Pipeline]
-            OCR[OCR Engine]
-            NER[NER Model]
+        CELERY[Celery Workers]        subgraph ML[ML/AI Pipeline]
+
+        JOBS[Schedulers]            OCR[OCR Engine]
+
+    end            NER[NER Model]
+
             EMB[Embeddings]
-            CLF[Classifier]
-        end
 
-        subgraph Data[Data Stores]
-            PG[(PostgreSQL)]
-            QD[(Qdrant Vectors)]
+    subgraph ML[ML/AI Pipeline]            CLF[Classifier]
+
+        OCR[OCR Engine]        end
+
+        NER[NER Model]
+
+        EMB[Embeddings]        subgraph Data[Data Stores]
+
+        CLF[Classifier]            PG[(PostgreSQL)]
+
+    end            QD[(Qdrant Vectors)]
+
             RD[(Redis Cache)]
-            S3[(MinIO S3)]
-        end
 
-        subgraph External[External APIs]
-            OFAC[OFAC]
-            OPENAI[OpenAI GPT-4]
+    subgraph Data[Data Stores]            S3[(MinIO S3)]
+
+        PG[(PostgreSQL)]        end
+
+        QD[(Qdrant Vectors)]
+
+        RD[(Redis Cache)]        subgraph External[External APIs]
+
+        S3[(MinIO S3)]            OFAC[OFAC]
+
+    end            OPENAI[OpenAI GPT-4]
+
             PHX[Arize Phoenix]
-        end
 
-        UI --> NGINX --> API
-        API --> DOC
-        API --> SRCH
+    subgraph External[External APIs]        end
+
+        OFAC[OFAC]
+
+        OPENAI[OpenAI GPT-4]        UI --> NGINX --> API
+
+        PHX[Arize Phoenix]        API --> DOC
+
+    end        API --> SRCH
+
         API --> COMP
-        API --> RISK
 
-        DOC --> CELERY --> OCR --> NER --> CLF
-        SRCH --> EMB --> OPENAI
+    UI --> NGINX --> API        API --> RISK
+
+    API --> DOC
+
+    API --> SRCH        DOC --> CELERY --> OCR --> NER --> CLF
+
+    API --> COMP        SRCH --> EMB --> OPENAI
+
+    API --> RISK
 
         API --> PG
-        SRCH --> QD
-        API --> RD
+
+    DOC --> CELERY --> OCR --> NER --> CLF        SRCH --> QD
+
+    SRCH --> EMB --> OPENAI        API --> RD
+
         DOC --> S3
 
-        COMP --> OFAC
-        API --> PHX
-```
+    API --> PG
 
-### Flujo de procesamiento de documentos
+    SRCH --> QD        COMP --> OFAC
 
-```mermaid
+    API --> RD        API --> PHX
+
+    DOC --> S3```
+
+
+
+    COMP --> OFAC### Flujo de procesamiento de documentos
+
+    API --> PHX
+
+``````mermaid
+
 sequenceDiagram
-        autonumber
+
+### Flujo de procesamiento de documentos        autonumber
+
         actor Usuario
-        participant UI as Frontend (React)
-        participant API as Backend (FastAPI)
-        participant S3 as MinIO (S3)
-        participant DB as PostgreSQL
-        participant ML as ML Pipeline
-        participant VDB as Qdrant
 
-        Usuario->>UI: Subir documento
-        UI->>API: POST /documents/upload
-        API->>S3: Guardar archivo
+```mermaid        participant UI as Frontend (React)
+
+sequenceDiagram        participant API as Backend (FastAPI)
+
+    autonumber        participant S3 as MinIO (S3)
+
+    actor Usuario        participant DB as PostgreSQL
+
+    participant UI as Frontend        participant ML as ML Pipeline
+
+    participant API as Backend        participant VDB as Qdrant
+
+    participant S3 as MinIO
+
+    participant DB as PostgreSQL        Usuario->>UI: Subir documento
+
+    participant ML as ML Pipeline        UI->>API: POST /documents/upload
+
+    participant VDB as Qdrant        API->>S3: Guardar archivo
+
         S3-->>API: file_id
-        API->>DB: Crear metadata (document_id)
-        API->>ML: Encolar procesamiento
-        activate ML
-        ML->>ML: OCR + NER + Clasificación
-        ML->>VDB: Generar embeddings
-        ML->>DB: Actualizar estado y resultados
-        deactivate ML
-        API-->>UI: Notificar documento procesado
-```
 
----
+    Usuario->>UI: Subir documento        API->>DB: Crear metadata (document_id)
 
-## 🧠 Stack Tecnológico
+    UI->>API: POST /documents/upload        API->>ML: Encolar procesamiento
 
-- Frontend: React 18.3, TypeScript 5.5, Vite, TanStack Query, Tailwind
+    API->>S3: Guardar archivo        activate ML
+
+    S3-->>API: file_id        ML->>ML: OCR + NER + Clasificación
+
+    API->>DB: Crear metadata        ML->>VDB: Generar embeddings
+
+    API->>ML: Encolar procesamiento        ML->>DB: Actualizar estado y resultados
+
+    activate ML        deactivate ML
+
+    ML->>ML: OCR + NER + Clasificacion        API-->>UI: Notificar documento procesado
+
+    ML->>VDB: Generar embeddings```
+
+    ML->>DB: Actualizar estado
+
+    deactivate ML---
+
+    API-->>UI: Notificar documento procesado
+
+```## 🧠 Stack Tecnológico
+
+
+
+---- Frontend: React 18.3, TypeScript 5.5, Vite, TanStack Query, Tailwind
+
 - Backend: FastAPI (Python 3.11), SQLAlchemy 2.0, Pydantic v2, Celery
-- ML/AI: SpaCy, Sentence-BERT, Scikit-learn, PyTorch, LIME/SHAP, Tesseract
+
+## 🧠 Stack Tecnológico- ML/AI: SpaCy, Sentence-BERT, Scikit-learn, PyTorch, LIME/SHAP, Tesseract
+
 - Datos: PostgreSQL, Qdrant, Redis, MinIO (S3)
-- DevOps: Docker Compose, GitHub Actions, NGINX, Prometheus/Grafana
-- Observabilidad IA: Arize Phoenix (OTLP)
 
----
+- **Frontend:** React 18.3, TypeScript 5.5, Vite, TanStack Query, Tailwind- DevOps: Docker Compose, GitHub Actions, NGINX, Prometheus/Grafana
 
-## 🚀 Inicio Rápido
+- **Backend:** FastAPI (Python 3.11), SQLAlchemy 2.0, Pydantic v2, Celery- Observabilidad IA: Arize Phoenix (OTLP)
 
-```bash
+- **ML/AI:** SpaCy, Sentence-BERT, Scikit-learn, PyTorch, LIME/SHAP, Tesseract
+
+- **Datos:** PostgreSQL, Qdrant, Redis, MinIO (S3)---
+
+- **DevOps:** Docker Compose, GitHub Actions, NGINX, Prometheus/Grafana
+
+- **Observabilidad:** Arize Phoenix (OTLP)## 🚀 Inicio Rápido
+
+
+
+---```bash
+
 # 1) Clonar
-git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.git
+
+## 🚀 Inicio Rápidogit clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.git
+
 cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
 
-# 2) Variables de entorno
-cp .env.example .env
-# Edita .env (OPENAI_API_KEY y demás)
+```bash
 
-# 3) Levantar servicios
-docker-compose up -d
+# 1) Clonar# 2) Variables de entorno
+
+git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.gitcp .env.example .env
+
+cd Sistema-Corporativo-Documental-con-Capacidades-de-IA# Edita .env (OPENAI_API_KEY y demás)
+
+
+
+# 2) Variables de entorno# 3) Levantar servicios
+
+cp .env.example .envdocker-compose up -d
+
+# Edita .env (OPENAI_API_KEY y demas)
 
 # 4) Acceso
-# Frontend:  http://localhost:3000
-# Backend:   http://localhost:8000/docs
+
+# 3) Levantar servicios# Frontend:  http://localhost:3000
+
+docker-compose up -d# Backend:   http://localhost:8000/docs
+
 # Phoenix:   http://localhost:6006
-```
 
-Modo desarrollo (opcional):
+# 4) Acceso```
 
-```bash
+# Frontend:  http://localhost:3000
+
+# Backend:   http://localhost:8000/docsModo desarrollo (opcional):
+
+# Phoenix:   http://localhost:6006
+
+``````bash
+
 # Backend
-cd backend
+
+**Modo desarrollo (opcional):**cd backend
+
 python -m venv venv
-venv\Scripts\activate  # Windows
-pip install -r requirements.txt
-uvicorn main:app --reload
 
-# Frontend (otra terminal)
-cd frontend
-npm install
+```bashvenv\Scripts\activate  # Windows
+
+# Backendpip install -r requirements.txt
+
+cd backenduvicorn main:app --reload
+
+python -m venv venv
+
+venv\Scripts\activate  # Windows# Frontend (otra terminal)
+
+pip install -r requirements.txtcd frontend
+
+uvicorn main:app --reloadnpm install
+
 npm run dev
-```
 
-Credenciales demo: usuario admin.demo / password Demo2025!
+# Frontend (otra terminal)```
 
----
+cd frontend
 
-## 🔒 Seguridad y Compliance
+npm installCredenciales demo: usuario admin.demo / password Demo2025!
 
-- OAuth2 + JWT + MFA, RBAC granular, TLS 1.3
+npm run dev
+
+```---
+
+
+
+**Credenciales demo:** `admin.demo` / `Demo2025!`## 🔒 Seguridad y Compliance
+
+
+
+---- OAuth2 + JWT + MFA, RBAC granular, TLS 1.3
+
 - Auditoría completa y DLP (detección de datos sensibles)
-- DPIA completo y alineamiento con EU AI Act y GDPR
 
----
+## 🔒 Seguridad y Compliance- DPIA completo y alineamiento con EU AI Act y GDPR
 
-## � Documentación completa
 
-- docs/ARCHITECTURE.md – Arquitectura técnica
-- docs/ADMIN_GUIDE.md – Guía de administración
+
+- **Autenticación:** OAuth2 + JWT + MFA---
+
+- **Autorización:** RBAC granular
+
+- **Encriptación:** TLS 1.3, AES-256## � Documentación completa
+
+- **Auditoría:** Logs inmutables con retención 2+ años
+
+- **DLP:** Detección automática de datos sensibles- docs/ARCHITECTURE.md – Arquitectura técnica
+
+- **Compliance:** EU AI Act, GDPR, NIS2- docs/ADMIN_GUIDE.md – Guía de administración
+
 - docs/USER_GUIDE.md – Manual de usuario
-- docs/API_REFERENCE.md – Referencia API
 
----
+---- docs/API_REFERENCE.md – Referencia API
+
+
+
+## 📚 Documentación completa---
+
+
+
+| Documento | Descripción |## 🧪 Calidad y CI/CD
+
+|-----------|-------------|
+
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Arquitectura técnica detallada |- Tests unitarios e integración (coverage 90%)
+
+| [docs/ADMIN_GUIDE.md](docs/ADMIN_GUIDE.md) | Guía para administradores |- GitHub Actions: build, tests, análisis seguridad y despliegue
+
+| [docs/USER_GUIDE.md](docs/USER_GUIDE.md) | Manual de usuario |
+
+| [docs/API_REFERENCE.md](docs/API_REFERENCE.md) | Referencia API |---
+
+| [docs/GOVERNANCE.md](docs/GOVERNANCE.md) | Gobernanza de IA |
+
+| [docs/DPIA.md](docs/DPIA.md) | Data Protection Impact Assessment |## 👥 Equipo
+
+
+
+---- Lead Developer: @rjamoriz
+
+- Arquitectura y ML: Equipo IA / Seguridad
 
 ## 🧪 Calidad y CI/CD
 
-- Tests unitarios e integración (coverage 90%)
-- GitHub Actions: build, tests, análisis seguridad y despliegue
-
 ---
 
-## 👥 Equipo
+- **Tests:** 78 tests unitarios + integración (coverage 90%)
 
-- Lead Developer: @rjamoriz
-- Arquitectura y ML: Equipo IA / Seguridad
+- **CI/CD:** GitHub Actions (build, tests, security scan, deploy)© 2024-2025 TeFinancia S.A. – Uso propietario
 
----
-
-© 2024-2025 TeFinancia S.A. – Uso propietario
+- **Análisis de seguridad:** Dependabot, Trivy
 
 git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.git    Rel(admin, dms, "Administra", "HTTPS")docker-compose -f docker-compose.hub.yml up -d
 
+---
+
 cd Sistema-Corporativo-Documental-con-Capacidades-de-IA
+
+## 👥 Equipo
 
     Rel(dms, sharepoint, "Sincroniza", "Microsoft Graph")
 
-# 2. Configurar variables de entorno
+- **Lead Developer:** [@rjamoriz](https://github.com/rjamoriz)
 
-cp .env.example .env    Rel(dms, sap, "Importa", "GraphQL")# 4. Acceder a la aplicación
+- **Arquitectura y ML:** Equipo IA / Seguridad# 2. Configurar variables de entorno
 
-nano .env  # Añadir OPENAI_API_KEY
+
+
+---cp .env.example .env    Rel(dms, sap, "Importa", "GraphQL")# 4. Acceder a la aplicación
+
+
+
+© 2024-2025 TeFinancia S.A. – Uso propietarionano .env  # Añadir OPENAI_API_KEY
+
 
     Rel(dms, ofac, "Valida", "REST API")# Frontend: http://localhost:3000
 
