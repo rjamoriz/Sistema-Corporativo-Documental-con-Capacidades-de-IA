@@ -39,6 +39,11 @@
   <text class="group-title" x="50" y="145">Cliente</text>
   <text class="label" x="50" y="170">React SPA</text>
   <text class="small" x="50" y="190">TypeScript · Vite</text>
+  <!-- Logo badge -->
+  <g transform="translate(250,130)">
+    <rect x="0" y="0" width="44" height="20" rx="4" fill="#61DAFB" stroke="#1b2b34"/>
+    <text x="22" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#05232a" text-anchor="middle">React</text>
+  </g>
 
   <!-- API Gateway -->
   <!-- BFF and API Gateway separated for clarity -->
@@ -46,11 +51,19 @@
   <text class="group-title" x="350" y="120">BFF</text>
   <text class="label" x="350" y="140">BFF (Node/Express or FastAPI)</text>
   <text class="small" x="350" y="155">Optimiza respuestas para cliente</text>
+  <g transform="translate(520,110)">
+    <rect x="0" y="0" width="44" height="20" rx="4" fill="#339933" stroke="#072008"/>
+    <text x="22" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#e6f7e6" text-anchor="middle">BFF</text>
+  </g>
 
   <rect class="box-accent" x="580" y="100" width="220" height="60"/>
   <text class="group-title" x="590" y="120">API Gateway</text>
   <text class="label" x="590" y="140">API Gateway (FastAPI)</text>
   <text class="small" x="590" y="155">Autenticación · Ruteo · Throttling</text>
+  <g transform="translate(760,110)">
+    <rect x="0" y="0" width="44" height="20" rx="4" fill="#009688" stroke="#01332b"/>
+    <text x="22" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#e6fff8" text-anchor="middle">API</text>
+  </g>
 
   <!-- Services group background -->
   <rect x="40" y="240" width="1120" height="300" rx="12" fill="#0b1220" stroke="#1f2937"/>
@@ -60,36 +73,68 @@
   <rect class="box" x="60" y="280" width="220" height="90"/>
   <text class="label" x="70" y="305">Ingestion Service</text>
   <text class="small" x="70" y="330">Carga, validación, normalización</text>
+  <g transform="translate(250,290)">
+    <rect x="0" y="0" width="44" height="20" rx="4" fill="#8b5cf6" stroke="#2b153e"/>
+    <text x="22" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#f3e8ff" text-anchor="middle">ETL</text>
+  </g>
 
   <rect class="box" x="300" y="280" width="220" height="90"/>
   <text class="label" x="310" y="305">OCR Service</text>
   <text class="small" x="310" y="330">PDF/Imagen → Texto</text>
+  <g transform="translate(500,290)">
+    <rect x="0" y="0" width="44" height="20" rx="4" fill="#f97316" stroke="#3d2707"/>
+    <text x="22" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#fff7ed" text-anchor="middle">OCR</text>
+  </g>
 
   <rect class="box" x="540" y="280" width="260" height="90"/>
   <text class="label" x="550" y="305">NLP & Embeddings</text>
   <text class="small" x="550" y="330">SpaCy · SBERT · OpenAI</text>
+  <g transform="translate(770,290)">
+    <rect x="0" y="0" width="48" height="20" rx="4" fill="#ffb020" stroke="#3f2a00"/>
+    <text x="24" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#2b2000" text-anchor="middle">Emb</text>
+  </g>
 
   <rect class="box" x="820" y="260" width="320" height="120"/>
   <text class="label" x="830" y="285">RAG / QA Service</text>
   <text class="small" x="830" y="310">Recuperación + Generación</text>
   <text class="small" x="830" y="330">Fuentes citadas: MinIO, PostgreSQL, Qdrant</text>
+  <g transform="translate(1120,270)">
+    <rect x="0" y="0" width="56" height="20" rx="4" fill="#06b6d4" stroke="#00353b"/>
+    <text x="28" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#00363b" text-anchor="middle">RAG</text>
+  </g>
 
   <!-- Row 2 services -->
   <rect class="box" x="60" y="390" width="260" height="90"/>
   <text class="label" x="70" y="415">Search API</text>
   <text class="small" x="70" y="440">Búsqueda híbrida (BM25 + vectores)</text>
+  <g transform="translate(280,400)">
+    <rect x="0" y="0" width="44" height="20" rx="4" fill="#0ea5a0" stroke="#052826"/>
+    <text x="22" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#e6fffd" text-anchor="middle">Search</text>
+  </g>
 
   <rect class="box" x="340" y="390" width="260" height="90"/>
   <text class="label" x="350" y="415">Compliance Service</text>
   <text class="small" x="350" y="440">GDPR · EU AI Act · OFAC · EUR‑Lex</text>
+  <g transform="translate(560,400)">
+    <rect x="0" y="0" width="48" height="20" rx="4" fill="#ef4444" stroke="#3b0b0b"/>
+    <text x="24" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#fff1f1" text-anchor="middle">Compliance</text>
+  </g>
 
   <rect class="box" x="620" y="390" width="260" height="90"/>
   <text class="label" x="630" y="415">Workers / Orchestrator</text>
   <text class="small" x="630" y="440">Colas y pipelines con Celery</text>
+  <g transform="translate(840,400)">
+    <rect x="0" y="0" width="44" height="20" rx="4" fill="#7c3aed" stroke="#2b153e"/>
+    <text x="22" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#f0e9ff" text-anchor="middle">Celery</text>
+  </g>
 
   <rect class="box" x="900" y="390" width="240" height="90"/>
   <text class="label" x="910" y="415">Notification Service</text>
   <text class="small" x="910" y="440">Email · Webhooks · Eventos</text>
+  <g transform="translate(1100,400)">
+    <rect x="0" y="0" width="44" height="20" rx="4" fill="#2563eb" stroke="#07204a"/>
+    <text x="22" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#e8f0ff" text-anchor="middle">Notif</text>
+  </g>
 
   <!-- Data layer -->
   <rect x="40" y="560" width="1120" height="120" rx="12" fill="#0b1220" stroke="#1f2937"/>
@@ -98,23 +143,43 @@
   <rect class="box" x="60" y="600" width="240" height="60"/>
   <text class="label" x="70" y="625">PostgreSQL</text>
   <text class="small" x="70" y="645">Metadatos · Auditoría</text>
+  <g transform="translate(260,610)">
+    <rect x="0" y="0" width="44" height="20" rx="4" fill="#336791" stroke="#082035"/>
+    <text x="22" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#e6f3ff" text-anchor="middle">PG</text>
+  </g>
 
   <rect class="box" x="340" y="600" width="240" height="60"/>
   <text class="label" x="350" y="625">Qdrant</text>
   <text class="small" x="350" y="645">Embeddings semánticos</text>
+  <g transform="translate(580,610)">
+    <rect x="0" y="0" width="44" height="20" rx="4" fill="#00aab1" stroke="#003434"/>
+    <text x="22" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#e6fffe" text-anchor="middle">Qdr</text>
+  </g>
 
   <rect class="box" x="620" y="600" width="240" height="60"/>
   <text class="label" x="630" y="625">Redis</text>
   <text class="small" x="630" y="645">Cache · Broker</text>
+  <g transform="translate(860,610)">
+    <rect x="0" y="0" width="44" height="20" rx="4" fill="#dc2626" stroke="#3a0b0b"/>
+    <text x="22" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#fff1f1" text-anchor="middle">RD</text>
+  </g>
 
   <rect class="box" x="900" y="600" width="240" height="60"/>
   <text class="label" x="910" y="625">MinIO (S3)</text>
   <text class="small" x="910" y="645">Almacenamiento de archivos</text>
+  <g transform="translate(1140,610)">
+    <rect x="0" y="0" width="44" height="20" rx="4" fill="#f97316" stroke="#3d2707"/>
+    <text x="22" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#fff7ed" text-anchor="middle">S3</text>
+  </g>
 
   <!-- External systems -->
   <rect class="box" x="940" y="120" width="220" height="80"/>
   <text class="group-title" x="950" y="145">Externo</text>
   <text class="label" x="950" y="170">OpenAI · OFAC · EUR‑Lex · Phoenix</text>
+  <g transform="translate(1110,130)">
+    <rect x="0" y="0" width="44" height="20" rx="4" fill="#111827" stroke="#e6eef8"/>
+    <text x="22" y="14" font-family="Segoe UI, Roboto, Arial" font-size="11" fill="#e6eef8" text-anchor="middle">API</text>
+  </g>
 
   <!-- Flows -->
   <line class="arrow-strong" x1="300" y1="160" x2="340" y2="130"/>
