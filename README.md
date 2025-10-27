@@ -142,10 +142,9 @@ Se incluyen dos diagramas Mermaid compatibles con GitHub: la vista de microservi
 ![Versión](https://img.shields.io/badge/Versión-1.0.0-blue)
 ![RFP Coverage](https://img.shields.io/badge/RFP%20Coverage-100%25-gold)
 
-Sistema corporativo de gestión documental con capacidades avanzadas de IA: ingestión, OCR, extracción de entidades, búsqueda híbrida (léxica + semántica), RAG con citación, scoring de riesgo y módulos de compliance (EU AI Act, GDPR).
+Plataforma enterprise para ingestión, procesamiento y búsqueda de documentos con capacidades de IA (OCR, NER, embeddings, RAG) y módulos de compliance (EU AI Act, GDPR).
 
-Links rápidos: [Quickstart](#inicio-rápido) • [Documentación completa](docs/) • [Diagramas generados (SVG)](docs/generated-diagrams/) • [Vista interactiva (GitHub Pages)](docs/index.html)
-
+Quick links: [Quickstart](#inicio-rápido) • [Docs](docs/) • [Diagramas (SVG)](docs/generated-diagrams/) • [Vista interactiva (docs/index.html)](docs/index.html)
 ---
 
 ## Descripción breve
@@ -154,36 +153,35 @@ Plataforma optimizada para producción (GPU-ready) que combina microservicios, p
 
 ## Diagramas y visualizaciones
 
-- SVGs generados por CI: `docs/generated-diagrams/` (si no existen, el workflow `.github/workflows/diagrams.yml` los generará en el próximo push).
-- Versión interactiva (fallback): `docs/index.html` (útil si GitHub no procesa ciertos bloques Mermaid).
+- SVGs generados por CI: `docs/generated-diagrams/`.
+- Versión interactiva (fallback): `docs/index.html`.
 
-Nota: He eliminado los bloques Mermaid inline del README (causaban errores de parseo en GitHub). Los diagramas fuente se mantienen en `docs/diagrams/` y se convierten a SVG por CI para máxima compatibilidad.
-
+Los diagramas fuente están en `docs/diagrams/` (PlantUML, Structurizr, .mmd). El CI genera SVGs para máxima compatibilidad con GitHub.
 ---
 
 ## Inicio rápido
 
-1. Clona el repo
+1) Clona el repositorio
 
 ```powershell
 git clone https://github.com/rjamoriz/Sistema-Corporativo-Documental-con-Capacidades-de-IA.git
 cd "Sistema-Corporativo-Documental-con-Capacidades-de-IA"
 ```
 
-2. Configura variables de entorno
+2) Copia el ejemplo de variables de entorno
 
 ```powershell
 copy .env.example .env
-# Edita .env (OPENAI_API_KEY y otras credenciales)
+# Edita .env para añadir OPENAI_API_KEY y otras credenciales
 ```
 
-3. Levanta los servicios (Docker Compose)
+3) Levanta los servicios con Docker Compose
 
 ```powershell
 docker-compose up -d
 ```
 
-Accesos:
+Accesos útiles:
 - Frontend: http://localhost:3000
 - Backend (OpenAPI): http://localhost:8000/docs
 
@@ -195,13 +193,6 @@ Accesos:
 - `docs/ADMIN_GUIDE.md` — Guía de administración
 - `docs/USER_GUIDE.md` — Manual de usuario
 - `docs/API_REFERENCE.md` — Referencia API
-
----
-
-## Cómo ayudar a que esto no vuelva a romperse
-
-- Mantén los diagramas en `docs/diagrams/` (PlantUML / Structurizr / .mmd). El CI genera SVGs en `docs/generated-diagrams/`.
-- Para cambios visuales complejos, edita las fuentes y deja que la acción de GitHub genere los SVGs. Evita bloques Mermaid complejos inline en `README.md`.
 
 ---
 
