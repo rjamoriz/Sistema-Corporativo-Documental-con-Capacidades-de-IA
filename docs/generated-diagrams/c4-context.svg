@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">C4 Context (Placeholder)</title>
+  <desc id="desc">Vista de contexto C4 — placeholder generado mientras CI crea el diagrama real.</desc>
+  <rect x="0" y="0" width="1200" height="360" fill="#071025" />
+  <text x="40" y="56" fill="#e6eef8" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="24" font-weight="700">C4 Context — Sistema Documental IA (Placeholder)</text>
+  <text x="40" y="92" fill="#94a3b8" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="14">Usuarios, sistemas externos (SharePoint, SAP, OpenAI, EUR-Lex) y el sistema documental.</text>
+  <rect x="60" y="130" width="320" height="80" rx="8" fill="#0f172a" stroke="#284155" stroke-width="1.5" />
+  <text x="80" y="160" fill="#dbeafe" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="16">Usuario / Admin</text>
+  <rect x="460" y="130" width="360" height="80" rx="8" fill="#0f172a" stroke="#284155" stroke-width="1.5" />
+  <text x="480" y="160" fill="#dbeafe" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="16">Sistema Documental IA</text>
+  <rect x="860" y="120" width="260" height="104" rx="8" fill="#0f172a" stroke="#284155" stroke-width="1.5" />
+  <text x="880" y="150" fill="#dbeafe" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="14">OpenAI · EUR-Lex · OFAC · SAP · SharePoint</text>
+  <line x1="380" y1="170" x2="460" y2="170" stroke="#60a5fa" stroke-width="2" marker-end="url(#m)" />
+  <defs>
+    <marker id="m" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#60a5fa"/>
+    </marker>
+  </defs>
+  <text x="600" y="320" fill="#9aa8b6" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="12">Placeholder: generado localmente por el equipo de docs. El diagrama real llegará vía GitHub Actions.</text>
+</svg>

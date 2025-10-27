@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">C4 Container (Placeholder)</title>
+  <desc id="desc">Vista de contenedores C4 — placeholder temporal para README.</desc>
+  <rect x="0" y="0" width="1200" height="360" fill="#071025" />
+  <text x="40" y="56" fill="#e6eef8" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="24" font-weight="700">C4 Container — Sistema Documental IA (Placeholder)</text>
+  <text x="40" y="92" fill="#94a3b8" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="14">React SPA · FastAPI · ML Pipeline · Workers · DBs</text>
+
+  <rect x="80" y="140" width="260" height="100" rx="10" fill="#0f172a" stroke="#284155" stroke-width="1.5" />
+  <text x="100" y="170" fill="#dbeafe" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="16">React SPA (Frontend)</text>
+
+  <rect x="420" y="140" width="260" height="100" rx="10" fill="#0f172a" stroke="#284155" stroke-width="1.5" />
+  <text x="440" y="170" fill="#dbeafe" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="16">API (FastAPI)</text>
+
+  <rect x="760" y="140" width="320" height="100" rx="10" fill="#0f172a" stroke="#284155" stroke-width="1.5" />
+  <text x="780" y="170" fill="#dbeafe" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="16">ML Pipeline · Workers</text>
+
+  <line x1="340" y1="190" x2="420" y2="190" stroke="#60a5fa" stroke-width="2" marker-end="url(#m)" />
+  <defs>
+    <marker id="m" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#60a5fa"/>
+    </marker>
+  </defs>
+  <text x="600" y="320" fill="#9aa8b6" font-family="Segoe UI, Roboto, Arial, sans-serif" font-size="12">Placeholder: se reemplazará por el SVG generado automáticamente por CI.</text>
+</svg>
