@@ -1,17 +1,16 @@
 # GPU Embedding Service Dockerfile
-# Base image with CUDA support and Python
-FROM nvidia/cuda:12.1.0-cudnn8-runtime-ubuntu22.04
+# Use Python slim image (will use GPU if available via PyTorch)
+FROM python:3.10-slim
 
 # Set working directory
 WORKDIR /app
 
-# Install Python and pip
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
+    gcc \
+    g++ \
     curl \
-    && rm -rf /var/lib/apt/lists/* \
-    && ln -s /usr/bin/python3 /usr/bin/python
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements
 COPY requirements.txt .
