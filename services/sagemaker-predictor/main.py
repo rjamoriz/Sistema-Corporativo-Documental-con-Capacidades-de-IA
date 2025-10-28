@@ -197,7 +197,8 @@ class PredictiveMLModel:
                 n_estimators=100,
                 max_depth=5,
                 learning_rate=0.1,
-                random_state=42
+                random_state=42,
+                base_score=0.5  # Fix for SHAP compatibility
             )
         
         self.model.fit(X, y)
@@ -205,7 +206,11 @@ class PredictiveMLModel:
         self.is_trained = True
         
         # Inicializar explainer
-        self.explainer = shap.TreeExplainer(self.model)
+        try:
+            self.explainer = shap.TreeExplainer(self.model)
+        except Exception as e:
+            logger.warning(f"⚠️ No se pudo inicializar SHAP explainer: {e}")
+            self.explainer = None
         
         logger.info(f"✅ Modelo dummy {self.model_type} entrenado con {n_samples} muestras")
     
