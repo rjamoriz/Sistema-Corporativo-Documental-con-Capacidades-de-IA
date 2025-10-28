@@ -78,6 +78,16 @@ scrape_configs:
     metrics_path: '/metrics'
     scrape_interval: 10s
 
+  # SageMaker Predictive ML Service
+  - job_name: 'sagemaker-predictor'
+    static_configs:
+      - targets: ['sagemaker-predictor:8008']
+        labels:
+          service: 'sagemaker-ml'
+          version: '3.0'
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
   # Prometheus self-monitoring
   - job_name: 'prometheus'
     static_configs:

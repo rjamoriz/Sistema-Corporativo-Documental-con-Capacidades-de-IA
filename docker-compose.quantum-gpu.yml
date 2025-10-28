@@ -234,6 +234,34 @@ services:
       - "com.financia.version=3.0"
 
   # ========================================
+  # NUEVO: SageMaker Predictive ML Service
+  # ========================================
+  sagemaker-predictor:
+    build:
+      context: ./services/sagemaker-predictor
+      dockerfile: Dockerfile
+    container_name: financia_sagemaker_ml
+    ports:
+      - "8008:8008"
+    environment:
+      - SERVICE_PORT=8008
+      - MODEL_PATH=/app/models
+      - USE_SAGEMAKER=false
+      - LOG_LEVEL=INFO
+    networks:
+      - financia-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8008/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    labels:
+      - "com.financia.service=sagemaker-ml"
+      - "com.financia.version=3.0"
+
+  # ========================================
   # Redis (Cache for Astra DB Service)
   # ========================================
   redis:
