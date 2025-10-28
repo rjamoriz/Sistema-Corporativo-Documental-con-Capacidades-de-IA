@@ -710,6 +710,7 @@ graph TB
 ### Flujo de Clasificación Cuántica
 
 ```mermaid
+%%{init: {'theme':'dark', 'themeVariables': { 'primaryColor':'#00d4ff','primaryTextColor':'#000','primaryBorderColor':'#0099cc','lineColor':'#00ff88','secondaryColor':'#ffaa00','tertiaryColor':'#ff00ff','noteBkgColor':'#ffaa00','noteTextColor':'#000','noteBorderColor':'#ff8800','actorBkg':'#00d4ff','actorBorder':'#0099cc','actorTextColor':'#000','actorLineColor':'#00ff88','signalColor':'#00ff88','signalTextColor':'#fff','labelBoxBkgColor':'#ff00ff','labelBoxBorderColor':'#cc00cc','labelTextColor':'#000','loopTextColor':'#000','activationBorderColor':'#0099cc','activationBkgColor':'#00d4ff','sequenceNumberColor':'#000'}}}%%
 sequenceDiagram
     participant C as Cliente
     participant API as FastAPI
@@ -869,6 +870,7 @@ graph TB
 ### Flujo de Predicción con Explainability
 
 ```mermaid
+%%{init: {'theme':'dark', 'themeVariables': { 'primaryColor':'#00d4ff','primaryTextColor':'#000','primaryBorderColor':'#0099cc','lineColor':'#00ff88','secondaryColor':'#ffaa00','tertiaryColor':'#ff00ff','noteBkgColor':'#ffaa00','noteTextColor':'#000','noteBorderColor':'#ff8800','actorBkg':'#00d4ff','actorBorder':'#0099cc','actorTextColor':'#000','actorLineColor':'#00ff88','signalColor':'#00ff88','signalTextColor':'#fff','labelBoxBkgColor':'#ff00ff','labelBoxBorderColor':'#cc00cc','labelTextColor':'#000','loopTextColor':'#000','activationBorderColor':'#0099cc','activationBkgColor':'#00d4ff','sequenceNumberColor':'#000','altBkgColor':'#ff6600'}}}%%
 sequenceDiagram
     participant C as Cliente
     participant API as FastAPI
