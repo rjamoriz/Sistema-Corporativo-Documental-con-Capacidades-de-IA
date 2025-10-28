@@ -32,9 +32,10 @@ logger = logging.getLogger(__name__)
 class CreditCardModelTrainer:
     """Pipeline completo de entrenamiento para modelo de tarjetas de crédito"""
     
-    def __init__(self, train_path: str, test_path: str):
+    def __init__(self, train_path: str, test_path: str = None, test_size: float = 0.2):
         self.train_path = train_path
         self.test_path = test_path
+        self.test_size = test_size
         self.df_train = None
         self.df_test = None
         self.X_train = None
@@ -53,13 +54,43 @@ class CreditCardModelTrainer:
         logger.info("📂 CARGANDO DATOS")
         logger.info("=" * 80)
         
-        self.df_train = pd.read_csv(self.train_path)
-        self.df_test = pd.read_csv(self.test_path)
+        df_full = pd.read_csv(self.train_path)
+        logger.info(f"✅ Datos cargados: {df_full.shape[0]} filas, {df_full.shape[1]} columnas")
         
-        logger.info(f"✅ Train: {self.df_train.shape[0]} filas, {self.df_train.shape[1]} columnas")
-        logger.info(f"✅ Test: {self.df_test.shape[0]} filas, {self.df_test.shape[1]} columnas")
-        logger.info(f"✅ Target (train): {self.df_train['credit_card_default'].value_counts().to_dict()}")
-        logger.info(f"   - Default rate: {self.df_train['credit_card_default'].mean():.2%}")
+        # Verificar si existe columna target
+        if 'credit_card_default' not in df_full.columns:
+            raise ValueError("❌ Columna 'credit_card_default' no encontrada en el dataset")
+        
+        logger.info(f"✅ Target: {df_full['credit_card_default'].value_counts().to_dict()}")
+        logger.info(f"   - Default rate: {df_full['credit_card_default'].mean():.2%}")
+        
+        # Split train/test si no hay test_path
+        if self.test_path is None:
+            logger.info(f"\n📊 Dividiendo datos en train ({1-self.test_size:.0%}) y test ({self.test_size:.0%})...")
+            self.df_train, self.df_test = train_test_split(
+                df_full,
+                test_size=self.test_size,
+                random_state=42,
+                stratify=df_full['credit_card_default']
+            )
+            logger.info(f"✅ Train: {self.df_train.shape[0]} filas")
+            logger.info(f"✅ Test: {self.df_test.shape[0]} filas")
+        else:
+            # Cargar test separado (si tiene target)
+            self.df_train = df_full
+            self.df_test = pd.read_csv(self.test_path)
+            logger.info(f"✅ Train: {self.df_train.shape[0]} filas")
+            logger.info(f"✅ Test: {self.df_test.shape[0]} filas")
+            
+            if 'credit_card_default' not in self.df_test.columns:
+                logger.warning("⚠️ Test no tiene columna target - solo se usará train para evaluación")
+                # Usar parte del train como test
+                self.df_train, self.df_test = train_test_split(
+                    self.df_train,
+                    test_size=self.test_size,
+                    random_state=42,
+                    stratify=self.df_train['credit_card_default']
+                )
         
         return self
     
@@ -334,13 +365,24 @@ class CreditCardModelTrainer:
         logger.info("\n" + classification_report(self.y_test, y_pred, target_names=['No Default', 'Default']))
         
         # Feature importance
-        if hasattr(self.model.base_estimator, 'feature_importances_'):
-            logger.info("\n🔝 Top 15 Features más importantes:")
-            importances = self.model.base_estimator.feature_importances_
-            indices = np.argsort(importances)[::-1][:15]
+        try:
+            # Intentar obtener feature importances del modelo base
+            if hasattr(self.model, 'base_estimator'):
+                base_model = self.model.base_estimator
+            elif hasattr(self.model, 'calibrated_classifiers_'):
+                base_model = self.model.calibrated_classifiers_[0].estimator
+            else:
+                base_model = None
             
-            for i, idx in enumerate(indices, 1):
-                logger.info(f"   {i:2d}. {self.feature_names[idx]:30s}: {importances[idx]:.4f}")
+            if base_model and hasattr(base_model, 'feature_importances_'):
+                logger.info("\n🔝 Top 15 Features más importantes:")
+                importances = base_model.feature_importances_
+                indices = np.argsort(importances)[::-1][:15]
+                
+                for i, idx in enumerate(indices, 1):
+                    logger.info(f"   {i:2d}. {self.feature_names[idx]:30s}: {importances[idx]:.4f}")
+        except Exception as e:
+            logger.warning(f"⚠️ No se pudieron extraer feature importances: {e}")
         
         # Métricas del detector de fraude
         if self.fraud_detector:
@@ -461,10 +503,10 @@ def main():
     
     # Rutas de los archivos
     train_path = "train.csv"
-    test_path = "test.csv"
+    test_path = "test.csv"  # Opcional - si no tiene target, se hace split del train
     
-    # Crear trainer
-    trainer = CreditCardModelTrainer(train_path, test_path)
+    # Crear trainer (test_path=None para hacer split automático)
+    trainer = CreditCardModelTrainer(train_path, test_path=test_path, test_size=0.2)
     
     # Ejecutar pipeline completo
     results = trainer.run_full_pipeline(hyperparameter_tuning=False)
