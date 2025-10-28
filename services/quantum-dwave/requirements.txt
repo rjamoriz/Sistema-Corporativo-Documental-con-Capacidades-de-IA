@@ -8,11 +8,11 @@ pydantic==2.5.0
 pydantic-settings==2.1.0
 
 # D-Wave Ocean SDK
-dwave-ocean-sdk==6.7.0
-dimod==0.12.14
-neal==0.6.0
-dwave-system==1.23.0
-dwave-preprocessing==0.6.5
+dwave-ocean-sdk>=6.0.0
+dimod>=0.12.0
+dwave-neal>=0.6.0
+dwave-system>=1.20.0
+dwave-preprocessing>=0.6.0
 
 # Scientific Computing
 numpy==1.24.3
