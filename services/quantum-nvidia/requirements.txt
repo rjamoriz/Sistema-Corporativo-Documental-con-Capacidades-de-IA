@@ -8,9 +8,8 @@ pydantic==2.5.0
 pydantic-settings==2.1.0
 
 # Qiskit for quantum circuits (compatible with cuQuantum)
-qiskit==0.45.1
-qiskit-aer==0.13.1
-qiskit-aer-gpu==0.13.1
+qiskit>=0.45.0
+qiskit-aer>=0.13.0
 
 # GPU & Deep Learning
 torch==2.1.0
