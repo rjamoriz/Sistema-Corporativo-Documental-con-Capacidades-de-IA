@@ -206,6 +206,34 @@ services:
       - "com.financia.version=2.0"
 
   # ========================================
+  # NUEVO: Quantum ML Service with PennyLane
+  # ========================================
+  quantum-ml-pennylane:
+    build:
+      context: ./services/quantum-ml-pennylane
+      dockerfile: Dockerfile
+    container_name: financia_quantum_ml
+    ports:
+      - "8007:8007"
+    environment:
+      - SERVICE_PORT=8007
+      - N_QUBITS=4
+      - N_LAYERS=3
+      - LOG_LEVEL=INFO
+    networks:
+      - financia-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8007/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    labels:
+      - "com.financia.service=quantum-ml"
+      - "com.financia.version=3.0"
+
+  # ========================================
   # Redis (Cache for Astra DB Service)
   # ========================================
   redis:
