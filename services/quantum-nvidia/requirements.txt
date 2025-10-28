@@ -1,0 +1,34 @@
+# Quantum NVIDIA cuQuantum Service - Requirements
+# Python 3.10+
+
+# Core Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Qiskit for quantum circuits (compatible with cuQuantum)
+qiskit==0.45.1
+qiskit-aer==0.13.1
+qiskit-aer-gpu==0.13.1
+
+# GPU & Deep Learning
+torch==2.1.0
+
+# Scientific Computing
+numpy==1.24.3
+scipy==1.11.4
+
+# Utilities
+python-multipart==0.0.6
+httpx==0.25.1
+
+# Monitoring
+prometheus-client==0.18.0
+python-json-logger==2.0.7
+
+# Environment
+python-dotenv==1.0.0
+
+# Note: cuQuantum SDK requires manual installation
+# See: https://developer.nvidia.com/cuquantum-downloads
