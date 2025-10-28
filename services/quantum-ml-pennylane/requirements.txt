@@ -1,0 +1,32 @@
+# Quantum ML PennyLane Service - Requirements
+# Python 3.10+
+
+# Core Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Quantum Computing
+pennylane>=0.33.0
+pennylane-qiskit>=0.33.0
+pennylane-lightning>=0.33.0
+
+# Machine Learning
+numpy>=1.24.0
+scipy>=1.11.0
+autograd>=1.6.0
+
+# Visualization
+matplotlib>=3.7.0
+
+# Utilities
+python-multipart==0.0.6
+httpx>=0.25.0
+
+# Monitoring
+prometheus-client==0.18.0
+python-json-logger==2.0.7
+
+# Environment
+python-dotenv==1.0.0
