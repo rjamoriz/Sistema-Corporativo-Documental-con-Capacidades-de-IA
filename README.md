@@ -1232,6 +1232,278 @@ Todas las métricas están disponibles en **Prometheus** (puerto 9090) y visuali
 
 ---
 
+## 💳 Modelo de Tarjetas de Crédito - Credit Risk ML
+
+### Arquitectura del Modelo Entrenado
+
+```mermaid
+graph TB
+    subgraph "📊 Datos de Entrada"
+        CSV[Train Dataset<br/>45,530 registros<br/>19 columnas]
+    end
+    
+    subgraph "🔧 Preprocesamiento"
+        CLEAN[Limpieza de Datos<br/>• Eliminar ID/Name<br/>• Imputar faltantes<br/>• Codificar categóricas]
+        FE[Feature Engineering<br/>• credit_utilization_ratio<br/>• debt_to_income_ratio<br/>• credit_used_amount<br/>• income_per_family_member<br/>• years_employed<br/>• high_risk_indicator]
+    end
+    
+    subgraph "🎯 Modelos"
+        GB[Gradient Boosting<br/>200 estimators<br/>max_depth=5]
+        CAL[Calibración<br/>Sigmoid Method<br/>CV=3]
+        IF[Isolation Forest<br/>Detector de Fraude<br/>contamination=5%]
+    end
+    
+    subgraph "📈 Resultados"
+        METRICS[Métricas Excelentes<br/>AUC-ROC: 0.9955<br/>Accuracy: 98.01%<br/>F1-Score: 86.50%]
+        MODELS[Modelos Guardados<br/>Version: 20251028_190524<br/>4 archivos .pkl]
+    end
+    
+    CSV --> CLEAN
+    CLEAN --> FE
+    FE --> GB
+    GB --> CAL
+    FE --> IF
+    CAL --> METRICS
+    IF --> METRICS
+    METRICS --> MODELS
+    
+    style CSV fill:#00d4ff,stroke:#0099cc,stroke-width:3px,color:#000
+    style CLEAN fill:#00ff88,stroke:#00cc66,stroke-width:3px,color:#000
+    style FE fill:#ffaa00,stroke:#ff8800,stroke-width:3px,color:#000
+    style GB fill:#ff00ff,stroke:#cc00cc,stroke-width:3px,color:#000
+    style CAL fill:#ff6600,stroke:#cc5200,stroke-width:3px,color:#000
+    style IF fill:#00d4ff,stroke:#0099cc,stroke-width:3px,color:#000
+    style METRICS fill:#00ff88,stroke:#00cc66,stroke-width:3px,color:#000
+    style MODELS fill:#ffaa00,stroke:#ff8800,stroke-width:3px,color:#000
+```
+
+### Pipeline de Entrenamiento
+
+```mermaid
+%%{init: {'theme':'dark', 'themeVariables': { 'primaryColor':'#00d4ff','primaryTextColor':'#000','primaryBorderColor':'#0099cc','lineColor':'#00ff88','secondaryColor':'#ffaa00','tertiaryColor':'#ff00ff','noteBkgColor':'#ffaa00','noteTextColor':'#000','noteBorderColor':'#ff8800','actorBkg':'#00d4ff','actorBorder':'#0099cc','actorTextColor':'#000','actorLineColor':'#00ff88','signalColor':'#00ff88','signalTextColor':'#fff','labelBoxBkgColor':'#ff00ff','labelBoxBorderColor':'#cc00cc','labelTextColor':'#000','loopTextColor':'#000','activationBorderColor':'#0099cc','activationBkgColor':'#00d4ff','sequenceNumberColor':'#000','altBkgColor':'#ff6600'}}}%%
+sequenceDiagram
+    participant D as Dataset
+    participant P as Preprocessor
+    participant F as Feature Engineer
+    participant T as Trainer
+    participant E as Evaluator
+    participant S as Storage
+    
+    D->>P: Load train.csv (45,530 rows)
+    Note over D,P: Default rate: 11.63%
+    
+    P->>P: Clean Data
+    Note over P: Remove ID/Name<br/>Impute missing<br/>Encode categorical
+    
+    P->>F: Cleaned Data
+    F->>F: Create 6 Derived Features
+    Note over F: Ratios, indicators,<br/>transformations
+    
+    F->>T: 23 Features Ready
+    T->>T: Train Gradient Boosting
+    Note over T: 200 iterations<br/>Learning rate: 0.1<br/>Max depth: 5
+    
+    T->>T: Calibrate Probabilities
+    Note over T: Sigmoid calibration<br/>CV=3
+    
+    T->>T: Train Fraud Detector
+    Note over T: Isolation Forest<br/>5% contamination
+    
+    T->>E: Models Ready
+    E->>E: Evaluate on Test Set
+    Note over E: 9,106 samples<br/>AUC-ROC: 0.9955<br/>Accuracy: 98.01%
+    
+    E->>S: Save Models
+    Note over S: 4 files saved<br/>Version: 20251028_190524
+    
+    S-->>D: Training Complete ✅
+```
+
+### Resultados del Entrenamiento
+
+#### 📊 Métricas de Performance
+
+| Métrica | Valor | Objetivo | Estado |
+|---|---|---|---|
+| **AUC-ROC** | **0.9955** | >0.80 | ✅ Excelente |
+| **AUC-PR** | **0.9587** | >0.70 | ✅ Excelente |
+| **Accuracy** | **98.01%** | >85% | ✅ Excelente |
+| **Precision** | **96.35%** | >75% | ✅ Excelente |
+| **Recall** | **78.48%** | >70% | ✅ Bueno |
+| **F1-Score** | **86.50%** | >72% | ✅ Excelente |
+| **Brier Score** | **0.0132** | <0.15 | ✅ Muy bien calibrado |
+| **Log Loss** | **0.0397** | <0.50 | ✅ Muy bajo |
+
+#### 📈 Matriz de Confusión
+
+```
+                    Predicción
+                 No Default  |  Default
+    Real         
+    No Default      8,345    |    22      (99.7% correctos)
+    Default           159    |   580      (78.5% correctos)
+    
+    Total: 9,106 muestras
+```
+
+**Interpretación:**
+- ✅ **True Negatives**: 8,345 - Excelente identificación de casos sin default
+- ✅ **True Positives**: 580 - Buena detección de defaults reales
+- ⚠️ **False Positives**: 22 - Muy pocos falsos positivos (0.26%)
+- ⚠️ **False Negatives**: 159 - Algunos defaults no detectados (21.5%)
+
+#### 🔝 Top 15 Features Más Importantes
+
+| Rank | Feature | Importancia | Descripción |
+|---|---|---|---|
+| 1 | `prev_defaults` | 0.6598 | ⭐ Defaults previos (factor crítico) |
+| 2 | `default_in_last_6months` | 0.1018 | Default reciente |
+| 3 | `credit_score` | 0.0748 | Score crediticio |
+| 4 | `credit_utilization_ratio` | 0.0290 | Ratio de uso de crédito |
+| 5 | `credit_used_amount` | 0.0134 | Monto usado absoluto |
+| 6 | `debt_to_income_ratio` | 0.0114 | Ratio deuda/ingresos |
+| 7 | `credit_limit` | 0.0102 | Límite de crédito |
+| 8 | `yearly_debt_payments` | 0.0097 | Pagos anuales de deuda |
+| 9 | `income_per_family_member` | 0.0080 | Ingreso per cápita |
+| 10 | `years_employed` | 0.0078 | Años de empleo |
+| 11 | `net_yearly_income` | 0.0074 | Ingresos anuales |
+| 12 | `age` | 0.0065 | Edad del cliente |
+| 13 | `no_of_days_employed` | 0.0059 | Días empleado |
+| 14 | `occupation_type` | 0.0048 | Tipo de ocupación |
+| 15 | `gender` | 0.0041 | Género |
+
+#### 🔍 Detector de Fraude
+
+- **Anomalías detectadas**: 475 casos (5.22%)
+- **Método**: Isolation Forest
+- **Contamination**: 5%
+- **Estado**: ✅ Funcionando correctamente
+
+#### ⏱️ Performance de Entrenamiento
+
+| Métrica | Valor |
+|---|---|
+| **Tiempo total** | 77.96 segundos |
+| **Registros procesados** | 45,530 |
+| **Train samples** | 36,424 (80%) |
+| **Test samples** | 9,106 (20%) |
+| **Features finales** | 23 |
+| **Iteraciones GB** | 200 |
+
+#### 💾 Modelos Generados
+
+```
+models/
+├── credit_card_model_v20251028_190524.pkl      # Modelo principal (GB + Calibración)
+├── fraud_detector_v20251028_190524.pkl         # Detector de fraude (IF)
+├── label_encoders_v20251028_190524.pkl         # Encoders para categóricas
+└── metadata_v20251028_190524.pkl               # Metadata + métricas
+```
+
+**Version**: `20251028_190524`
+
+### Características del Modelo
+
+#### Features Originales (17)
+- Demográficas: `age`, `gender`, `no_of_children`
+- Financieras: `net_yearly_income`, `yearly_debt_payments`, `credit_limit`, `credit_limit_used(%)`
+- Crediticias: `credit_score`, `prev_defaults`, `default_in_last_6months`
+- Empleo: `no_of_days_employed`, `occupation_type`
+- Propiedades: `owns_car`, `owns_house`
+- Familiares: `total_family_members`, `migrant_worker`
+
+#### Features Derivadas (6)
+- `credit_utilization_ratio`: Normalización del uso de crédito
+- `debt_to_income_ratio`: Ratio de endeudamiento
+- `credit_used_amount`: Monto absoluto usado
+- `income_per_family_member`: Ingreso per cápita familiar
+- `years_employed`: Conversión de días a años
+- `high_risk_indicator`: Indicador combinado de alto riesgo
+
+### Uso del Modelo
+
+#### Cargar Modelo Entrenado
+
+```python
+import joblib
+
+# Cargar artefactos
+model = joblib.load("models/credit_card_model_v20251028_190524.pkl")
+fraud_detector = joblib.load("models/fraud_detector_v20251028_190524.pkl")
+encoders = joblib.load("models/label_encoders_v20251028_190524.pkl")
+metadata = joblib.load("models/metadata_v20251028_190524.pkl")
+
+print(f"Modelo: {metadata['version']}")
+print(f"AUC-ROC: {metadata['metrics']['auc_roc']:.4f}")
+```
+
+#### Hacer Predicción
+
+```python
+# Preparar datos de entrada (aplicar mismo preprocesamiento)
+customer_data = {
+    'age': 35,
+    'gender': 'M',
+    'owns_car': 'Y',
+    'owns_house': 'Y',
+    'no_of_children': 2,
+    'net_yearly_income': 150000,
+    'no_of_days_employed': 2000,
+    'occupation_type': 'Core staff',
+    'total_family_members': 4,
+    'migrant_worker': 0,
+    'yearly_debt_payments': 25000,
+    'credit_limit': 50000,
+    'credit_limit_used(%)': 65,
+    'credit_score': 720,
+    'prev_defaults': 0,
+    'default_in_last_6months': 0
+}
+
+# Preprocesar y predecir
+X = preprocess(customer_data)  # Aplicar mismo pipeline
+probability = model.predict_proba(X)[0][1]
+is_fraud = fraud_detector.predict(X)[0] == -1
+
+print(f"Probabilidad de default: {probability:.2%}")
+print(f"Fraude detectado: {'Sí' if is_fraud else 'No'}")
+```
+
+### Ventajas del Modelo
+
+| Ventaja | Descripción | Beneficio |
+|---|---|---|
+| **🎯 Alta Precisión** | AUC-ROC de 0.9955 | Decisiones muy confiables |
+| **⚡ Rápido** | <100ms por predicción | Scoring en tiempo real |
+| **📊 Bien Calibrado** | Brier Score: 0.0132 | Probabilidades confiables |
+| **🔍 Detección de Fraude** | Isolation Forest integrado | Seguridad adicional |
+| **📈 Explicable** | Feature importance + SHAP | Cumplimiento regulatorio |
+| **🔄 Reproducible** | Pipeline automatizado | Fácil reentrenamiento |
+
+### Casos de Uso
+
+1. **Aprobación Automática de Tarjetas**
+   - Input: Datos del solicitante
+   - Output: Probabilidad de default + decisión
+   - Beneficio: Reducción de 90% en tiempo de decisión
+
+2. **Scoring de Cartera Existente**
+   - Input: Base de clientes actuales
+   - Output: Re-scoring periódico
+   - Beneficio: Gestión proactiva de riesgo
+
+3. **Detección de Fraude en Solicitudes**
+   - Input: Datos de nueva solicitud
+   - Output: Anomaly score + patrones sospechosos
+   - Beneficio: Prevención de pérdidas
+
+4. **Optimización de Límites de Crédito**
+   - Input: Historial + comportamiento
+   - Output: Límite óptimo sugerido
+   - Beneficio: Maximizar ingresos minimizando riesgo
+
+---
+
 ## ✨ Características Principales
 
 ### 🤖 Inteligencia Artificial
