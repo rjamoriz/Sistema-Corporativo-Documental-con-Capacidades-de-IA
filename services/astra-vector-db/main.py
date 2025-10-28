@@ -32,7 +32,16 @@ from cache_service import get_cache_service
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Prometheus Metrics
+# Prometheus Metrics - with duplicate protection
+from prometheus_client import REGISTRY
+
+# Clear any existing metrics to avoid duplicates
+for collector in list(REGISTRY._collector_to_names.keys()):
+    try:
+        REGISTRY.unregister(collector)
+    except Exception:
+        pass
+
 ingest_requests = Counter('ingest_requests_total', 'Total document ingestion requests')
 search_requests = Counter('search_requests_total', 'Total search requests')
 ingest_duration = Histogram('ingest_duration_seconds', 'Time to ingest document')
