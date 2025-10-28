@@ -1098,6 +1098,9 @@ sequenceDiagram
 | **SageMaker Predictor** | 8008 | Scoring ML clásico con explainability | LightGBM + XGBoost + SHAP |
 | **Quantum ML PennyLane** | 8007 | Clasificación cuántica y detección de anomalías | PennyLane + VQC + SHAP |
 | **Scoring Orchestrator** | 8010 | Orquesta modelos y genera score final | FastAPI + Async HTTP + Ensemble |
+| **Scikit-Learn ML** | 8011 | Modelo de tarjetas de crédito (GB + IF) | Scikit-Learn + Joblib |
+| **Credit Card Demo API** | 8012 | API de demo para frontend | FastAPI + 3 casos pre-configurados |
+| **EU Compliance** | 8013 | Compliance regulatorio automático | EUR-Lex + GDPR + AI Act + NIS2 |
 | **Astra Vector DB** | 8006 | Almacena embeddings y resultados | DataStax Astra + Vector Search |
 | **Prometheus** | 9090 | Monitoreo y métricas | Prometheus |
 | **Grafana** | 3001 | Visualización de métricas | Grafana |
