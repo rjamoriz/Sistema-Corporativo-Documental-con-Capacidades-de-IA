@@ -236,6 +236,167 @@ graph TB
     style DB5 fill:#FF7043,stroke:#BF360C,stroke-width:2px,color:#fff
 ```
 
+### Arquitectura v2.0 - Quantum & GPU Enhancement
+
+```mermaid
+graph TB
+    subgraph "🌐 Sistema Actual v1.0"
+        APP[App Principal<br/>Backend + Frontend]
+        DB[(Bases de Datos<br/>PostgreSQL + OpenSearch + Qdrant)]
+    end
+    
+    subgraph "🎮 GPU Acceleration Layer"
+        GPU[GPU Embedding Service<br/>Puerto 8001]
+        FAISS[FAISS-GPU<br/>Vector Search]
+    end
+    
+    subgraph "⚛️ Quantum Computing Layer"
+        DWAVE[D-Wave Service<br/>Puerto 8002<br/>QUBO + Simulated Annealing]
+        IBM[IBM Qiskit Service<br/>Puerto 8003<br/>QAOA + Circuits]
+        NVIDIA[NVIDIA cuQuantum Service<br/>Puerto 8004<br/>GPU Simulation]
+    end
+    
+    subgraph "🤖 Enhanced AI Layer"
+        RAG[RAG Enhanced Service<br/>Puerto 8005<br/>OpenAI + Anthropic]
+    end
+    
+    subgraph "📊 Monitoring Layer"
+        PROM[Prometheus<br/>Puerto 9090]
+        GRAF[Grafana<br/>Puerto 3001]
+    end
+    
+    APP -.->|Opcional| GPU
+    APP -.->|Opcional| DWAVE
+    APP -.->|Opcional| IBM
+    APP -.->|Opcional| NVIDIA
+    APP -.->|Opcional| RAG
+    
+    GPU --> FAISS
+    RAG --> GPU
+    
+    GPU --> PROM
+    DWAVE --> PROM
+    IBM --> PROM
+    NVIDIA --> PROM
+    RAG --> PROM
+    
+    PROM --> GRAF
+    
+    style APP fill:#4FC3F7,stroke:#0277BD,stroke-width:3px,color:#000
+    style GPU fill:#FFB74D,stroke:#E65100,stroke-width:3px,color:#000
+    style FAISS fill:#FFA726,stroke:#EF6C00,stroke-width:2px,color:#000
+    style DWAVE fill:#BA68C8,stroke:#6A1B9A,stroke-width:2px,color:#fff
+    style IBM fill:#9575CD,stroke:#4527A0,stroke-width:2px,color:#fff
+    style NVIDIA fill:#7E57C2,stroke:#311B92,stroke-width:2px,color:#fff
+    style RAG fill:#66BB6A,stroke:#1B5E20,stroke-width:2px,color:#000
+    style PROM fill:#EF5350,stroke:#B71C1C,stroke-width:2px,color:#fff
+    style GRAF fill:#EC407A,stroke:#880E4F,stroke-width:2px,color:#fff
+```
+
+**Características v2.0:**
+- ⚡ **GPU Acceleration**: Embeddings 10-20× más rápidos
+- ⚛️ **Quantum Computing**: Optimización QUBO para deduplicación
+- 🧠 **Quantum ML**: Clasificación con circuitos cuánticos
+- 🤖 **Enhanced RAG**: LLMs con trazabilidad 100%
+- 📊 **Monitoring**: Prometheus + Grafana opensource
+- 🔌 **Modular**: Servicios independientes, no afectan app actual
+
+---
+
+## 📁 Estructura del Proyecto
+
+```
+Sistema-Corporativo-Documental-con-Capacidades-de-IA/
+├── 📂 backend/                          # Backend existente (FastAPI)
+│   ├── api/                             # Endpoints REST
+│   ├── core/                            # Configuración y seguridad
+│   ├── models/                          # Modelos SQLAlchemy
+│   ├── services/                        # Lógica de negocio
+│   ├── ml/                              # Modelos ML
+│   └── main.py                          # Punto de entrada
+│
+├── 📂 frontend/                         # Frontend existente (React + TypeScript)
+│   ├── src/
+│   │   ├── components/                  # Componentes React
+│   │   ├── pages/                       # Páginas
+│   │   ├── services/                    # API clients
+│   │   └── App.tsx                      # App principal
+│   └── package.json
+│
+├── 📂 services/                         # ✨ NUEVOS SERVICIOS v2.0
+│   ├── 🎮 gpu-embedding/               # GPU Embedding Service
+│   │   ├── main.py                      # FastAPI service
+│   │   ├── Dockerfile                   # CUDA 12.1 + PyTorch
+│   │   ├── requirements.txt             # Dependencias GPU
+│   │   ├── README.md                    # Documentación
+│   │   └── .env.example                 # Configuración
+│   │
+│   ├── ⚛️ quantum-dwave/               # Quantum D-Wave Service
+│   │   ├── main.py                      # QUBO + Simulated Annealing
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt             # D-Wave Ocean SDK
+│   │   └── .env.example
+│   │
+│   ├── ⚛️ quantum-ibm/                 # Quantum IBM Qiskit Service
+│   │   ├── main.py                      # QAOA + Circuits
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt             # Qiskit + Aer
+│   │   └── .env.example
+│   │
+│   ├── ⚛️ quantum-nvidia/              # Quantum NVIDIA cuQuantum Service
+│   │   ├── main.py                      # GPU Quantum Simulation
+│   │   ├── Dockerfile                   # CUDA + Qiskit-Aer-GPU
+│   │   ├── requirements.txt
+│   │   └── .env.example
+│   │
+│   ├── 🤖 rag-enhanced/                # RAG Enhanced Service
+│   │   ├── main.py                      # RAG + LLMs
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt             # LangChain + OpenAI + Anthropic
+│   │   └── .env.example
+│   │
+│   └── README.md                        # 📚 README consolidado servicios
+│
+├── 📂 monitoring/                       # ✨ MONITOREO (Opensource)
+│   ├── prometheus/
+│   │   └── prometheus.yml               # Configuración Prometheus
+│   └── grafana/
+│       └── datasources/
+│           └── prometheus.yml           # Datasource Grafana
+│
+├── 📂 docs/                             # 📚 DOCUMENTACIÓN
+│   ├── ARCHITECTURE.md                  # Arquitectura técnica
+│   ├── QUANTUM_GPU_ENHANCEMENT_PLAN.md  # ✨ Plan v2.0 completo
+│   ├── IMPLEMENTATION_GUIDE_V2.md       # ✨ Guía de implementación
+│   ├── TESTING_GUIDE.md                 # ✨ Guía de testing
+│   ├── API_DOCUMENTATION.md             # Documentación API
+│   └── DEPLOYMENT.md                    # Guía de despliegue
+│
+├── 📂 infrastructure/                   # Infraestructura
+│   └── docker/                          # Configuraciones Docker
+│
+├── 📄 docker-compose.yml                # Compose app principal
+├── 📄 docker-compose.quantum-gpu.yml    # ✨ Compose servicios v2.0
+├── 📄 README.md                         # Este archivo
+└── 📄 .env.example                      # Variables de entorno
+
+Leyenda:
+📂 Carpeta existente
+✨ Nuevo en v2.0
+🎮 GPU Service
+⚛️ Quantum Service
+🤖 AI Service
+📚 Documentación
+```
+
+**Estadísticas del Proyecto:**
+- **Servicios v1.0:** 1 aplicación monolítica
+- **Servicios v2.0:** +5 microservicios modulares
+- **Líneas de código v2.0:** ~4,500+
+- **Documentación v2.0:** ~3,000+ líneas
+- **Endpoints API v2.0:** +25 nuevos endpoints
+- **Frameworks cuánticos:** 3 (D-Wave, IBM Qiskit, NVIDIA cuQuantum)
+
 ---
 
 ## ✨ Características Principales
