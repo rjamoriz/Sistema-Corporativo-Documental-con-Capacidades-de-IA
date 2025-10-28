@@ -2,6 +2,207 @@
 
 Servicio de Machine Learning Cuántico utilizando PennyLane para clasificación, optimización y detección de anomalías en documentos.
 
+---
+
+## 📊 Arquitectura del Componente
+
+```mermaid
+graph TB
+    subgraph "Client Layer"
+        CLIENT[Client Applications]
+        API_GATEWAY[API Gateway]
+    end
+    
+    subgraph "PennyLane QML Service - Port 8007"
+        FASTAPI[FastAPI Server]
+        
+        subgraph "Quantum Models"
+            VQC[Variational Quantum Classifier]
+            QAUTO[Quantum Autoencoder]
+            QANOM[Quantum Anomaly Detector]
+        end
+        
+        subgraph "Quantum Backend"
+            PENNYLANE[PennyLane Framework]
+            QDEV[Quantum Device<br/>default.qubit]
+            QCIRCUIT[Quantum Circuits<br/>4 qubits, 3 layers]
+        end
+        
+        subgraph "Monitoring"
+            PROM_METRICS[Prometheus Metrics]
+            HEALTH[Health Check]
+        end
+    end
+    
+    subgraph "External Services"
+        GPU_EMB[GPU Embedding Service<br/>Port 8001]
+        ASTRA[Astra VectorDB<br/>Port 8006]
+        PROMETHEUS[Prometheus<br/>Port 9090]
+    end
+    
+    CLIENT --> API_GATEWAY
+    API_GATEWAY --> FASTAPI
+    
+    FASTAPI --> VQC
+    FASTAPI --> QAUTO
+    FASTAPI --> QANOM
+    
+    VQC --> PENNYLANE
+    QAUTO --> PENNYLANE
+    QANOM --> PENNYLANE
+    
+    PENNYLANE --> QDEV
+    QDEV --> QCIRCUIT
+    
+    FASTAPI --> PROM_METRICS
+    FASTAPI --> HEALTH
+    
+    FASTAPI -.->|Get Embeddings| GPU_EMB
+    FASTAPI -.->|Store Results| ASTRA
+    PROM_METRICS -->|Scrape| PROMETHEUS
+    
+    style VQC fill:#e1f5ff
+    style QAUTO fill:#e1f5ff
+    style QANOM fill:#e1f5ff
+    style PENNYLANE fill:#fff3e0
+    style QDEV fill:#fff3e0
+    style QCIRCUIT fill:#fff3e0
+    style FASTAPI fill:#f3e5f5
+```
+
+### Flujo de Procesamiento
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant API as FastAPI
+    participant VQC as Quantum Classifier
+    participant PL as PennyLane
+    participant QD as Quantum Device
+    participant P as Prometheus
+    
+    C->>API: POST /qml/classify
+    Note over C,API: {embedding: [0.1, 0.2, ...]}
+    
+    API->>VQC: classify(embedding)
+    VQC->>VQC: preprocess_input()
+    Note over VQC: Normalize to [0, 2π]
+    
+    VQC->>PL: quantum_neural_network()
+    PL->>QD: Execute circuit
+    
+    Note over QD: 1. AngleEmbedding<br/>2. StronglyEntanglingLayers<br/>3. Measure Pauli-Z
+    
+    QD-->>PL: quantum_output
+    PL-->>VQC: expectation_values
+    
+    VQC->>VQC: softmax(quantum_output)
+    VQC-->>API: classification_result
+    
+    API->>P: Update metrics
+    Note over P: qml_requests_total++<br/>qml_latency_seconds
+    
+    API-->>C: JSON Response
+    Note over C,API: {predicted_class: 2,<br/>confidence: 0.85,<br/>circuit_depth: 9}
+```
+
+### Circuito Cuántico Detallado
+
+```mermaid
+graph LR
+    subgraph "Input Layer - Angle Encoding"
+        I0["|0⟩"] --> RY0["RY(θ₁)"]
+        I1["|0⟩"] --> RY1["RY(θ₂)"]
+        I2["|0⟩"] --> RY2["RY(θ₃)"]
+        I3["|0⟩"] --> RY3["RY(θ₄)"]
+    end
+    
+    subgraph "Entangling Layer 1"
+        RY0 --> CNOT01["CNOT"]
+        RY1 --> CNOT01
+        CNOT01 --> RY4["RY(φ₁)"]
+        
+        RY2 --> CNOT23["CNOT"]
+        RY3 --> CNOT23
+        CNOT23 --> RY5["RY(φ₂)"]
+    end
+    
+    subgraph "Entangling Layer 2"
+        RY4 --> CNOT12["CNOT"]
+        RY5 --> CNOT12
+        CNOT12 --> RY6["RY(ψ₁)"]
+    end
+    
+    subgraph "Measurement"
+        RY6 --> M0["⟨Z₀⟩"]
+        RY6 --> M1["⟨Z₁⟩"]
+        RY6 --> M2["⟨Z₂⟩"]
+        RY6 --> M3["⟨Z₃⟩"]
+    end
+    
+    M0 --> OUT[Output Vector]
+    M1 --> OUT
+    M2 --> OUT
+    M3 --> OUT
+    
+    style I0 fill:#e3f2fd
+    style I1 fill:#e3f2fd
+    style I2 fill:#e3f2fd
+    style I3 fill:#e3f2fd
+    style CNOT01 fill:#fff9c4
+    style CNOT23 fill:#fff9c4
+    style CNOT12 fill:#fff9c4
+    style M0 fill:#c8e6c9
+    style M1 fill:#c8e6c9
+    style M2 fill:#c8e6c9
+    style M3 fill:#c8e6c9
+    style OUT fill:#ffccbc
+```
+
+### Métricas y Monitoreo
+
+```mermaid
+graph TB
+    subgraph "Quantum ML Service Metrics"
+        QML[Quantum ML Service]
+        
+        QML --> M1[qml_requests_total<br/>Counter]
+        QML --> M2[qml_latency_seconds<br/>Histogram]
+        QML --> M3[quantum_advantage_ratio<br/>Gauge]
+        QML --> M4[quantum_circuit_depth<br/>Gauge]
+    end
+    
+    subgraph "Prometheus"
+        PROM[Prometheus Server]
+        SCRAPE[Scrape /metrics<br/>every 10s]
+    end
+    
+    subgraph "Grafana Dashboards"
+        D1[QML Performance]
+        D2[Circuit Metrics]
+        D3[Quantum Advantage]
+    end
+    
+    M1 --> SCRAPE
+    M2 --> SCRAPE
+    M3 --> SCRAPE
+    M4 --> SCRAPE
+    
+    SCRAPE --> PROM
+    
+    PROM --> D1
+    PROM --> D2
+    PROM --> D3
+    
+    style QML fill:#e1f5ff
+    style PROM fill:#fff3e0
+    style D1 fill:#f3e5f5
+    style D2 fill:#f3e5f5
+    style D3 fill:#f3e5f5
+```
+
+---
+
 ## 🎯 Características
 
 ### Modelos Implementados
