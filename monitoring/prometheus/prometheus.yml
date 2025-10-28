@@ -1,0 +1,64 @@
+# Prometheus Configuration for FinancIA 2.0 Services
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'financia-v2'
+    environment: 'development'
+
+# Scrape configurations
+scrape_configs:
+  # GPU Embedding Service
+  - job_name: 'gpu-embedding'
+    static_configs:
+      - targets: ['gpu-embedding-service:8001']
+        labels:
+          service: 'gpu-embedding'
+          version: '2.0'
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Quantum D-Wave Service
+  - job_name: 'quantum-dwave'
+    static_configs:
+      - targets: ['quantum-dwave-service:8002']
+        labels:
+          service: 'quantum-dwave'
+          version: '2.0'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  # Quantum IBM Qiskit Service
+  - job_name: 'quantum-ibm'
+    static_configs:
+      - targets: ['quantum-ibm-service:8003']
+        labels:
+          service: 'quantum-ibm'
+          version: '2.0'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  # Quantum NVIDIA cuQuantum Service
+  - job_name: 'quantum-nvidia'
+    static_configs:
+      - targets: ['quantum-nvidia-service:8004']
+        labels:
+          service: 'quantum-nvidia'
+          version: '2.0'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  # RAG Enhanced Service
+  - job_name: 'rag-enhanced'
+    static_configs:
+      - targets: ['rag-enhanced-service:8005']
+        labels:
+          service: 'rag-enhanced'
+          version: '2.0'
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
