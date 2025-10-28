@@ -160,6 +160,75 @@ services:
       - "com.financia.version=2.0"
 
   # ========================================
+  # NUEVO: DataStax Astra DB Vector Search Service
+  # ========================================
+  astra-vector-db-service:
+    build:
+      context: ./services/astra-vector-db
+      dockerfile: Dockerfile
+    container_name: financia_astra_vectordb
+    ports:
+      - "8006:8006"
+    environment:
+      # Astra DB Configuration (REQUIRED)
+      - ASTRA_DB_TOKEN=${ASTRA_DB_TOKEN}
+      - ASTRA_DB_API_ENDPOINT=${ASTRA_DB_API_ENDPOINT}
+      - ASTRA_DB_KEYSPACE=${ASTRA_DB_KEYSPACE:-financia_vectors}
+      - ASTRA_DB_COLLECTION=${ASTRA_DB_COLLECTION:-documents}
+      # Service Configuration
+      - SERVICE_PORT=8006
+      - LOG_LEVEL=INFO
+      # Embedding Services
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - COHERE_API_KEY=${COHERE_API_KEY:-}
+      - USE_GPU_EMBEDDINGS=true
+      - GPU_EMBEDDING_URL=http://gpu-embedding-service:8001
+      # Redis Cache
+      - ENABLE_CACHE=true
+      - REDIS_URL=redis://redis:6379
+      - CACHE_TTL=3600
+      # Monitoring
+      - ENABLE_METRICS=true
+    depends_on:
+      - gpu-embedding-service
+      - redis
+    networks:
+      - financia-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8006/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    labels:
+      - "com.financia.service=astra-vectordb"
+      - "com.financia.version=2.0"
+
+  # ========================================
+  # Redis (Cache for Astra DB Service)
+  # ========================================
+  redis:
+    image: redis:7-alpine
+    container_name: financia_redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    networks:
+      - financia-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+    labels:
+      - "com.financia.service=redis"
+      - "com.financia.version=2.0"
+
+  # ========================================
   # Prometheus (Monitoring)
   # ========================================
   prometheus:
@@ -220,6 +289,8 @@ networks:
 volumes:
   gpu-embedding-models:
     name: financia_gpu_models
+  redis-data:
+    name: financia_redis_data
   prometheus-data:
     name: financia_prometheus_data
   grafana-data:
