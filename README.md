@@ -697,14 +697,14 @@ graph TB
     FASTAPI -.->|Almacenar Resultados| ASTRA_DB
     METRICS_Q -->|Scrape Métricas| PROMETHEUS
     
-    style VQC fill:#e1f5ff
-    style QAUTO fill:#e1f5ff
-    style QANOM fill:#e1f5ff
-    style PENNYLANE fill:#fff3e0
-    style QDEV fill:#fff3e0
-    style QCIRCUIT fill:#fff3e0
-    style SHAP_Q fill:#f3e5f5
-    style FASTAPI fill:#c8e6c9
+    style VQC fill:#00d4ff,stroke:#0099cc,stroke-width:3px,color:#000
+    style QAUTO fill:#00d4ff,stroke:#0099cc,stroke-width:3px,color:#000
+    style QANOM fill:#00d4ff,stroke:#0099cc,stroke-width:3px,color:#000
+    style PENNYLANE fill:#ffaa00,stroke:#ff8800,stroke-width:3px,color:#000
+    style QDEV fill:#ffaa00,stroke:#ff8800,stroke-width:3px,color:#000
+    style QCIRCUIT fill:#ffaa00,stroke:#ff8800,stroke-width:3px,color:#000
+    style SHAP_Q fill:#ff00ff,stroke:#cc00cc,stroke-width:3px,color:#000
+    style FASTAPI fill:#00ff88,stroke:#00cc66,stroke-width:3px,color:#000
 ```
 
 ### Flujo de Clasificación Cuántica
@@ -857,13 +857,13 @@ graph TB
     FASTAPI -.->|Guardar Resultados| ASTRA_DB
     PROM_M -->|Scrape| PROMETHEUS
     
-    style LGBM fill:#e1f5ff
-    style XGB fill:#e1f5ff
-    style SHAP fill:#fff3e0
-    style CONTRIB fill:#fff3e0
-    style SM_ENDPOINT fill:#f3e5f5
-    style FASTAPI fill:#c8e6c9
-    style DUMMY fill:#ffccbc
+    style LGBM fill:#00d4ff,stroke:#0099cc,stroke-width:3px,color:#000
+    style XGB fill:#00d4ff,stroke:#0099cc,stroke-width:3px,color:#000
+    style SHAP fill:#ffaa00,stroke:#ff8800,stroke-width:3px,color:#000
+    style CONTRIB fill:#ffaa00,stroke:#ff8800,stroke-width:3px,color:#000
+    style SM_ENDPOINT fill:#ff00ff,stroke:#cc00cc,stroke-width:3px,color:#000
+    style FASTAPI fill:#00ff88,stroke:#00cc66,stroke-width:3px,color:#000
+    style DUMMY fill:#ff6600,stroke:#cc5200,stroke-width:3px,color:#000
 ```
 
 ### Flujo de Predicción con Explainability
