@@ -399,6 +399,243 @@ Leyenda:
 
 ---
 
+## 🗄️ Arquitectura DataStax Astra DB - Vector Search
+
+### Diagrama de Componente
+
+```mermaid
+graph TB
+    subgraph "📱 Cliente"
+        USER[Usuario/Aplicación]
+    end
+    
+    subgraph "🎯 API Layer"
+        API[FastAPI Service<br/>Puerto 8006]
+        CACHE[Redis Cache<br/>Consultas Frecuentes]
+    end
+    
+    subgraph "🔄 Processing Layer"
+        DOC[Document Processor<br/>PDF, DOCX, TXT]
+        CHUNK[Text Chunker<br/>Overlapping Windows]
+        EMB[Embedding Generator<br/>OpenAI/Cohere/BERT]
+    end
+    
+    subgraph "🎮 GPU Integration"
+        GPU[GPU Embedding Service<br/>Puerto 8001<br/>10-20x Faster]
+    end
+    
+    subgraph "☁️ DataStax Astra DB Cloud"
+        ASTRA[(Astra DB<br/>Vector Collection)]
+        HNSW[HNSW Index<br/>ANN Search]
+        META[Metadata Store<br/>JSON Fields]
+    end
+    
+    subgraph "📊 Monitoring"
+        PROM[Prometheus<br/>Métricas]
+        GRAF[Grafana<br/>Dashboards]
+    end
+    
+    USER -->|Upload Doc| API
+    USER -->|Search Query| API
+    
+    API -->|Check Cache| CACHE
+    API -->|Process| DOC
+    DOC -->|Extract Text| CHUNK
+    CHUNK -->|Generate Embeddings| EMB
+    
+    EMB -.->|Optional GPU| GPU
+    GPU -.->|Fast Embeddings| EMB
+    
+    EMB -->|Store Vector| ASTRA
+    API -->|Vector Search| HNSW
+    HNSW -->|ANN Results| API
+    ASTRA -->|Metadata| META
+    
+    API -->|Metrics| PROM
+    PROM -->|Visualize| GRAF
+    
+    API -->|Results + Cache| USER
+    
+    style USER fill:#4FC3F7,stroke:#0277BD,stroke-width:2px,color:#000
+    style API fill:#66BB6A,stroke:#2E7D32,stroke-width:3px,color:#fff
+    style CACHE fill:#FFA726,stroke:#EF6C00,stroke-width:2px,color:#000
+    style DOC fill:#FFB74D,stroke:#F57C00,stroke-width:2px,color:#000
+    style CHUNK fill:#FFCC80,stroke:#FB8C00,stroke-width:2px,color:#000
+    style EMB fill:#FFD54F,stroke:#F9A825,stroke-width:2px,color:#000
+    style GPU fill:#FF6F00,stroke:#E65100,stroke-width:3px,color:#fff
+    style ASTRA fill:#7E57C2,stroke:#4527A0,stroke-width:3px,color:#fff
+    style HNSW fill:#9575CD,stroke:#5E35B1,stroke-width:2px,color:#fff
+    style META fill:#B39DDB,stroke:#673AB7,stroke-width:2px,color:#000
+    style PROM fill:#EF5350,stroke:#C62828,stroke-width:2px,color:#fff
+    style GRAF fill:#EC407A,stroke:#AD1457,stroke-width:2px,color:#fff
+```
+
+### Flujo de Datos
+
+**Ingestión de Documentos:**
+```
+Usuario → API → Document Processor → Text Chunker → Embedding Generator → [GPU Service] → Astra DB
+```
+
+**Búsqueda Semántica:**
+```
+Query → API → [Cache Check] → Embedding Generator → [GPU Service] → HNSW Search → Ranking → Usuario
+```
+
+---
+
+## 🧮 Algoritmo HNSW (Hierarchical Navigable Small World)
+
+### Fundamentos Matemáticos
+
+DataStax Astra DB utiliza el algoritmo **HNSW** para búsquedas vectoriales eficientes (ANN - Approximate Nearest Neighbor).
+
+#### 1. Estructura Jerárquica
+
+El índice HNSW construye una estructura de grafo multi-capa donde cada capa $l$ contiene un subconjunto de nodos:
+
+$$
+\text{Probabilidad de inserción en capa } l: \quad P(l) = \frac{1}{2^l}
+$$
+
+**Número máximo de capas:**
+
+$$
+L_{max} = \lfloor -\ln(N) \cdot m_L \rfloor
+$$
+
+Donde:
+- $N$ = número total de vectores
+- $m_L$ = factor de normalización (típicamente $\frac{1}{\ln(2)}$)
+
+#### 2. Distancia entre Vectores
+
+Para vectores $\mathbf{v}_i, \mathbf{v}_j \in \mathbb{R}^d$, HNSW soporta múltiples métricas:
+
+**Similitud Coseno (usada en Astra DB):**
+
+$$
+\text{similarity}(\mathbf{v}_i, \mathbf{v}_j) = \frac{\mathbf{v}_i \cdot \mathbf{v}_j}{\|\mathbf{v}_i\| \|\mathbf{v}_j\|} = \frac{\sum_{k=1}^{d} v_{i,k} \cdot v_{j,k}}{\sqrt{\sum_{k=1}^{d} v_{i,k}^2} \cdot \sqrt{\sum_{k=1}^{d} v_{j,k}^2}}
+$$
+
+**Distancia Euclidiana:**
+
+$$
+d(\mathbf{v}_i, \mathbf{v}_j) = \|\mathbf{v}_i - \mathbf{v}_j\| = \sqrt{\sum_{k=1}^{d} (v_{i,k} - v_{j,k})^2}
+$$
+
+#### 3. Algoritmo de Búsqueda
+
+**Entrada:** Vector query $\mathbf{q}$, número de vecinos $K$
+
+**Proceso:**
+
+1. **Capa superior** ($l = L_{max}$): Encontrar punto de entrada $e_p$
+
+$$
+e_p = \arg\min_{v \in \text{Layer}_l} d(\mathbf{q}, \mathbf{v})
+$$
+
+2. **Descenso por capas** ($l = L_{max} \to 0$):
+
+Para cada capa $l$:
+
+$$
+\text{candidates} = \{v \in \text{neighbors}(e_p) : d(\mathbf{q}, v) < d(\mathbf{q}, e_p)\}
+$$
+
+3. **Búsqueda en capa 0** (más densa):
+
+Mantener lista de $K$ vecinos más cercanos:
+
+$$
+\text{result} = \text{top-K}\{\mathbf{v} \in \text{Layer}_0 : \text{similarity}(\mathbf{q}, \mathbf{v})\}
+$$
+
+#### 4. Complejidad Computacional
+
+**Tiempo de búsqueda:**
+
+$$
+O(\log N \cdot M)
+$$
+
+Donde:
+- $N$ = número de vectores en el índice
+- $M$ = número máximo de conexiones por nodo (típicamente 16-32)
+
+**Comparación con búsqueda lineal:**
+
+| Método | Complejidad | Ejemplo (1M vectores) |
+|--------|-------------|----------------------|
+| **Búsqueda Lineal** | $O(N \cdot d)$ | ~1,000,000 comparaciones |
+| **HNSW** | $O(\log N \cdot M)$ | ~300 comparaciones |
+| **Speedup** | $\frac{N \cdot d}{\log N \cdot M}$ | **~3,300x más rápido** |
+
+#### 5. Parámetros de Optimización
+
+**Factor de construcción** ($ef_{construction}$):
+
+$$
+ef_{construction} \geq K
+$$
+
+Controla la calidad del índice durante construcción.
+
+**Factor de búsqueda** ($ef_{search}$):
+
+$$
+ef_{search} \geq K
+$$
+
+Trade-off entre precisión y velocidad:
+
+$$
+\text{Recall} \propto ef_{search}, \quad \text{Latency} \propto ef_{search}
+$$
+
+#### 6. Ejemplo Práctico
+
+Para un sistema con:
+- $N = 1,000,000$ documentos
+- $d = 1536$ dimensiones (OpenAI ada-002)
+- $M = 16$ conexiones
+- $K = 5$ vecinos
+
+**Búsqueda HNSW:**
+
+$$
+\text{Comparaciones} \approx \log_2(1,000,000) \cdot 16 \approx 320
+$$
+
+$$
+\text{Latencia} \approx 1-5 \text{ ms}
+$$
+
+**vs Búsqueda Lineal:**
+
+$$
+\text{Comparaciones} = 1,000,000
+$$
+
+$$
+\text{Latencia} \approx 500-1000 \text{ ms}
+$$
+
+**Mejora:** $\frac{1000}{5} = 200\text{x más rápido}$
+
+---
+
+### 📊 Ventajas de HNSW en Astra DB
+
+1. **Escalabilidad:** $O(\log N)$ permite millones de vectores
+2. **Precisión:** Recall > 95% con configuración óptima
+3. **Velocidad:** Latencias < 10ms para búsquedas
+4. **Memoria Eficiente:** Solo mantiene grafo, no matriz completa
+5. **Actualización Dinámica:** Inserción/eliminación en tiempo real
+
+---
+
 ## ✨ Características Principales
 
 ### 🤖 Inteligencia Artificial
