@@ -636,6 +636,333 @@ $$
 
 ---
 
+## ⚛️ Arquitectura Quantum ML - PennyLane
+
+### Diagrama de Componente
+
+```mermaid
+graph TB
+    subgraph "🌐 Client Layer"
+        CLIENT[Aplicaciones Cliente]
+        API_GW[API Gateway]
+    end
+    
+    subgraph "⚛️ Quantum ML Service - Puerto 8007"
+        FASTAPI[FastAPI Server]
+        
+        subgraph "Modelos Cuánticos"
+            VQC[Variational Quantum Classifier<br/>Clasificación de Documentos]
+            QAUTO[Quantum Autoencoder<br/>Compresión de Embeddings]
+            QANOM[Quantum Anomaly Detector<br/>Detección de Outliers]
+        end
+        
+        subgraph "Backend Cuántico"
+            PENNYLANE[PennyLane Framework<br/>Diferenciación Automática]
+            QDEV[Quantum Device<br/>default.qubit<br/>4 qubits, 3 layers]
+            QCIRCUIT[Circuitos Cuánticos<br/>StronglyEntanglingLayers]
+        end
+        
+        subgraph "Explainability"
+            SHAP_Q[SHAP TreeExplainer<br/>Quantum Circuits]
+            METRICS_Q[Métricas Cuánticas<br/>Circuit Depth, Gates]
+        end
+    end
+    
+    subgraph "🔗 Servicios Integrados"
+        GPU_EMB[GPU Embedding Service<br/>Puerto 8001]
+        ASTRA_DB[Astra VectorDB<br/>Puerto 8006]
+        PROMETHEUS[Prometheus<br/>Puerto 9090]
+    end
+    
+    CLIENT --> API_GW
+    API_GW --> FASTAPI
+    
+    FASTAPI --> VQC
+    FASTAPI --> QAUTO
+    FASTAPI --> QANOM
+    
+    VQC --> PENNYLANE
+    QAUTO --> PENNYLANE
+    QANOM --> PENNYLANE
+    
+    PENNYLANE --> QDEV
+    QDEV --> QCIRCUIT
+    
+    VQC --> SHAP_Q
+    QAUTO --> SHAP_Q
+    
+    FASTAPI --> METRICS_Q
+    
+    FASTAPI -.->|Obtener Embeddings| GPU_EMB
+    FASTAPI -.->|Almacenar Resultados| ASTRA_DB
+    METRICS_Q -->|Scrape Métricas| PROMETHEUS
+    
+    style VQC fill:#e1f5ff
+    style QAUTO fill:#e1f5ff
+    style QANOM fill:#e1f5ff
+    style PENNYLANE fill:#fff3e0
+    style QDEV fill:#fff3e0
+    style QCIRCUIT fill:#fff3e0
+    style SHAP_Q fill:#f3e5f5
+    style FASTAPI fill:#c8e6c9
+```
+
+### Flujo de Clasificación Cuántica
+
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant API as FastAPI
+    participant VQC as Quantum Classifier
+    participant PL as PennyLane
+    participant QD as Quantum Device
+    participant SHAP as SHAP Explainer
+    
+    C->>API: POST /qml/classify
+    Note over C,API: {embedding: [0.1, 0.2, ...],<br/>explain: true}
+    
+    API->>VQC: classify(embedding)
+    VQC->>VQC: preprocess_input()
+    Note over VQC: Normalizar a [0, 2π]<br/>para Angle Encoding
+    
+    VQC->>PL: quantum_neural_network()
+    PL->>QD: Ejecutar circuito
+    
+    Note over QD: 1. AngleEmbedding<br/>2. StronglyEntanglingLayers<br/>3. Medir Pauli-Z
+    
+    QD-->>PL: quantum_output
+    PL-->>VQC: expectation_values
+    
+    VQC->>VQC: softmax(quantum_output)
+    Note over VQC: Convertir a probabilidades
+    
+    VQC->>SHAP: compute_shap_values()
+    SHAP->>SHAP: Calcular contribuciones
+    SHAP-->>VQC: shap_values
+    
+    VQC-->>API: classification_result
+    Note over API: {predicted_class: 2,<br/>confidence: 0.85,<br/>quantum_output: [...],<br/>shap_values: [...]}
+    
+    API-->>C: JSON Response
+```
+
+### Ventajas del Quantum ML
+
+| Característica | Descripción | Beneficio |
+|---|---|---|
+| **Ventaja Cuántica** | Procesamiento paralelo cuántico | >1.2x vs modelos clásicos en alta dimensión |
+| **Generalización** | Mejor con pocos datos | Reduce overfitting |
+| **Expresividad** | Espacios de Hilbert exponenciales | Captura patrones complejos |
+| **Explainability** | SHAP para circuitos cuánticos | Transparencia total |
+
+### Casos de Uso Quantum ML
+
+1. **Clasificación de Documentos Complejos**
+   - Documentos con múltiples idiomas
+   - Estructuras no lineales
+   - Patrones ocultos en embeddings
+
+2. **Optimización de Embeddings**
+   - Reducción de dimensionalidad cuántica
+   - Compresión sin pérdida de información
+   - Autoencoders variacionales
+
+3. **Detección de Anomalías**
+   - Documentos fraudulentos
+   - Patrones inusuales
+   - Outliers en alta dimensión
+
+---
+
+## 🤖 Arquitectura AWS SageMaker - Predictive ML
+
+### Diagrama de Componente
+
+```mermaid
+graph TB
+    subgraph "🌐 Client Layer"
+        CLIENT[Aplicaciones Cliente]
+        API_GW[API Gateway]
+    end
+    
+    subgraph "🤖 SageMaker Predictor Service - Puerto 8008"
+        FASTAPI[FastAPI Server]
+        
+        subgraph "Modelos ML"
+            LGBM[LightGBM Classifier<br/>Gradient Boosting]
+            XGB[XGBoost Classifier<br/>Extreme Gradient Boosting]
+        end
+        
+        subgraph "Explainability"
+            SHAP[SHAP TreeExplainer<br/>Feature Importance]
+            CONTRIB[Feature Contributions<br/>Waterfall Plots]
+        end
+        
+        subgraph "Model Management"
+            LOADER[Model Loader<br/>Pickle/Joblib]
+            CACHE[Model Cache<br/>In-Memory]
+            DUMMY[Dummy Models<br/>Development]
+        end
+        
+        subgraph "Monitoring"
+            PROM_M[Prometheus Metrics<br/>Latency, Confidence]
+            HEALTH[Health Checks]
+        end
+    end
+    
+    subgraph "☁️ AWS Services (Opcional)"
+        SM_ENDPOINT[SageMaker Endpoint<br/>Producción]
+        
+        subgraph "Training Pipeline"
+            S3_DATA[S3 Data Bucket<br/>Datasets]
+            GLUE[AWS Glue<br/>Data Processing]
+            SM_TRAIN[SageMaker Training<br/>ml.c5.xlarge]
+            S3_MODEL[S3 Model Bucket<br/>Artifacts]
+        end
+        
+        ECR[Amazon ECR<br/>Container Registry]
+    end
+    
+    subgraph "🔗 Servicios Integrados"
+        ASTRA_DB[Astra VectorDB<br/>Almacenar Predicciones]
+        PROMETHEUS[Prometheus<br/>Monitoring]
+    end
+    
+    CLIENT --> API_GW
+    API_GW --> FASTAPI
+    
+    FASTAPI --> LGBM
+    FASTAPI --> XGB
+    
+    LGBM --> SHAP
+    XGB --> SHAP
+    SHAP --> CONTRIB
+    
+    LOADER --> LGBM
+    LOADER --> XGB
+    LOADER --> CACHE
+    LOADER --> DUMMY
+    
+    FASTAPI --> PROM_M
+    FASTAPI --> HEALTH
+    
+    FASTAPI -.->|Modo Producción| SM_ENDPOINT
+    
+    S3_DATA --> GLUE
+    GLUE --> SM_TRAIN
+    SM_TRAIN --> S3_MODEL
+    S3_MODEL --> SM_ENDPOINT
+    ECR --> SM_ENDPOINT
+    
+    FASTAPI -.->|Guardar Resultados| ASTRA_DB
+    PROM_M -->|Scrape| PROMETHEUS
+    
+    style LGBM fill:#e1f5ff
+    style XGB fill:#e1f5ff
+    style SHAP fill:#fff3e0
+    style CONTRIB fill:#fff3e0
+    style SM_ENDPOINT fill:#f3e5f5
+    style FASTAPI fill:#c8e6c9
+    style DUMMY fill:#ffccbc
+```
+
+### Flujo de Predicción con Explainability
+
+```mermaid
+sequenceDiagram
+    participant C as Cliente
+    participant API as FastAPI
+    participant M as ML Model
+    participant SHAP as SHAP Explainer
+    participant DB as Astra DB
+    
+    C->>API: POST /predict
+    Note over C,API: {features: {<br/>  amount: 25000,<br/>  duration: 24,<br/>  age: 35<br/>}, explain: true}
+    
+    API->>M: Load Model
+    Note over M: LightGBM o XGBoost
+    
+    API->>M: predict(features)
+    M->>M: Feature Engineering
+    Note over M: Normalización<br/>Encoding categórico
+    
+    M->>M: Model Inference
+    M-->>API: prediction + probabilities
+    Note over API: prediction: 1<br/>probability: 0.85
+    
+    alt Explain = True
+        API->>SHAP: compute_shap_values()
+        Note over SHAP: TreeExplainer<br/>Calcular contribuciones
+        
+        SHAP->>SHAP: For each feature
+        Note over SHAP: amount: +0.15<br/>duration: -0.05<br/>age: +0.08
+        
+        SHAP-->>API: shap_values + base_value
+        
+        API->>API: Format explanation
+        Note over API: Feature names<br/>Feature values<br/>SHAP values<br/>Base value
+    end
+    
+    API->>DB: Store prediction
+    Note over DB: Guardar para<br/>análisis posterior
+    
+    API-->>C: JSON Response
+    Note over C,API: {prediction: 1,<br/>probability: 0.85,<br/>risk_score: 85.0,<br/>explanation: {...}}
+```
+
+### Capacidades del SageMaker Predictor
+
+| Característica | Descripción | Beneficio |
+|---|---|---|
+| **Dual Model Support** | LightGBM + XGBoost | Comparación de rendimiento |
+| **SHAP Explainability** | Contribución de cada feature | Transparencia total |
+| **Batch Processing** | Predicciones masivas | Alta eficiencia |
+| **AWS Integration** | SageMaker opcional | Escalabilidad cloud |
+| **Local Development** | Modelos dummy | Sin costos AWS |
+
+### Casos de Uso Predictive ML
+
+1. **Evaluación de Crédito**
+   - Scoring de solicitudes
+   - Análisis de riesgo
+   - Explicación de decisiones
+
+2. **Análisis de Riesgo Financiero**
+   - Predicción de default
+   - Clasificación de documentos
+   - Detección de fraude
+
+3. **Aprobación de Préstamos**
+   - Decisión automática
+   - Explicación regulatoria
+   - Cumplimiento normativo
+
+### Interpretación SHAP
+
+**Ejemplo de Explicación:**
+
+```
+Base Value: 0.50 (50% probabilidad base)
+
+Feature Contributions:
++ Amount (25000€):        +0.15  → Aumenta riesgo
+- Duration (24 meses):    -0.05  → Reduce riesgo
++ Age (35 años):          +0.08  → Aumenta confianza
++ Employment (60 meses):  +0.12  → Aumenta confianza
+- Dependents (2):         -0.02  → Reduce ligeramente
+
+Final Prediction: 0.85 (85% probabilidad)
+Risk Score: 85/100
+```
+
+**Interpretación:**
+- Valores SHAP **positivos**: Aumentan la probabilidad de la clase positiva
+- Valores SHAP **negativos**: Disminuyen la probabilidad
+- **Base value**: Predicción promedio del modelo
+- **Suma de contribuciones**: Lleva del base value a la predicción final
+
+---
+
 ## ✨ Características Principales
 
 ### 🤖 Inteligencia Artificial
