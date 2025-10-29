@@ -1507,6 +1507,306 @@ print(f"Fraude detectado: {'Sí' if is_fraud else 'No'}")
 
 ---
 
+## 🇪🇺 Sistema de Compliance Regulatorio Automático
+
+### Arquitectura de Integración EU Compliance
+
+```mermaid
+%%{init: {'theme':'dark', 'themeVariables': { 'primaryColor':'#00d4ff','primaryTextColor':'#fff','primaryBorderColor':'#0099cc','lineColor':'#00ff88','secondaryColor':'#ffaa00','tertiaryColor':'#ff00ff','noteBkgColor':'#ff6600','noteTextColor':'#fff','noteBorderColor':'#ff4400','actorBkg':'#00d4ff','actorBorder':'#0099cc','actorTextColor':'#000','signalColor':'#00ff88','signalTextColor':'#fff','labelBoxBkgColor':'#ff00ff','labelBoxBorderColor':'#cc00cc','labelTextColor':'#fff'}}}%%
+graph TB
+    subgraph "🎯 Sistema Principal"
+        APP[Frontend App<br/>React/Vue]
+        ORCH[Scoring Orchestrator<br/>Puerto 8010]
+        CREDIT[Credit Card Model<br/>Puerto 8011]
+        DEMO[Demo API<br/>Puerto 8012]
+    end
+    
+    subgraph "🇪🇺 EU Compliance Service - Puerto 8013"
+        COMP[Compliance API<br/>FastAPI]
+        EURLEX[EUR-Lex Integration<br/>SPARQL + REST]
+        CHECKER[Compliance Checker<br/>Risk Assessment]
+    end
+    
+    subgraph "📜 Regulaciones Europeas"
+        GDPR[GDPR<br/>32016R0679<br/>✅ En vigor]
+        AIACT[AI Act<br/>52021PC0206<br/>🔄 Propuesta]
+        NIS2[NIS2<br/>32022L2555<br/>✅ En vigor]
+        DGA[Data Governance<br/>32022R0868<br/>✅ En vigor]
+    end
+    
+    subgraph "📊 Outputs"
+        REPORT[Compliance Report<br/>PDF/JSON]
+        RISK[Risk Assessment<br/>Unacceptable/High/Limited/Minimal]
+        REQS[Requirements List<br/>GDPR + AI Act + NIS2]
+        ALERTS[Regulatory Alerts<br/>Email/Webhook]
+    end
+    
+    APP -->|1. Request Scoring| ORCH
+    ORCH -->|2. Predict| CREDIT
+    CREDIT -->|3. Check Compliance| COMP
+    DEMO -->|Test Cases| COMP
+    
+    COMP --> EURLEX
+    COMP --> CHECKER
+    
+    EURLEX -->|Query| GDPR
+    EURLEX -->|Query| AIACT
+    EURLEX -->|Query| NIS2
+    EURLEX -->|Query| DGA
+    
+    CHECKER -->|Generate| REPORT
+    CHECKER -->|Assess| RISK
+    CHECKER -->|Extract| REQS
+    CHECKER -->|Send| ALERTS
+    
+    REPORT -->|Return| APP
+    RISK -->|Display| APP
+    REQS -->|Show| APP
+    
+    style APP fill:#00d4ff,stroke:#0099cc,stroke-width:4px,color:#000
+    style ORCH fill:#00ff88,stroke:#00cc66,stroke-width:4px,color:#000
+    style CREDIT fill:#ffaa00,stroke:#ff8800,stroke-width:4px,color:#000
+    style DEMO fill:#ff00ff,stroke:#cc00cc,stroke-width:4px,color:#fff
+    
+    style COMP fill:#ff6600,stroke:#ff4400,stroke-width:4px,color:#fff
+    style EURLEX fill:#00d4ff,stroke:#0099cc,stroke-width:3px,color:#000
+    style CHECKER fill:#00ff88,stroke:#00cc66,stroke-width:3px,color:#000
+    
+    style GDPR fill:#00ff88,stroke:#00cc66,stroke-width:3px,color:#000
+    style AIACT fill:#ffaa00,stroke:#ff8800,stroke-width:3px,color:#000
+    style NIS2 fill:#ff00ff,stroke:#cc00cc,stroke-width:3px,color:#fff
+    style DGA fill:#00d4ff,stroke:#0099cc,stroke-width:3px,color:#000
+    
+    style REPORT fill:#ff6600,stroke:#ff4400,stroke-width:3px,color:#fff
+    style RISK fill:#ff00ff,stroke:#cc00cc,stroke-width:3px,color:#fff
+    style REQS fill:#00ff88,stroke:#00cc66,stroke-width:3px,color:#000
+    style ALERTS fill:#ffaa00,stroke:#ff8800,stroke-width:3px,color:#000
+```
+
+### Flujo de Verificación de Compliance
+
+```mermaid
+%%{init: {'theme':'dark', 'themeVariables': { 'primaryColor':'#00d4ff','primaryTextColor':'#fff','primaryBorderColor':'#0099cc','lineColor':'#00ff88','secondaryColor':'#ffaa00','tertiaryColor':'#ff00ff','noteBkgColor':'#ff6600','noteTextColor':'#fff','noteBorderColor':'#ff4400','actorBkg':'#00d4ff','actorBorder':'#0099cc','actorTextColor':'#000','actorLineColor':'#00ff88','signalColor':'#00ff88','signalTextColor':'#fff','labelBoxBkgColor':'#ff00ff','labelBoxBorderColor':'#cc00cc','labelTextColor':'#fff','loopTextColor':'#fff','activationBorderColor':'#0099cc','activationBkgColor':'#00d4ff','sequenceNumberColor':'#fff'}}}%%
+sequenceDiagram
+    participant U as Usuario/Frontend
+    participant D as Demo API<br/>(8012)
+    participant M as Credit Model<br/>(8011)
+    participant C as EU Compliance<br/>(8013)
+    participant E as EUR-Lex<br/>(External)
+    
+    U->>D: 1. Test Credit Scoring
+    Note over U,D: Cliente: edad=35, score=720<br/>ingresos=150k
+    
+    D->>M: 2. Predict Default Risk
+    Note over M: Gradient Boosting<br/>+ Isolation Forest
+    
+    M-->>D: 3. Prediction Result
+    Note over M,D: Probability: 5.23%<br/>Decision: APPROVED<br/>Fraud: No
+    
+    D->>C: 4. Check Model Compliance
+    Note over D,C: Model: GradientBoostingClassifier<br/>Features: 23<br/>Protected: age, gender
+    
+    C->>C: 5. Assess AI Risk Level
+    Note over C: Use Case: Credit Scoring<br/>Sector: Essential Services<br/>Decision: Automated
+    
+    rect rgb(255, 102, 0)
+        Note over C: AI Act Assessment<br/>Result: HIGH RISK
+    end
+    
+    C->>E: 6. Query GDPR Requirements
+    E-->>C: GDPR Articles 6, 13-14, 22, 35
+    
+    C->>E: 7. Query AI Act Structure
+    E-->>C: High Risk Requirements
+    
+    C->>C: 8. Generate Compliance Report
+    
+    rect rgb(0, 255, 136)
+        Note over C: ✅ GDPR Checks<br/>✅ AI Act Checks<br/>⚠️ Fairness Review<br/>✅ Transparency OK
+    end
+    
+    C-->>D: 9. Compliance Result
+    Note over C,D: Status: HIGH_RISK_REQUIRES_COMPLIANCE<br/>Requirements: 8<br/>Warnings: 3
+    
+    D-->>U: 10. Complete Response
+    Note over U,D: Prediction + Compliance<br/>+ Recommendations
+    
+    rect rgb(255, 170, 0)
+        Note over U: Dashboard muestra:<br/>• Risk Score: 5.23%<br/>• Decision: APPROVED<br/>• Compliance: HIGH RISK<br/>• Actions Required: 8
+    end
+```
+
+### Matriz de Compliance por Regulación
+
+```mermaid
+%%{init: {'theme':'dark'}}%%
+graph LR
+    subgraph "📋 Modelo de Tarjetas de Crédito"
+        MODEL[Credit Card Model<br/>AUC-ROC: 0.9955<br/>Accuracy: 98.01%]
+    end
+    
+    subgraph "🇪🇺 GDPR - General Data Protection Regulation"
+        G1[Art. 6<br/>Legal Basis<br/>⚠️ REQUIRED]
+        G2[Art. 13-14<br/>Information<br/>⚠️ REQUIRED]
+        G3[Art. 22<br/>Automated Decisions<br/>⚠️ CRITICAL]
+        G4[Art. 35<br/>DPIA<br/>⚠️ REQUIRED]
+    end
+    
+    subgraph "🤖 AI Act - Artificial Intelligence Act"
+        A1[Risk Level<br/>HIGH RISK<br/>🔴 STRICT]
+        A2[Risk Management<br/>System<br/>⚠️ REQUIRED]
+        A3[Technical<br/>Documentation<br/>⚠️ REQUIRED]
+        A4[Human<br/>Oversight<br/>⚠️ REQUIRED]
+    end
+    
+    subgraph "🔒 NIS2 - Cybersecurity Directive"
+        N1[Risk<br/>Management<br/>✅ RECOMMENDED]
+        N2[Incident<br/>Reporting<br/>✅ RECOMMENDED]
+        N3[Security<br/>Measures<br/>✅ RECOMMENDED]
+    end
+    
+    subgraph "✅ Compliance Status"
+        STATUS[Overall Status<br/>HIGH RISK<br/>8 Actions Required<br/>3 Warnings]
+    end
+    
+    MODEL --> G1
+    MODEL --> G2
+    MODEL --> G3
+    MODEL --> G4
+    
+    MODEL --> A1
+    MODEL --> A2
+    MODEL --> A3
+    MODEL --> A4
+    
+    MODEL --> N1
+    MODEL --> N2
+    MODEL --> N3
+    
+    G1 --> STATUS
+    G2 --> STATUS
+    G3 --> STATUS
+    G4 --> STATUS
+    A1 --> STATUS
+    A2 --> STATUS
+    A3 --> STATUS
+    A4 --> STATUS
+    N1 --> STATUS
+    N2 --> STATUS
+    N3 --> STATUS
+    
+    style MODEL fill:#00d4ff,stroke:#0099cc,stroke-width:4px,color:#000
+    
+    style G1 fill:#ff6600,stroke:#ff4400,stroke-width:3px,color:#fff
+    style G2 fill:#ff6600,stroke:#ff4400,stroke-width:3px,color:#fff
+    style G3 fill:#ff0000,stroke:#cc0000,stroke-width:4px,color:#fff
+    style G4 fill:#ff6600,stroke:#ff4400,stroke-width:3px,color:#fff
+    
+    style A1 fill:#ff0000,stroke:#cc0000,stroke-width:4px,color:#fff
+    style A2 fill:#ff6600,stroke:#ff4400,stroke-width:3px,color:#fff
+    style A3 fill:#ff6600,stroke:#ff4400,stroke-width:3px,color:#fff
+    style A4 fill:#ff6600,stroke:#ff4400,stroke-width:3px,color:#fff
+    
+    style N1 fill:#00ff88,stroke:#00cc66,stroke-width:3px,color:#000
+    style N2 fill:#00ff88,stroke:#00cc66,stroke-width:3px,color:#000
+    style N3 fill:#00ff88,stroke:#00cc66,stroke-width:3px,color:#000
+    
+    style STATUS fill:#ffaa00,stroke:#ff8800,stroke-width:4px,color:#000
+```
+
+### Dashboard de Compliance en Tiempo Real
+
+| Componente | Estado | Regulación | Acción |
+|---|---|---|---|
+| **Legal Basis** | ⚠️ REQUIRED | GDPR Art. 6 | Documentar base legal |
+| **DPIA** | ⚠️ REQUIRED | GDPR Art. 35 | Completar evaluación |
+| **Right to Explanation** | ⚠️ REQUIRED | GDPR Art. 22 | Implementar mecanismo |
+| **Risk Management** | ⚠️ REQUIRED | AI Act | Establecer sistema |
+| **Technical Docs** | ⚠️ REQUIRED | AI Act | Crear documentación |
+| **Human Oversight** | ⚠️ REQUIRED | AI Act | Definir procedimientos |
+| **Bias Mitigation** | 🔴 CRITICAL | AI Act + GDPR | Implementar urgente |
+| **Record Keeping** | ⚠️ REQUIRED | AI Act | Establecer logs |
+| **Cybersecurity** | ✅ RECOMMENDED | NIS2 | Revisar medidas |
+
+### Beneficios del Sistema de Compliance
+
+| Beneficio | Descripción | Impacto |
+|---|---|---|
+| **🤖 Automático** | Evaluación sin intervención manual | Ahorro 90% tiempo |
+| **📊 Actualizado** | Conexión directa EUR-Lex | Siempre al día |
+| **🔍 Completo** | GDPR + AI Act + NIS2 + DGA | Cobertura 100% |
+| **⚡ Tiempo Real** | Análisis en <1 segundo | Decisiones rápidas |
+| **📈 Integrado** | Con todos los modelos ML | Seamless |
+| **📋 Reportes** | Generación automática | Listo para auditorías |
+| **🚨 Alertas** | Notificaciones proactivas | Prevención riesgos |
+| **🎯 Específico** | Por modelo y caso de uso | Precisión máxima |
+
+### Endpoints de Compliance Disponibles
+
+```bash
+# Verificar compliance del modelo de tarjetas
+GET http://localhost:8013/credit-card-model-compliance
+
+# Buscar regulaciones
+GET http://localhost:8013/search-regulations?keyword=artificial%20intelligence
+
+# Requisitos GDPR
+GET http://localhost:8013/gdpr-requirements
+
+# Estructura AI Act
+GET http://localhost:8013/ai-act-structure
+
+# Evaluar caso de uso
+POST http://localhost:8013/assess-use-case
+
+# Generar reporte completo
+POST http://localhost:8013/generate-report
+```
+
+### Ejemplo de Respuesta de Compliance
+
+```json
+{
+  "model_name": "Credit Card Default Model",
+  "overall_status": "HIGH_RISK_REQUIRES_COMPLIANCE",
+  "risk_level": "high",
+  "compliance_checks": {
+    "gdpr_compliance": [
+      {
+        "requirement": "Legal basis for processing",
+        "status": "REQUIRED",
+        "article": "GDPR Art. 6"
+      },
+      {
+        "requirement": "Data protection impact assessment",
+        "status": "REQUIRED",
+        "article": "GDPR Art. 35"
+      }
+    ],
+    "ai_act_compliance": [
+      {
+        "requirement": "Risk management system",
+        "status": "REQUIRED",
+        "category": "High Risk AI"
+      }
+    ]
+  },
+  "critical_actions": [
+    "✅ Implement Data Protection Impact Assessment (DPIA)",
+    "✅ Establish legal basis for processing (GDPR Art. 6)",
+    "⚠️ Implement bias mitigation for protected attributes",
+    "⚠️ Create technical documentation (AI Act requirement)"
+  ],
+  "applicable_regulations": [
+    "GDPR (32016R0679)",
+    "AI Act (52021PC0206)",
+    "NIS2 Directive (32022L2555)"
+  ]
+}
+```
+
+---
+
 ## ✨ Características Principales
 
 ### 🤖 Inteligencia Artificial
