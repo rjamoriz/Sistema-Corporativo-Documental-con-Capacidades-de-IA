@@ -2207,6 +2207,364 @@ Ver documento completo: **[QUANTUM_GPU_ENHANCEMENT_PLAN.md](docs/QUANTUM_GPU_ENH
 
 ---
 
+## 🎨 ARQUITECTURA COMPLETA DEL SISTEMA - Vista Modular
+
+### 🏗️ Diagrama Arquitectónico Integral con Todas las Conexiones
+
+```mermaid
+%%{init: {'theme':'dark', 'themeVariables': { 'fontSize':'18px', 'fontFamily':'arial', 'primaryColor':'#00d4ff','primaryTextColor':'#fff','primaryBorderColor':'#0099cc','lineColor':'#00ff88','secondaryColor':'#ffaa00','tertiaryColor':'#ff00ff','noteBkgColor':'#ff6600','noteTextColor':'#fff','noteBorderColor':'#ff4400'}}}%%
+graph TB
+    subgraph "🌐 CAPA DE PRESENTACIÓN"
+        WEB["<b>🖥️ WEB APP</b><br/>React + TypeScript<br/>Puerto: 3000<br/>UI/UX Moderna"]
+        MOBILE["<b>📱 MOBILE APP</b><br/>React Native<br/>iOS + Android<br/>Responsive"]
+    end
+    
+    subgraph "🔐 CAPA DE SEGURIDAD & GATEWAY"
+        GATEWAY["<b>🚪 API GATEWAY</b><br/>Kong/Nginx<br/>Rate Limiting<br/>Auth + CORS"]
+        AUTH["<b>🔑 AUTENTICACIÓN</b><br/>Keycloak/Auth0<br/>SSO + MFA + LDAP<br/>JWT Tokens"]
+        AUDIT["<b>📝 AUDITORÍA</b><br/>Logs Inmutables<br/>Blockchain opcional<br/>Compliance Trail"]
+    end
+    
+    subgraph "⚙️ CAPA DE SERVICIOS CORE"
+        UPLOAD["<b>📤 UPLOAD SERVICE</b><br/>FastAPI<br/>Puerto: 8000<br/>Multi-format"]
+        PROCESS["<b>⚡ PROCESSING</b><br/>Celery + Redis<br/>Async Tasks<br/>Queue Management"]
+        SEARCH["<b>🔍 SEARCH SERVICE</b><br/>FastAPI<br/>Puerto: 8001<br/>Hybrid Search"]
+        RAG["<b>🤖 RAG SERVICE</b><br/>FastAPI + LangChain<br/>Puerto: 8002<br/>Conversational AI"]
+    end
+    
+    subgraph "🧠 CAPA DE INTELIGENCIA ARTIFICIAL"
+        OCR["<b>👁️ OCR ENGINE</b><br/>Tesseract + PyTesseract<br/>Multi-language<br/>High Accuracy"]
+        NER["<b>🏷️ NER EXTRACTOR</b><br/>spaCy + Transformers<br/>Entities Detection<br/>Custom Models"]
+        CLASSIFY["<b>📊 CLASSIFIER</b><br/>BETO Fine-tuned<br/>10+ Categories<br/>Confidence Scores"]
+        EMBED["<b>🔢 EMBEDDINGS</b><br/>Sentence-BERT<br/>GPU Accelerated<br/>Vector Generation"]
+        SENTIMENT["<b>😊 SENTIMENT</b><br/>Análisis de Sentimiento<br/>Positivo/Negativo<br/>Score -1 to 1"]
+    end
+    
+    subgraph "💳 CAPA DE SCORING & ML"
+        CREDIT["<b>💳 CREDIT MODEL</b><br/>Scikit-Learn<br/>Puerto: 8011<br/>GB + IF<br/>AUC: 0.9955"]
+        DEMO["<b>🎯 DEMO API</b><br/>FastAPI<br/>Puerto: 8012<br/>3 Test Cases"]
+        SAGE["<b>☁️ SAGEMAKER</b><br/>AWS ML<br/>Puerto: 8008<br/>LightGBM + XGBoost"]
+        QUANTUM["<b>⚛️ QUANTUM ML</b><br/>PennyLane<br/>Puerto: 8007<br/>VQC + SHAP"]
+        ORCH["<b>🎼 ORCHESTRATOR</b><br/>FastAPI<br/>Puerto: 8010<br/>Ensemble Scoring"]
+        FEATURE["<b>📋 FEATURES</b><br/>FastAPI<br/>Puerto: 8009<br/>Doc Analysis"]
+    end
+    
+    subgraph "🇪🇺 CAPA DE COMPLIANCE"
+        COMP["<b>⚖️ EU COMPLIANCE</b><br/>FastAPI<br/>Puerto: 8013<br/>GDPR + AI Act + NIS2"]
+        EURLEX["<b>📜 EUR-LEX API</b><br/>SPARQL + REST<br/>Regulaciones UE<br/>Auto-updated"]
+        RISK["<b>🎯 RISK CHECKER</b><br/>Compliance Assessment<br/>4 Risk Levels<br/>Auto Reports"]
+    end
+    
+    subgraph "💾 CAPA DE ALMACENAMIENTO"
+        POSTGRES["<b>🐘 POSTGRESQL</b><br/>Metadata + Users<br/>ACID Compliant<br/>Relational Data"]
+        MONGO["<b>🍃 MONGODB</b><br/>Documents Store<br/>JSON Flexible<br/>Sharding Ready"]
+        S3["<b>☁️ AWS S3</b><br/>File Storage<br/>Versioning<br/>Lifecycle Policies"]
+        REDIS["<b>⚡ REDIS</b><br/>Cache + Queue<br/>Pub/Sub<br/>Session Store"]
+    end
+    
+    subgraph "🔍 CAPA DE BÚSQUEDA & VECTORES"
+        ELASTIC["<b>🔎 ELASTICSEARCH</b><br/>Full-text Search<br/>BM25 Ranking<br/>Aggregations"]
+        QDRANT["<b>🎯 QDRANT</b><br/>Vector Database<br/>Semantic Search<br/>HNSW Index"]
+        ASTRA["<b>⭐ ASTRA DB</b><br/>DataStax<br/>Puerto: 8006<br/>Vector + Results"]
+    end
+    
+    subgraph "⚛️ CAPA QUANTUM & GPU"
+        DWAVE["<b>🌊 D-WAVE</b><br/>Quantum Annealing<br/>QUBO Optimization<br/>Deduplication"]
+        IBM["<b>💙 IBM QISKIT</b><br/>Quantum Computing<br/>Circuit Simulation<br/>Research"]
+        NVIDIA["<b>💚 NVIDIA cuQuantum</b><br/>GPU Quantum<br/>Accelerated QML<br/>Hybrid Computing"]
+        GPU["<b>🎮 GPU SERVICE</b><br/>CUDA + cuDNN<br/>Embedding Accel<br/>3-5x Faster"]
+    end
+    
+    subgraph "📊 CAPA DE OBSERVABILIDAD"
+        PROM["<b>📈 PROMETHEUS</b><br/>Metrics Collection<br/>Puerto: 9090<br/>Time Series DB"]
+        GRAF["<b>📊 GRAFANA</b><br/>Dashboards<br/>Puerto: 3001<br/>Visualization"]
+        PHOENIX["<b>🔥 ARIZE PHOENIX</b><br/>LLM Monitoring<br/>Traces + Evals<br/>Observability"]
+        LOGS["<b>📝 ELK STACK</b><br/>Elasticsearch<br/>Logstash + Kibana<br/>Log Analysis"]
+    end
+    
+    %% CONEXIONES CAPA PRESENTACIÓN
+    WEB --> GATEWAY
+    MOBILE --> GATEWAY
+    
+    %% CONEXIONES GATEWAY & SEGURIDAD
+    GATEWAY --> AUTH
+    GATEWAY --> UPLOAD
+    GATEWAY --> SEARCH
+    GATEWAY --> RAG
+    GATEWAY --> ORCH
+    GATEWAY --> COMP
+    AUTH --> AUDIT
+    
+    %% CONEXIONES SERVICIOS CORE
+    UPLOAD --> PROCESS
+    PROCESS --> OCR
+    PROCESS --> NER
+    PROCESS --> CLASSIFY
+    PROCESS --> EMBED
+    PROCESS --> SENTIMENT
+    
+    SEARCH --> ELASTIC
+    SEARCH --> QDRANT
+    SEARCH --> POSTGRES
+    
+    RAG --> QDRANT
+    RAG --> ELASTIC
+    RAG --> PHOENIX
+    
+    %% CONEXIONES AI
+    OCR --> MONGO
+    NER --> MONGO
+    CLASSIFY --> MONGO
+    EMBED --> QDRANT
+    EMBED --> GPU
+    SENTIMENT --> MONGO
+    
+    %% CONEXIONES SCORING
+    ORCH --> CREDIT
+    ORCH --> SAGE
+    ORCH --> QUANTUM
+    ORCH --> FEATURE
+    ORCH --> ASTRA
+    
+    CREDIT --> COMP
+    DEMO --> CREDIT
+    DEMO --> COMP
+    
+    FEATURE --> NER
+    FEATURE --> SENTIMENT
+    
+    %% CONEXIONES COMPLIANCE
+    COMP --> EURLEX
+    COMP --> RISK
+    RISK --> AUDIT
+    
+    %% CONEXIONES STORAGE
+    UPLOAD --> S3
+    UPLOAD --> MONGO
+    UPLOAD --> POSTGRES
+    PROCESS --> REDIS
+    
+    %% CONEXIONES QUANTUM
+    QUANTUM --> NVIDIA
+    PROCESS --> DWAVE
+    PROCESS --> IBM
+    
+    %% CONEXIONES OBSERVABILIDAD
+    UPLOAD -.-> PROM
+    SEARCH -.-> PROM
+    RAG -.-> PROM
+    ORCH -.-> PROM
+    CREDIT -.-> PROM
+    COMP -.-> PROM
+    
+    PROM --> GRAF
+    RAG --> PHOENIX
+    GATEWAY -.-> LOGS
+    
+    %% ESTILOS - CAPA PRESENTACIÓN
+    style WEB fill:#00d4ff,stroke:#0099cc,stroke-width:5px,color:#000,font-size:16px
+    style MOBILE fill:#00d4ff,stroke:#0099cc,stroke-width:5px,color:#000,font-size:16px
+    
+    %% ESTILOS - SEGURIDAD
+    style GATEWAY fill:#ff00ff,stroke:#cc00cc,stroke-width:5px,color:#fff,font-size:16px
+    style AUTH fill:#ff00ff,stroke:#cc00cc,stroke-width:5px,color:#fff,font-size:16px
+    style AUDIT fill:#ff6600,stroke:#ff4400,stroke-width:5px,color:#fff,font-size:16px
+    
+    %% ESTILOS - SERVICIOS CORE
+    style UPLOAD fill:#00ff88,stroke:#00cc66,stroke-width:5px,color:#000,font-size:16px
+    style PROCESS fill:#00ff88,stroke:#00cc66,stroke-width:5px,color:#000,font-size:16px
+    style SEARCH fill:#00ff88,stroke:#00cc66,stroke-width:5px,color:#000,font-size:16px
+    style RAG fill:#00ff88,stroke:#00cc66,stroke-width:5px,color:#000,font-size:16px
+    
+    %% ESTILOS - AI
+    style OCR fill:#ffaa00,stroke:#ff8800,stroke-width:5px,color:#000,font-size:16px
+    style NER fill:#ffaa00,stroke:#ff8800,stroke-width:5px,color:#000,font-size:16px
+    style CLASSIFY fill:#ffaa00,stroke:#ff8800,stroke-width:5px,color:#000,font-size:16px
+    style EMBED fill:#ffaa00,stroke:#ff8800,stroke-width:5px,color:#000,font-size:16px
+    style SENTIMENT fill:#ffaa00,stroke:#ff8800,stroke-width:5px,color:#000,font-size:16px
+    
+    %% ESTILOS - SCORING
+    style CREDIT fill:#ff00ff,stroke:#cc00cc,stroke-width:5px,color:#fff,font-size:16px
+    style DEMO fill:#ff00ff,stroke:#cc00cc,stroke-width:5px,color:#fff,font-size:16px
+    style SAGE fill:#ff00ff,stroke:#cc00cc,stroke-width:5px,color:#fff,font-size:16px
+    style QUANTUM fill:#ff00ff,stroke:#cc00cc,stroke-width:5px,color:#fff,font-size:16px
+    style ORCH fill:#ff6600,stroke:#ff4400,stroke-width:5px,color:#fff,font-size:16px
+    style FEATURE fill:#ff00ff,stroke:#cc00cc,stroke-width:5px,color:#fff,font-size:16px
+    
+    %% ESTILOS - COMPLIANCE
+    style COMP fill:#ff6600,stroke:#ff4400,stroke-width:5px,color:#fff,font-size:16px
+    style EURLEX fill:#00d4ff,stroke:#0099cc,stroke-width:5px,color:#000,font-size:16px
+    style RISK fill:#ffaa00,stroke:#ff8800,stroke-width:5px,color:#000,font-size:16px
+    
+    %% ESTILOS - STORAGE
+    style POSTGRES fill:#00d4ff,stroke:#0099cc,stroke-width:5px,color:#000,font-size:16px
+    style MONGO fill:#00ff88,stroke:#00cc66,stroke-width:5px,color:#000,font-size:16px
+    style S3 fill:#ffaa00,stroke:#ff8800,stroke-width:5px,color:#000,font-size:16px
+    style REDIS fill:#ff0000,stroke:#cc0000,stroke-width:5px,color:#fff,font-size:16px
+    
+    %% ESTILOS - BÚSQUEDA
+    style ELASTIC fill:#ffaa00,stroke:#ff8800,stroke-width:5px,color:#000,font-size:16px
+    style QDRANT fill:#ff00ff,stroke:#cc00cc,stroke-width:5px,color:#fff,font-size:16px
+    style ASTRA fill:#00d4ff,stroke:#0099cc,stroke-width:5px,color:#000,font-size:16px
+    
+    %% ESTILOS - QUANTUM
+    style DWAVE fill:#00d4ff,stroke:#0099cc,stroke-width:5px,color:#000,font-size:16px
+    style IBM fill:#00d4ff,stroke:#0099cc,stroke-width:5px,color:#000,font-size:16px
+    style NVIDIA fill:#00ff88,stroke:#00cc66,stroke-width:5px,color:#000,font-size:16px
+    style GPU fill:#00ff88,stroke:#00cc66,stroke-width:5px,color:#000,font-size:16px
+    
+    %% ESTILOS - OBSERVABILIDAD
+    style PROM fill:#ff6600,stroke:#ff4400,stroke-width:5px,color:#fff,font-size:16px
+    style GRAF fill:#ff6600,stroke:#ff4400,stroke-width:5px,color:#fff,font-size:16px
+    style PHOENIX fill:#ff6600,stroke:#ff4400,stroke-width:5px,color:#fff,font-size:16px
+    style LOGS fill:#ffaa00,stroke:#ff8800,stroke-width:5px,color:#000,font-size:16px
+```
+
+### 📊 Resumen de Componentes por Capa
+
+| Capa | Componentes | Tecnologías Clave | Puertos |
+|---|---|---|---|
+| **🌐 Presentación** | 2 | React, React Native, TypeScript | 3000 |
+| **🔐 Seguridad** | 3 | Kong/Nginx, Keycloak, Blockchain | - |
+| **⚙️ Servicios Core** | 4 | FastAPI, Celery, Redis, LangChain | 8000-8002 |
+| **🧠 IA** | 5 | Tesseract, spaCy, BETO, Sentence-BERT | - |
+| **💳 Scoring & ML** | 6 | Scikit-Learn, SageMaker, PennyLane | 8007-8012 |
+| **🇪🇺 Compliance** | 3 | EUR-Lex, GDPR, AI Act, NIS2 | 8013 |
+| **💾 Storage** | 4 | PostgreSQL, MongoDB, S3, Redis | - |
+| **🔍 Búsqueda** | 3 | Elasticsearch, Qdrant, Astra | 8006 |
+| **⚛️ Quantum & GPU** | 4 | D-Wave, IBM Qiskit, NVIDIA cuQuantum | - |
+| **📊 Observabilidad** | 4 | Prometheus, Grafana, Phoenix, ELK | 9090, 3001 |
+| **TOTAL** | **38** | **Componentes Modulares** | **15+ Servicios** |
+
+### 🎯 Flujos Principales del Sistema
+
+#### 1️⃣ **Flujo de Ingestión de Documentos**
+```
+Usuario → Gateway → Upload Service → S3 + MongoDB
+                                   ↓
+                              Process Queue (Celery)
+                                   ↓
+                    ┌──────────────┼──────────────┐
+                    ↓              ↓              ↓
+                  OCR           NER         Classify
+                    ↓              ↓              ↓
+                Embeddings → Qdrant + Elasticsearch
+                    ↓
+              Indexado Completo ✅
+```
+
+#### 2️⃣ **Flujo de Búsqueda Híbrida**
+```
+Usuario → Gateway → Search Service
+                         ↓
+            ┌────────────┼────────────┐
+            ↓                         ↓
+      Elasticsearch              Qdrant
+      (BM25 Léxico)         (Semántico)
+            ↓                         ↓
+            └────────────┬────────────┘
+                         ↓
+                  Fusion + Re-rank
+                         ↓
+                  Resultados ✅
+```
+
+#### 3️⃣ **Flujo de Scoring de Crédito**
+```
+Usuario → Gateway → Orchestrator
+                         ↓
+         ┌───────────────┼───────────────┐
+         ↓               ↓               ↓
+    Credit Model    SageMaker      Quantum ML
+    (Scikit-Learn)  (AWS)          (PennyLane)
+         ↓               ↓               ↓
+         └───────────────┼───────────────┘
+                         ↓
+                  Ensemble Score
+                         ↓
+                  EU Compliance Check
+                         ↓
+              Score + Compliance ✅
+```
+
+#### 4️⃣ **Flujo de RAG Conversacional**
+```
+Usuario → Gateway → RAG Service
+                         ↓
+                  Retrieve Context
+                         ↓
+            ┌────────────┼────────────┐
+            ↓                         ↓
+      Qdrant (Vectores)      Elasticsearch
+            ↓                         ↓
+            └────────────┬────────────┘
+                         ↓
+                    LLM Generate
+                         ↓
+                  Phoenix Monitor
+                         ↓
+              Respuesta + Citations ✅
+```
+
+#### 5️⃣ **Flujo de Compliance Automático**
+```
+Modelo ML → EU Compliance Service
+                    ↓
+            EUR-Lex Query
+                    ↓
+        ┌───────────┼───────────┐
+        ↓           ↓           ↓
+      GDPR      AI Act       NIS2
+        ↓           ↓           ↓
+        └───────────┼───────────┘
+                    ↓
+          Risk Assessment
+                    ↓
+      Report + Recommendations ✅
+```
+
+### 🔗 Matriz de Integraciones
+
+| Servicio | Integra Con | Propósito |
+|---|---|---|
+| **Upload** | S3, MongoDB, Celery | Almacenamiento + Queue |
+| **Process** | OCR, NER, Classify, Embed | Pipeline AI |
+| **Search** | Elasticsearch, Qdrant, PostgreSQL | Búsqueda híbrida |
+| **RAG** | Qdrant, Elasticsearch, Phoenix | Conversacional + Monitor |
+| **Orchestrator** | Credit, SageMaker, Quantum, Feature | Ensemble scoring |
+| **Credit Model** | EU Compliance | Verificación regulatoria |
+| **EU Compliance** | EUR-Lex, GDPR, AI Act, NIS2 | Compliance automático |
+| **Embeddings** | GPU Service, Qdrant | Aceleración + Storage |
+| **Quantum ML** | NVIDIA cuQuantum | Aceleración cuántica |
+| **Todos** | Prometheus, Grafana | Observabilidad |
+
+### 🎨 Leyenda de Colores
+
+| Color | Capa | Descripción |
+|---|---|---|
+| 🔵 **Cian** | Presentación, Storage, Quantum | Frontend, Bases de datos, Computación cuántica |
+| 🟢 **Verde Neón** | Servicios Core, GPU | APIs principales, Aceleración |
+| 🟠 **Naranja** | IA, Búsqueda | Machine Learning, Indexación |
+| 🟣 **Magenta** | Seguridad, Scoring | Auth, Modelos ML |
+| 🔴 **Naranja Fuego** | Compliance, Observabilidad | Regulatorio, Monitoreo |
+| 🔴 **Rojo** | Cache (Redis) | Alta velocidad |
+
+### 📈 Métricas del Sistema
+
+| Métrica | Valor | Descripente |
+|---|---|---|
+| **Componentes Totales** | 38 | Servicios modulares independientes |
+| **Puertos Activos** | 15+ | APIs REST expuestas |
+| **Bases de Datos** | 4 | PostgreSQL, MongoDB, Redis, Qdrant |
+| **Servicios AI** | 5 | OCR, NER, Classify, Embed, Sentiment |
+| **Modelos ML** | 6 | Credit, SageMaker, Quantum, Feature, Orchestrator, Demo |
+| **Regulaciones** | 4 | GDPR, AI Act, NIS2, DGA |
+| **Proveedores Cloud** | 3 | AWS, DataStax, Quantum providers |
+| **Lenguajes** | 3 | Python, TypeScript, JavaScript |
+| **Frameworks** | 5+ | FastAPI, React, LangChain, Celery, spaCy |
+
+---
+
 <div align="center">
 
 **⭐ Si este proyecto te resulta útil, considera darle una estrella ⭐**
